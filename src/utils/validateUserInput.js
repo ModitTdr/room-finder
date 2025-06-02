@@ -2,13 +2,16 @@ import userService from "../services/userService.js";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-const validateUserInput = async ({ name, email, password, phone, address }) => {
-  // Trim and normalize input
-  name = name?.trim();
-  email = email?.trim().toLowerCase();
-  phone = phone?.trim();
-  address = address?.trim();
+const validateUserInput = async (userInput) => {
+  let { name, email, password, phone, address } =userInput;
 
+  
+  // Trim and normalize input
+  name = name.trim();
+  email = email.trim().toLowerCase();
+  phone = phone.trim();
+  address = address.trim();
+  
   if (!name || !email || !password || !phone || !address) {
     return { valid: false, message: "All fields required" };
   }
