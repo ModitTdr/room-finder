@@ -1,4 +1,5 @@
 import userService from "../services/userService.js";
+import validateUserInput  from "../utils/validateUserInput.js";
 
 export const getAllUser = async (req, res) => {
   try{
@@ -28,9 +29,13 @@ export const getUserById = async (req, res) => {
 };
 
 export const createUser = async (req,res) => {
-  const newUserData = req.body;
+  const {valid,message,sanitizedData} = await validateUserInput(req.body);
+  
+  if(!valid){
+    return res.status(400).json({error: message});
+  }
   try{
-    const newUser = await userService.createUserService(newUserData);
+    const newUser = await userService.createUserService(sanitizedData);
     res.status(201).json({message:'User Created', data:newUser});
   }catch(error){
     console.error('Error creating user:', error);

@@ -21,15 +21,29 @@ export const getUserByIdService = async (userId) => {
     return user;
 }
 
-export const createUserService = async (userData) => {
-    const hashedPassword = await bcrypt.hash(userData.password,10);
-    const newUser = await db.user.create({
-      data: {
-        ...userData,
-        password: hashedPassword,
-      },
+export const getUserByEmailService = async (userEmail) => {
+    const user = await db.user.findFirst({ 
+      where:{email: userEmail} 
     });
-    return newUser;
+    return user;
+}
+
+export const getUserByPhoneService = async (userPhone) => {
+    const user = await db.user.findFirst({ 
+      where:{phone: userPhone} 
+    });
+    return user;
+}
+
+export const createUserService = async (userData) => {
+  const hashedPassword = await bcrypt.hash(userData.password,10);
+  const newUser = await db.user.create({
+    data: {
+      ...userData,
+      password: hashedPassword,
+    },
+  });
+  return newUser;
 }
 
 export const deleteUserService = async (userId) => {
@@ -51,6 +65,8 @@ export const updateUserService = async (userData,userId) => {
 export default {
     getAllUserService,
     getUserByIdService,
+    getUserByEmailService,
+    getUserByPhoneService,
     createUserService,
     deleteUserService,
     updateUserService,
