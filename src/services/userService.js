@@ -2,41 +2,49 @@ import db from "../prismaClient.js";
 import bcrypt from "bcrypt";
 
 export const getAllUserService = async () => {
-    const result = await db.user.findMany()
-    return result;
+    const users = await db.user.findMany({
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        phone: true,
+        role: true
+      },
+    })
+    return users;
 };
 
 export const getUserByIdService = async (userId) => {
-    const result = await db.user.findFirst({ 
+    const user = await db.user.findFirst({ 
       where:{id: userId} 
     });
-    return result;
+    return user;
 }
 
 export const createUserService = async (userData) => {
     const hashedPassword = await bcrypt.hash(userData.password,10);
-    const result = await db.user.create({
+    const newUser = await db.user.create({
       data: {
         ...userData,
         password: hashedPassword,
       },
     });
-    return result;
+    return newUser;
 }
 
 export const deleteUserService = async (userId) => {
-  const result = await db.user.delete({
+  const deletedUser = await db.user.delete({
     where:{id:userId}
   });
-  return result;
+  return deletedUser;
 };
 
 export const updateUserService = async (userData,userId) => {
-    const result = await db.user.update({
+    const updatedUser = await db.user.update({
         where: {id: userId},
         data: userData
     })
-    return result;
+    return updatedUser;
 };
 
 
