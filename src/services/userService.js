@@ -35,7 +35,7 @@ export const getUserByPhoneService = async (userPhone) => {
     return user;
 }
 
-export const createUserService = async (userData) => {
+export const createSignupService = async (userData) => {
   const hashedPassword = await bcrypt.hash(userData.password,10);
   const newUser = await db.user.create({
     data: {
@@ -67,7 +67,7 @@ export default {
     getUserByIdService,
     getUserByEmailService,
     getUserByPhoneService,
-    createUserService,
+    createSignupService,
     deleteUserService,
     updateUserService,
 };

@@ -1,46 +1,43 @@
 import userService from "../services/userService.js";
 
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const validateUserInput = async (userInput,userId=null) =>{
 
-const validateUserInput = async (userInput) => {
-  let { name, email, password, phone, address } =userInput;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const sanitizedInput = {}
+    for (const key of Object.keys(userInput)) {
+        const value = userInput[key]?.trim()
 
-  
-  // Trim and normalize input
-  name = name.trim();
-  email = email.trim().toLowerCase();
-  phone = phone.trim();
-  address = address.trim();
-  
-  if (!name || !email || !password || !phone || !address) {
-    return { valid: false, message: "All fields required" };
-  }
+        //checking for empty fields
+        if(!value)
+            return { valid: false, message: "All fields required" };
 
-  if (!emailRegex.test(email)) {
-    return { valid: false, message: "Invalid email format" };
-  }
+        if (key === "email"){
+          if (!emailRegex.test(value))
+            return { valid: false, message: "Invalid email format" };
+          
+          const existingEmail = await userService.getUserByEmailService(value);
+          if (existingEmail && existingEmail.id != userId) 
+            return { valid: false, message: "Email already registered" };
+        }
 
-  if (await userService.getUserByEmailService(email)) {
-    return { valid: false, message: "Email already registered" };
-  }
+        if(key === "password" && value.length < 6) 
+            return { valid: false, message: "Password must be at least 6 letters" };
 
-  if (password.length < 6) {
-    return { valid: false, message: "Password must be at least 6 characters" };
-  }
+        if(key === "phone") {
+            if(value.length !== 10)
+                return { valid: false, message: "Phone number must be 10 digits" };
 
-  if (phone.length !== 10) {
-    return { valid: false, message: "Phone number must be 10 digits" };
-  }
-
-  if (await userService.getUserByPhoneService(phone)) {
-    return { valid: false, message: "Phone number already registered" };
-  }
-
-  return {
-    valid: true,
-    message: "All data are validated",
-    sanitizedData: { name, email, password, phone, address },
-  };
-};
+            const existingPhone = await userService.getUserByPhoneService(value);
+            if (existingPhone && existingPhone.id != userId) 
+                return { valid: false, message: "Phone number already registered" };
+        }
+        sanitizedInput[key] = value;
+    }
+    return{
+        valid:true,
+        message: "All data are validated",
+        validatedData: sanitizedInput
+    }
+}
 
 export default validateUserInput;
