@@ -1,13 +1,12 @@
 import express from "express"
-import dotenv from "dotenv"
+import {PORT_NUMBER} from "./secret.js"
 import cors from "cors"
 
 import userRoute from "./routing/userRoute.js"
 
-dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = PORT_NUMBER || 3000;
 
 //middlewares
 app.use(express.json());

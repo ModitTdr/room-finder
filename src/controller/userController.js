@@ -1,5 +1,6 @@
-import userService from "../services/userService.js";
+import userService, { getUserByEmailService } from "../services/userService.js";
 import validateUserInput  from "../utils/validateUserInput.js";
+import bcrypt from "bcrypt"
 
 export const getAllUser = async (req, res) => {
   try{
@@ -28,15 +29,34 @@ export const getUserById = async (req, res) => {
   
 };
 
-export const signup = async (req,res) => {
+export const userLogin = async (req,res) => {
+  const {email,password} = req.body;
+  
+  if(email){
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email))
+      return res.status(400).json({ valid: false, message: "Invalid email format" });
+  }
+  const user = await getUserByEmailService(email);
 
-  const {valid,message,sanitizedData} = await validateUserInput(req.body);
+  if(password && !password.length < 8){
+    const match = await bcrypt.compare(password, user.password);
+    if(!match){
+        return res.status(400).json({ valid: false, message: "You're password doesn't match" });
+    }
+  }
+  return res.status(400).json({ valid: true, message: "Logged in successfully" });
+};
+
+export const userSignup = async (req,res) => {
+
+  const {valid,message,validatedData} = await validateUserInput(req.body);
   if(!valid){
     return res.status(400).json({error: message});
   }
-
+  
   try{
-    const newUser = await userService.createUserService(sanitizedData);
+    const newUser = await userService.createSignupService(validatedData);
     res.status(201).json({message:'User Created', data:newUser});
   }catch(error){
     console.error('Error creating user:', error);
@@ -59,10 +79,11 @@ export const updateUser = async (req, res) => {
     return res.status(400).json({ message: "Invalid user ID"});
   }
 
-  const {valid,message,validatedData} = await validateUserInput(req.body,userId);
+  const {valid,message,validatedData} = await validateUserInput(req.body,userId,true);
   if(!valid){
     return res.status(400).json({error: message});
   }
+
   try{
     const updatedUserData = await userService.updateUserService(validatedData,userId);
     res.status(200).json({message:"User Updated", data:updatedUserData});
@@ -75,7 +96,8 @@ export const updateUser = async (req, res) => {
 export default {
     getAllUser,
     getUserById,
-    signup,
+    userLogin,
+    userSignup,
     deleteUser,
     updateUser
 };
