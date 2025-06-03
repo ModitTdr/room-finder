@@ -1,4 +1,4 @@
-import userService, { getUserByEmailService } from "../services/userService.js";
+import userService from "../services/userService.js";
 import validateUserInput  from "../utils/validateUserInput.js";
 import bcrypt from "bcrypt"
 
@@ -37,7 +37,7 @@ export const userLogin = async (req,res) => {
     if (!emailRegex.test(email))
       return res.status(400).json({ valid: false, message: "Invalid email format" });
   }
-  const user = await getUserByEmailService(email);
+  const user = await userService.getUserByEmailService(email);
 
   if(password && !password.length < 8){
     const match = await bcrypt.compare(password, user.password);

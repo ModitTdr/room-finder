@@ -54,11 +54,15 @@ export const deleteUserService = async (userId) => {
 };
 
 export const updateUserService = async (userData,userId) => {
-    const updatedUser = await db.user.update({
-        where: {id: userId},
-        data: userData
-    })
-    return updatedUser;
+  const hashedPassword = await bcrypt.hash(userData.password,10);
+  const updatedUser = await db.user.update({
+      where: {id: userId},
+      data: {
+        ...userData,
+        password: hashedPassword
+      }
+  })
+  return updatedUser;
 };
 
 
