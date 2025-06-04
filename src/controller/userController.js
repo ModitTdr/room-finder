@@ -2,7 +2,6 @@ import userService from "../services/userService.js";
 import validateUserInput  from "../utils/validateUserInput.js";
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
-import {JWT_SECRET} from "../secret.js"
 
 export const getAllUser = async (req, res) => {
   try{
@@ -55,7 +54,7 @@ export const userLogin = async (req,res) => {
         "role" : user.role,
       }
     },
-    JWT_SECRET,
+    process.env.JWT_SECRET,
     {expiresIn: '15m'}
     );
   } catch(error) {
