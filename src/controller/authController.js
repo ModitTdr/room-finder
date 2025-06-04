@@ -43,13 +43,12 @@ export const userLogin = async (req,res) => {
 
 export const userSignup = async (req,res) => {
 
-  const {valid,message,validatedData} = await validateUserInput(req.body);
-  if(!valid){
-    return res.status(400).json({message: message});
-  }
-  
   try{
-    const newUser = await userService.createSignupService(validatedData);
+    const {valid,message,validatedData} = await validateUserInput(req.body);
+    if(!valid){
+      return res.status(400).json({message: message});
+    }
+    const newUser = await userService.userSignupService(validatedData);
     res.status(201).json({message:'User Created', data:newUser});
   }catch(error){
     console.error('Error creating user:', error);

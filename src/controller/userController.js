@@ -55,8 +55,12 @@ export const updateUser = async (req, res) => {
   if(!valid){
     return res.status(400).json({message: message});
   }
+  
   try{
-    const updatedUserData = await userService.updateUserService(validatedData,userId);
+    let updatedUserData;
+    const isAdmin = req.user.role === "ADMIN";
+    
+    updatedUserData = await userService.updateUserService(validatedData,userId,isAdmin);
     if(!updatedUserData) return res.status(404).json({ message: "User not found or no changes applied." });
     res.status(200).json({message:"User Updated", data:updatedUserData});
   }catch(error){

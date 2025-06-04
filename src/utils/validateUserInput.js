@@ -1,7 +1,7 @@
 import userService from "../services/userService.js";
 import bcrypt from "bcrypt"
 
-const validateUserInput = async (userInput,userId=null,isUpdate=false) =>{
+const validateUserInput = async (userInput,userId=null,isUpdate=false,isAdmin=false) =>{
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const sanitizedInput = {}
@@ -16,25 +16,27 @@ const validateUserInput = async (userInput,userId=null,isUpdate=false) =>{
     const {name,email,password,address,phone,newpassword} = sanitizedInput;
 
     if(isUpdate){
-        if(!password){
-            return { valid: false, message: "Password is required to confirm changes" };
-        }else{
-            try{
-                const userData = await userService.getUserByIdService(userId);
-                if(!userData) return { valid: false, message: "Invalid user ID provided" };
-                const match = await bcrypt.compare(password, userData.password);
-                if(!match)  return { valid: false, message: "Invalid password" };
-            }catch(error){
-                console.log(error);
-                res.status(500).json({message:"Something went wrong"});
+        if(!isAdmin){
+            if(!password){
+                return { valid: false, message: "Password is required to confirm changes" };
+            }else{
+                try{
+                    const userData = await userService.getUserByIdService(userId);
+                    if(!userData) return { valid: false, message: "Invalid user ID provided" };
+                    const match = await bcrypt.compare(password, userData.password);
+                    if(!match)  return { valid: false, message: "Invalid password" };
+                }catch(error){
+                    console.log(error);
+                    res.status(500).json({message:"Something went wrong"});
+                }
             }
         }
         if (newpassword) {
             if (newpassword.length < 8) {
                 return { valid: false, message: "New password must be at least 8 characters" };
             }
+            sanitizedInput.password = newpassword;
         }
-        sanitizedInput.password = newpassword;
         delete sanitizedInput.newpassword;
     }else{
         if(!name || !email || !password || !address || !phone)

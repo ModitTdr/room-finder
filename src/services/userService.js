@@ -37,6 +37,7 @@ export const getUserByPhoneService = async (userPhone) => {
 
 export const userSignupService = async (userData) => {
   const hashedPassword = await bcrypt.hash(userData.password,10);
+  delete userData.role;
   const newUser = await db.user.create({
     data: {
       ...userData,
@@ -53,7 +54,8 @@ export const deleteUserService = async (userId) => {
   return deletedUser;
 };
 
-export const updateUserService = async (userData,userId) => {
+export const updateUserService = async (userData,userId,isAdmin=false) => {
+  if(!isAdmin) delete userData.role;
   const hashedPassword = await bcrypt.hash(userData.password,10);
   const updatedUser = await db.user.update({
       where: {id: userId},
