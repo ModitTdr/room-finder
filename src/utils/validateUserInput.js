@@ -1,4 +1,4 @@
-import userService, { getUserByIdService } from "../services/userService.js";
+import userService from "../services/userService.js";
 import bcrypt from "bcrypt"
 
 const validateUserInput = async (userInput,userId=null,isUpdate=false) =>{
@@ -19,15 +19,19 @@ const validateUserInput = async (userInput,userId=null,isUpdate=false) =>{
         if(!password){
             return { valid: false, message: "Password is required to confirm changes" };
         }else{
-            const userData = await getUserByIdService(userId);
-            const match = await bcrypt.compare(password, userData.password);
-            if(!match){
-                return { valid: false, message: "Your password doesn't match" };
+            try{
+                const userData = await userService.getUserByIdService(userId);
+                if(!userData) return { valid: false, message: "Invalid user ID provided" };
+                const match = await bcrypt.compare(password, userData.password);
+                if(!match)  return { valid: false, message: "Your password doesn't match" };
+            }catch(error){
+                console.log(error);
+                res.status(500).json({message:"Something went wrong"});
             }
         }
         if (newpassword) {
             if (newpassword.length < 8) {
-                return { valid: false, message: "New password must be at least 6 characters" };
+                return { valid: false, message: "New password must be at least 8 characters" };
             }
         }
     }else{
@@ -35,27 +39,36 @@ const validateUserInput = async (userInput,userId=null,isUpdate=false) =>{
             return { valid: false, message:"All fields are required"};
 
         if(password && password.length < 8){
-            return { valid: false, message: "Password must be at least 6 characters" };
+            return { valid: false, message: "Password must be at least 8 characters" };
         }
     }
 
     if(email){
         if (!emailRegex.test(email))
             return { valid: false, message: "Invalid email format" };
-
-        const existingEmail = await userService.getUserByEmailService(email);
-        if (existingEmail && existingEmail.id != userId) 
-            return { valid: false, message: "Email already registered" };
+        try{
+            const existingEmail = await userService.getUserByEmailService(email);
+            if (existingEmail && existingEmail.id != userId) 
+                return { valid: false, message: "Email already registered" };
+        }catch(error){
+            console.log(error);
+            res.status(500).json({message:"Something went wrong"});
+        }
     }
 
     if(phone){
         if(phone.length !== 10)
              return { valid: false, message: "Phone number must be 10 digits" };
         
-        const existingPhone = await userService.getUserByPhoneService(phone);
-        if (existingPhone && existingPhone.id != userId) 
-            return { valid: false, message: "Phone number already registered" };
-
+        try{
+            const existingPhone = await userService.getUserByPhoneService(phone);
+            if (existingPhone && existingPhone.id != userId) 
+                return { valid: false, message: "Phone number already registered" };   
+        }catch(error){
+            console.log(error);
+            res.status(500).json({message:"Something went wrong"});
+        }
+        
         sanitizedInput.phone = phone;
     }
     
