@@ -23,7 +23,7 @@ const validateUserInput = async (userInput,userId=null,isUpdate=false) =>{
                 const userData = await userService.getUserByIdService(userId);
                 if(!userData) return { valid: false, message: "Invalid user ID provided" };
                 const match = await bcrypt.compare(password, userData.password);
-                if(!match)  return { valid: false, message: "Your password doesn't match" };
+                if(!match)  return { valid: false, message: "Invalid password" };
             }catch(error){
                 console.log(error);
                 res.status(500).json({message:"Something went wrong"});
@@ -34,6 +34,8 @@ const validateUserInput = async (userInput,userId=null,isUpdate=false) =>{
                 return { valid: false, message: "New password must be at least 8 characters" };
             }
         }
+        sanitizedInput.password = newpassword;
+        delete sanitizedInput.newpassword;
     }else{
         if(!name || !email || !password || !address || !phone)
             return { valid: false, message:"All fields are required"};
