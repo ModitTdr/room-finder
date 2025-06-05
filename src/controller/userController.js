@@ -1,5 +1,6 @@
 import userService from "../services/userService.js";
 import validateUserInput  from "../utils/validateUserInput.js";
+import { userLogout } from "./authController.js";
 
 export const getAllUser = async (req, res) => {
   try{
@@ -46,6 +47,9 @@ export const deleteUser = async (req, res) => {
 };
 
 export const updateUser = async (req, res) => {
+  if(!req.body || Object.keys(req.body).length === 0 )
+      return res.status(404).json("Request Body Missing")
+    
   const userId = parseInt(req.params.id);
   if(isNaN(userId)){
     return res.status(400).json({ message: "Invalid user ID"});
@@ -62,6 +66,17 @@ export const updateUser = async (req, res) => {
     
     updatedUserData = await userService.updateUserService(validatedData,userId,isAdmin);
     if(!updatedUserData) return res.status(404).json({ message: "User not found or no changes applied." });
+
+    if(updatedUserData.password || updatedUserData.email || updatedUserData.role){
+       res.cookie('token', '', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production', // use secure flag in prod
+        expires: new Date(0), // expire cookie immediately
+        sameSite: 'Strict'
+      });
+      return res.status(200).json({message:"User updated"});
+    }
+
     res.status(200).json({message:"User Updated", data:updatedUserData});
   }catch(error){
     console.log(error);

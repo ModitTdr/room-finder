@@ -13,7 +13,7 @@ const validateUserInput = async (userInput,userId=null,isUpdate=false,isAdmin=fa
             sanitizedInput[key] = userInput[key]
         }
     });
-    const {name,email,password,address,phone,newpassword} = sanitizedInput;
+    let {firstname,lastname,email,password,address,phone,newpassword} = sanitizedInput;
 
     if(isUpdate){
         if(!isAdmin){
@@ -27,10 +27,11 @@ const validateUserInput = async (userInput,userId=null,isUpdate=false,isAdmin=fa
                     if(!match)  return { valid: false, message: "Invalid password" };
                 }catch(error){
                     console.log(error);
-                    res.status(500).json({message:"Something went wrong"});
+                    return{valid: false, message:"Something went wrong"};
                 }
             }
         }
+
         if (newpassword) {
             if (newpassword.length < 8) {
                 return { valid: false, message: "New password must be at least 8 characters" };
@@ -38,13 +39,29 @@ const validateUserInput = async (userInput,userId=null,isUpdate=false,isAdmin=fa
             sanitizedInput.password = newpassword;
         }
         delete sanitizedInput.newpassword;
-    }else{
-        if(!name || !email || !password || !address || !phone)
+    } else{
+        if(!firstname || !lastname || !email || !password || !address || !phone)
             return { valid: false, message:"All fields are required"};
 
         if(password && password.length < 8){
             return { valid: false, message: "Password must be at least 8 characters" };
         }
+    }
+
+    if(firstname && lastname){
+        const letterOnlyRegex = /^[a-zA-Z]+$/;
+        if(!letterOnlyRegex.test(firstname) || !letterOnlyRegex.test(lastname)){
+            return { valid: false, message: "Name should only contain letters" };
+        }
+
+        firstname = firstname.charAt(0).toUpperCase() + firstname.slice(1).toLowerCase();
+        lastname = lastname.charAt(0).toUpperCase() + lastname.slice(1).toLowerCase();
+        sanitizedInput.name = `${firstname} ${lastname}`;
+
+        delete sanitizedInput.firstname;
+        delete sanitizedInput.lastname;
+    }else if(firstname || lastname){
+        return { valid: false, message: "Both first and last names are required to update the name" };
     }
 
     if(email){

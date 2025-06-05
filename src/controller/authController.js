@@ -6,6 +6,10 @@ import validateUserInput  from "../utils/validateUserInput.js";
 
 
 export const userLogin = async (req,res) => {
+
+  if(!req.body || Object.keys(req.body).length === 0 )
+      return res.status(400).json("Request Body Missing")
+
   const {email,password} = req.body;
   
   if (!email || !password) {
@@ -16,7 +20,7 @@ export const userLogin = async (req,res) => {
 
   try{
     const user = await userService.getUserByEmailService(email);
-    if(!user) return res.status(404).json({message: "Your Email doesn't exists" });
+    if(!user) return res.status(404).json({message: "Email not found" });
     
     if(password.length < 8) return res.status(400).json({message: "Password must be atleast 8 characters" });
     const match = await bcrypt.compare(password, user.password);
@@ -24,14 +28,20 @@ export const userLogin = async (req,res) => {
 
     let accessToken = jwt.sign(
     {
-      "id" : user.id,
-      "email" : user.email,
-      "role" : user.role,
+      id : user.id,
+      email : user.email,
+      role : user.role,
     },
     process.env.JWT_SECRET,
     {expiresIn: '15m'}
     );
-    return res.status(200).json({ message: "Logged in" , accessToken});
+    res.cookie("token" , accessToken,{
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+      maxAge: 30 * 60 * 1000
+    });
+    return res.status(200).json({ message: "Logged in" , accessToken}); //remove accessToken from here
     
   } catch(error) {
     console.error('Error:', error);
@@ -43,6 +53,9 @@ export const userLogin = async (req,res) => {
 
 export const userSignup = async (req,res) => {
 
+  if(!req.body || Object.keys(req.body).length === 0 )
+      return res.status(404).json("Request Body Missing")
+    
   try{
     const {valid,message,validatedData} = await validateUserInput(req.body);
     if(!valid){
@@ -56,7 +69,17 @@ export const userSignup = async (req,res) => {
   }
 };
 
+export const userLogout = (req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "strict",
+  });
+  res.status(200).json({ message: "Logged out" });
+};
+
 export default {
     userLogin,
-    userSignup
+    userSignup,
+    userLogout
 };

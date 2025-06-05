@@ -1,7 +1,7 @@
 import express from "express";
 
 import userController from "../controller/userController.js";
-import verifyToken from "../middleware/authMiddleware.js";
+import isLoggedIn from "../middleware/isLoggedIn.js";
 import authorize from "../middleware/roleMiddleware.js";
 import permissionMiddleware from "../middleware/permissionMiddleware.js";
 const router = express.Router();
@@ -9,27 +9,27 @@ const router = express.Router();
 //User Controller
 router.get(
     '/',
-    verifyToken,
+    isLoggedIn,
     authorize('ADMIN'),
     userController.getAllUser
 );
 router.get(
     '/:id',
-    verifyToken,
+    isLoggedIn,
     permissionMiddleware, 
     userController.getUserById
 );
 router.delete(
     '/:id',
-    verifyToken,
+    isLoggedIn,
     permissionMiddleware, 
     userController.deleteUser)
 ;
 router.put(
     '/:id',
-    verifyToken,
+    isLoggedIn,
     permissionMiddleware,
-     userController.updateUser
+    userController.updateUser
 );
 
 export default router;
