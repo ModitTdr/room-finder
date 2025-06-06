@@ -6,17 +6,17 @@ import { IoIosMenu,IoIosSearch } from "react-icons/io";
 import { BiLogInCircle, BiLogOutCircle  } from "react-icons/bi";
 import { useState } from "react";
 
-const NavLinks = () =>{
-  const linkStyle = "flex items-center gap-2 "
+const NavLinks = (props) =>{
+  const linkStyle = "flex items-center gap-2"
   return(
     <>
       <Link to="/login" className={linkStyle}>
         <BiLogInCircle className="md:hidden block"/>
-        <Button name="Login"/>
+        <Button>Login</Button>
       </Link>
       <Link to="/register" className={linkStyle}>
         <BiLogOutCircle  className="md:hidden block"/>
-        <Button name="Sign Up"/>
+        <Button bgcolor="bg-primary-color" textcolor="text-[#333]">SignUp</Button>
       </Link>
     </>
   )
@@ -24,10 +24,9 @@ const NavLinks = () =>{
 
 const Navbar = () => {
   const [isOpen,setIsOpen] = useState(false);
-
   return (
     <>
-      <nav className="flex items-center justify-end">
+      <nav className="flex items-center justify-end box-border">
         <div className="flex items-center justify-between gap-4">
           {/* desktop view*/}
           <div className="relative hidden md:block">
@@ -39,7 +38,7 @@ const Navbar = () => {
               <IoIosSearch className="absolute top-[8px] right-3 cursor-pointer text-lg"/>
           </div>
           
-          <div className="hidden md:flex gap-4">
+          <div className="hidden md:flex gap-4 items-center">
             <DarkModeButton />
             <NavLinks />
           </div>
@@ -47,7 +46,7 @@ const Navbar = () => {
         </div>
         
         {/* mobile view */}
-        <div className="block md:hidden flex  gap-3">
+        <div className="block md:hidden gap-3">
           <DarkModeButton />
           <IoIosMenu 
             className="block md:hidden cursor-pointer text-3xl"

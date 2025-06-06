@@ -3,15 +3,19 @@
 @theme{
     --color-background:var(--background);
     --color-text:var(--primary-text);
+    --color-primary-color:var(--primary-color);
 }
 
 :root{
     --background:#eee;
     --primary-text: #333;
+    --primary-color:red;
 }
+
 .dark{
     --background:#333;
     --primary-text: #eee;
+    --primary-color: red;
 }
 
 @layer utilities {

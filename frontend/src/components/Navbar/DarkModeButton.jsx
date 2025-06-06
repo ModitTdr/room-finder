@@ -23,7 +23,7 @@ const DarkModeButton = () => {
 
   return (
     <div
-      className="w-fit cursor-pointer relative border rounded-md p-1"
+      className="w-fit cursor-pointer relative border rounded-md p-1 h-fit"
       onClick={() => setIsDark(prev=>!prev) }
     >
 
