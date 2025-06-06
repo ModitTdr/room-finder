@@ -12,7 +12,7 @@ function App() {
 
   return (
     <div className='bg-background text-text smooth-transition  p-4 lg:px-8 py-4'>
-      <header className='flex justify-between flex-wrap w-full'>
+      <header className='flex justify-between flex-wrap w-full container m-auto'>
         <h1 className="text-3xl">Room Finder</h1>
         <Navbar />
       </header>
