@@ -1,6 +1,6 @@
 const Button = (props) => {
   return (
-    <button className="">
+    <button className="cursor-pointer">
         {props.name}
     </button>
   )

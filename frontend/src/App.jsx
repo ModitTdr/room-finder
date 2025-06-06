@@ -11,10 +11,11 @@ function App() {
   const [count, setCount] = useState(0)
 
   return (
-    <div>
-      <div className='flex justify-center bg-amber-50'>
+    <div className='bg-background text-text smooth-transition  p-4 lg:px-8 py-4'>
+      <header className='flex justify-between flex-wrap w-full'>
+        <h1 className="text-3xl">Room Finder</h1>
         <Navbar />
-      </div>
+      </header>
       <div className='container m-auto'>
         <Routes>
           <Route path="/" element={<Homepage />} />

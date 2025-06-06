@@ -2,26 +2,65 @@ import { Link } from "react-router";
 
 import DarkModeButton from "./DarkModeButton";
 import Button from "../common/Button";
+import { IoIosMenu,IoIosSearch } from "react-icons/io";
+import { BiLogInCircle, BiLogOutCircle  } from "react-icons/bi";
+import { useState } from "react";
+
+const NavLinks = () =>{
+  const linkStyle = "flex items-center gap-2 "
+  return(
+    <>
+      <Link to="/login" className={linkStyle}>
+        <BiLogInCircle className="md:hidden block"/>
+        <Button name="Login"/>
+      </Link>
+      <Link to="/register" className={linkStyle}>
+        <BiLogOutCircle  className="md:hidden block"/>
+        <Button name="Sign Up"/>
+      </Link>
+    </>
+  )
+}
 
 const Navbar = () => {
+  const [isOpen,setIsOpen] = useState(false);
+
   return (
-    <div className="flex justify-between items-center container p-4 sm:8">
-        <div>test</div>
-        <div className="flex items-center justify-between">
-          <input 
-              type="text" 
-              placeholder="Search"
-              className="border border-black/30 rounded-xl px-2 py-1 transition duration-200 ease-in-out focus:border-black focus:border-opacity-100 focus:outline-none"
-          />
-          <DarkModeButton />
-          <Link to="/login">
-            <Button name="Login"/>
-          </Link>
-          <Link to="/register">
-            <Button name="Sign Up"/>
-          </Link>
+    <>
+      <nav className="flex items-center justify-end">
+        <div className="flex items-center justify-between gap-4">
+          {/* desktop view*/}
+          <div className="relative hidden md:block">
+            <input 
+                type="text" 
+                placeholder="Search"
+                className="border border-text rounded-lg px-2 py-1 smooth-transition focus:border-text focus:border-opacity-100 focus:outline-none placeholder-text w-[300px]"
+              />
+              <IoIosSearch className="absolute top-[8px] right-3 cursor-pointer text-lg"/>
+          </div>
+          
+          <div className="hidden md:flex gap-4">
+            <DarkModeButton />
+            <NavLinks />
+          </div>
+
         </div>
-    </div>
+        
+        {/* mobile view */}
+        <div className="block md:hidden flex  gap-3">
+          <DarkModeButton />
+          <IoIosMenu 
+            className="block md:hidden cursor-pointer text-3xl"
+            onClick={()=> setIsOpen(!isOpen)}/>
+        </div>
+      </nav>
+      {
+        isOpen &&
+        <div className="flex basis-full flex-col gap-3 p-3 items-center text-xl">
+          <NavLinks />
+        </div>
+      }
+    </>
   )
 }
 
