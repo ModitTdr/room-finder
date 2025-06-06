@@ -70,8 +70,8 @@ export const updateUser = async (req, res) => {
     if(updatedUserData.password || updatedUserData.email || updatedUserData.role){
        res.cookie('token', '', {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production', // use secure flag in prod
-        expires: new Date(0), // expire cookie immediately
+        secure: process.env.NODE_ENV === 'production',
+        expires: new Date(0), 
         sameSite: 'Strict'
       });
       return res.status(200).json({message:"User updated"});

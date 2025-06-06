@@ -41,7 +41,7 @@ export const userLogin = async (req,res) => {
       sameSite: "strict",
       maxAge: 30 * 60 * 1000
     });
-    return res.status(200).json({ message: "Logged in" , accessToken}); //remove accessToken from here
+    return res.status(200).json({ message: "Logged in" }); //remove accessToken from here
     
   } catch(error) {
     console.error('Error:', error);
