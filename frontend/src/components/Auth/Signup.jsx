@@ -42,7 +42,6 @@ const Signup = () => {
         userData,
       );
       if(response){
-        setMessage(response);
         navigate('/login');
       }
     }catch(error){
@@ -201,8 +200,8 @@ const Signup = () => {
           transition={{ duration: 0.3 }}
           className="absolute top-12 smooth-transition"
         >
-          <Alert variant={`${message.status===200?"success":"destructive"}`}>
-            { message.status===200?<CheckCircle className="h-4 w-4" />:<Info className="h-4 w-4" />}
+          <Alert variant="destructive">
+            <Info className="h-4 w-4" />
             <AlertTitle>{`Error: ${message.status}`}</AlertTitle>
             <AlertDescription>
               {message.data.message}

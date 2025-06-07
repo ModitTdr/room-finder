@@ -21,7 +21,7 @@ const Login = () => {
     email: '',
     password: ''
   });
-  const[message,setMessage] = useState(); 
+  const[message,setMessage] = useState(null); 
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -44,12 +44,17 @@ const Login = () => {
       if(response.data.token){
         const {token}=response.data;
         localStorage.setItem("token", token);
-        setMessage(response)
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         navigate('/');
       }
     } catch (error) {
-      error.response ? setMessage(error.response) : setMessage(error) ;
+      if (error.response) {
+        setMessage({ status: error.response.status, data: { message: error.response.data.message || "An error occurred." } });
+      } else if (error.request) {
+        setMessage({ status: 'Network Error', data: { message: "No response from server."} });
+      } else {
+        setMessage({ status: 'Error', data: { message: error.message || "An unexpected error occurred." } });
+      }
     }
   }
   useEffect(() => {
@@ -136,8 +141,8 @@ const Login = () => {
           transition={{ duration: 0.3 }}
           className="absolute top-12 smooth-transition"
         >
-          <Alert variant={`${message.status===200?"success":"destructive"}`}>
-            { message.status===200?<CheckCircle className="h-4 w-4" />:<Info className="h-4 w-4" />}
+          <Alert variant="destructive">
+            <Info className="h-4 w-4" />
             <AlertTitle>{`Error: ${message.status}`}</AlertTitle>
             <AlertDescription>
               {message.data.message}
