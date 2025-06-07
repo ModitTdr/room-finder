@@ -1,10 +1,10 @@
 import { Link } from "react-router";
 
 import DarkModeButton from "./DarkModeButton";
-import Button from "../common/Button";
 import { IoIosMenu,IoIosSearch } from "react-icons/io";
 import { BiLogInCircle, BiLogOutCircle  } from "react-icons/bi";
 import { useState } from "react";
+import { Button } from "../ui/button";
 
 const NavLinks = (props) =>{
   const linkStyle = "flex items-center gap-2"
@@ -16,7 +16,7 @@ const NavLinks = (props) =>{
       </Link>
       <Link to="/register" className={linkStyle}>
         <BiLogOutCircle  className="md:hidden block"/>
-        <Button bgcolor="bg-primary-color" textcolor="text-[#333]">SignUp</Button>
+        <Button>SignUp</Button>
       </Link>
     </>
   )
@@ -46,7 +46,7 @@ const Navbar = () => {
         </div>
         
         {/* mobile view */}
-        <div className="block md:hidden gap-3">
+        <div className="block md:hidden gap-3 flex">
           <DarkModeButton />
           <IoIosMenu 
             className="block md:hidden cursor-pointer text-3xl"

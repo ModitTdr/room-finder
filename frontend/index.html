@@ -5,6 +5,18 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite + React</title>
+    <script>
+      (function() {
+        try {
+          const storedDarkMode = localStorage.getItem('darkMode');
+          if (storedDarkMode === 'true') {
+            document.documentElement.classList.add('dark');
+          }
+        } catch (e) {
+          console.error("Error setting dark mode from localStorage:", e);
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

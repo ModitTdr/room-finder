@@ -5,18 +5,20 @@ import { IoMoon } from "react-icons/io5";
 
 
 const DarkModeButton = () => {
-  const [isDark,setIsDark] = useState(
-    localStorage.getItem("darkMode") ? localStorage.getItem("darkMode"): false
+  const [isDark,setIsDark] = useState(()=>{
+    const currentMode = localStorage.getItem("darkMode");
+    return currentMode === "true";
+  }  
   );
 
   const element = document.documentElement;
   React.useEffect(()=>{
     if(isDark){
       element.classList.add("dark");
-      localStorage.setItem("darkMode",true);
+      localStorage.setItem("darkMode","true");
     }else{
       element.classList.remove("dark");
-      localStorage.setItem("darkMode",false);
+      localStorage.setItem("darkMode","false");
     }
   })
   const iconBaseClass = "text-xl smooth-transition duration-150 absolute top-0 left-0";
