@@ -14,9 +14,9 @@ import { Label } from "../ui/label"
 
 const Login = () => {
   return (
-    <div className="flex justify-center items-center h-full">
-      <div>
-        <h2 className="text-6xl w-[600px]">Welcome Back..</h2>
+    <div className="flex justify-center items-center md:h-full h-[80dvh] flex-col xl:flex-row gap-x-32 px-4 gap-y-8">
+      <div >
+        <h2 className="text-4xl xl:text-6xl max-w-[600px]">Welcome Back..</h2>
       </div>
       <Card className="w-full max-w-sm">
         <CardHeader>
