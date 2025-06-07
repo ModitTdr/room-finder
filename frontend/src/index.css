@@ -8,11 +8,12 @@
     --color-background:var(--background);
     --color-text:var(--primary-text);
     --color-primary-color:var(--primary-color);
+    --color-success:var(--primary-success);
 }
 /* custmom tailwind class */
 @layer utilities {
   .smooth-transition {
-    @apply transition duration-300 ease-in-out;
+    @apply transition duration-50 ease-in-out;
   }
 }
 
@@ -21,6 +22,7 @@
     --background:oklch(1 0 0);
     --primary-text: #333;
     --primary-color:red;
+    --primary-success: oklch(0.63 0.17 149);
     /* shadcn */
     --radius:0.625rem;
     --foreground:oklch(0.145 0 0);
@@ -60,6 +62,7 @@
     --background:oklch(0.145 0 0);
     --primary-text: #eee;
     --primary-color: red;
+    --primary-success: oklch(0.63 0.17 149);
     /* shadcn */
     --foreground:oklch(0.985 0 0);
     --card:oklch(0.205 0 0);

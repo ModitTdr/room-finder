@@ -1,5 +1,5 @@
 import { use, useState } from 'react'
-import { Routes, Route} from "react-router";
+import { Routes, Route, Outlet} from "react-router";
 
 import Navbar from "./components/Navbar/Navbar"
 import Homepage from "./components/Homepage"
@@ -12,15 +12,11 @@ function App() {
   return (
     <div className='bg-background text-text smooth-transition p-4 lg:px-8 py-4 h-screen flex flex-col'>
       <header className='flex justify-between items-center flex-wrap w-full container m-auto'>
-        <h1 className="text-3xl">Room Finder</h1>
+        <h1 className="text-3xl font-[Montserrat]">Room Finder</h1>
         <Navbar />
       </header>
       <div className='container m-auto my-8 flex-grow'>
-        <Routes>
-          <Route path="/" element={<Homepage />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Signup />} />
-        </Routes>
+        <Outlet />
       </div>
     </div>
   )
