@@ -1,58 +1,58 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
-import { Link,useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 //components
-import {Button} from "../ui/button"
-import {Card,CardContent} from "../ui/card"
+import { Button } from "../ui/button"
+import { Card, CardContent } from "../ui/card"
 import { Input } from "../ui/input"
 import { Label } from "../ui/label"
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert"
 
 //icons
 import { FaGoogle } from "react-icons/fa";
-import { Info, CheckCircle } from "lucide-react"
+import { Info } from "lucide-react"
 
+//redux
+import { useDispatch } from "react-redux";
+import { createUser } from "../../store/features/auth/authSlice";
 
 const Signup = () => {
-  const [userData,setUserData] = useState({
-    firstname:'',
-    lastname:'',
-    email:'',
-    password:'',
-    address:'',
-    phone:''
+  const [userData, setUserData] = useState({
+    firstname: '',
+    lastname: '',
+    email: '',
+    password: '',
+    address: '',
+    phone: ''
   });
-  const[message,setMessage] = useState(); 
+  const [message, setMessage] = useState(null);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const handleChange = (e) =>{
-    const {name,value} = e.target;
-    setUserData((prev)=>({
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setUserData((prev) => ({
       ...prev,
       [name]: value
     }))
   }
   const userRegister = async (e) => {
     e.preventDefault();
-    try{
-      const response = await axios.post(
-        "http://localhost:3000/api/auth/signup",
-        userData,
-      );
-      if(response){
-        navigate('/login');
-      }
-    }catch(error){
-      error.response ? setMessage(error.response) : setMessage(error) ;
-    }
+    dispatch(createUser(userData))
+      .unwrap()
+      .then(() => {
+        navigate('/')
+      })
+      .catch((err) => {
+        setMessage({ status: "Error", data: { message: err } });
+      })
   }
 
   useEffect(() => {
     if (message) {
-      const timer = setTimeout(() => setMessage(null), 3000); 
-      return () => clearTimeout(timer); 
+      const timer = setTimeout(() => setMessage(null), 3000);
+      return () => clearTimeout(timer);
     }
   }, [message]);
 
@@ -62,7 +62,7 @@ const Signup = () => {
       <div>
         <h2 className="text-4xl xl:text-6xl xl:w-[550px] text-center font-[Montserrat]">Create Your Account..</h2>
       </div>
-      
+
       {/* right */}
       <Card className="w-full max-w-sm smooth-transition">
         <CardContent>
@@ -78,7 +78,7 @@ const Signup = () => {
                     id="firstname"
                     type="text"
                     name="firstname"
-                    value={userData.fname}
+                    value={userData.firstname}
                     onChange={handleChange}
                     placeholder="John"
                     required
@@ -91,7 +91,7 @@ const Signup = () => {
                     id="lastname"
                     type="text"
                     name="lastname"
-                    value={userData.lname}
+                    value={userData.lastname}
                     onChange={handleChange}
                     placeholder="Doe"
                     required
@@ -153,13 +153,13 @@ const Signup = () => {
                     Forgot your password?
                   </a>
                 </div>
-                <Input 
-                  id="password" 
-                  type="password" 
+                <Input
+                  id="password"
+                  type="password"
                   name="password"
                   value={userData.password}
                   onChange={handleChange}
-                  required 
+                  required
                 />
               </div>
 
@@ -168,13 +168,13 @@ const Signup = () => {
                 <Button type="submit" className="w-full">
                   Login
                 </Button>
-                 <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
+                <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
                   <span className="bg-card text-muted-foreground relative z-10 px-2">
                     Or Continue With
                   </span>
                 </div>
                 <Button variant="outline" className="w-full">
-                  <FaGoogle/>Login with Google
+                  <FaGoogle />Login with Google
                 </Button>
               </div>
             </div>
@@ -192,23 +192,23 @@ const Signup = () => {
 
       {/* alert message */}
       <AnimatePresence>
-      { message &&
-        <motion.div 
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.3 }}
-          className="absolute top-12 smooth-transition"
-        >
-          <Alert variant="destructive">
-            <Info className="h-4 w-4" />
-            <AlertTitle>{`Error: ${message.status}`}</AlertTitle>
-            <AlertDescription>
-              {message.data.message}
-            </AlertDescription>
-          </Alert>
-        </motion.div>
-      }
+        {message &&
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3 }}
+            className="absolute top-12 smooth-transition"
+          >
+            <Alert variant="destructive">
+              <Info className="h-4 w-4" />
+              <AlertTitle>{`Error`}</AlertTitle>
+              <AlertDescription>
+                {message.data.message}
+              </AlertDescription>
+            </Alert>
+          </motion.div>
+        }
       </AnimatePresence>
     </div>
   )

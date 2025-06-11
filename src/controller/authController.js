@@ -70,11 +70,33 @@ export const userSignup = async (req,res) => {
     if(!valid){
       return res.status(400).json({message: message});
     }
-    const newUser = await userService.userSignupService(validatedData);
-    if(newUser){
-      return res.status(200).json({message:'User Created', data:newUser});
+    const user = await userService.userSignupService(validatedData);
+    if(user){
+      let accessToken = jwt.sign(
+      {
+        id : user.id,
+        email : user.email,
+        role : user.role,
+      },
+      process.env.JWT_SECRET,
+      {expiresIn: '15m'}
+      );
+      res.cookie("token" , accessToken,{
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict",
+        maxAge: 30 * 60 * 1000
+      });
+      return res.status(200).json({ 
+        message: "User Created", 
+        token: accessToken,
+        user: {
+          id: user.id,
+          email: user.email,
+          role: user.role
+        }});
     }else{
-      return res.status(400).json({message:'Failed to Create', data:newUser});
+      return res.status(400).json({message:'Failed to Create'});
     }
   }catch(error){
     console.error('Error creating user:', error);

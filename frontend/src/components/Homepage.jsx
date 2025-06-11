@@ -9,7 +9,7 @@ const Homepage = () => {
 
   return (
     <div>
-      hi {isLoggedIn?'user':'guest'}
+      hi {isLoggedIn?data.email:'guest'}
     </div>
   )
 }
