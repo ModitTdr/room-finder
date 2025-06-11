@@ -5,13 +5,17 @@ import { IoIosMenu, IoIosSearch } from "react-icons/io";
 import { BiLogInCircle, BiLogOutCircle } from "react-icons/bi";
 import { useState } from "react";
 import { Button } from "../ui/button";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../store/features/auth/authSlice";
 
 const NavLinks = (props) => {
   const linkStyle = "flex items-center gap-2"
-
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
-  console.log(isLoggedIn)
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    dispatch(logout());
+  }
   return (
     <>
       {
@@ -26,7 +30,7 @@ const NavLinks = (props) => {
               <Button>SignUp</Button>
             </Link>
           </>
-          : <Button>Logout</Button>
+          : <Button onClick={handleLogout}>Logout</Button>
       }
     </>
   )

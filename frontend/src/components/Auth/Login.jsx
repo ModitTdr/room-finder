@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useNavigate } from "react-router";
-import { jwtDecode } from "jwt-decode";
 
+//redux
 import { loginUser } from "../../store/features/auth/authSlice";
 //components
 import { Button } from "../ui/button"
@@ -16,7 +15,6 @@ import { Alert, AlertDescription, AlertTitle } from "../ui/alert"
 import { FaGoogle } from "react-icons/fa";
 import { Info, CheckCircle } from "lucide-react"
 import { useDispatch } from "react-redux";
-
 
 
 const Login = () => {
@@ -47,6 +45,7 @@ const Login = () => {
         setMessage({ status: "Error", data: { message: err } });
       });
   }
+
   useEffect(() => {
     if (message) {
       const timer = setTimeout(() => setMessage(null), 3000);
