@@ -1,11 +1,15 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { useDispatch } from "react-redux";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 
+import { setLoading } from "../loading/loadingSlice";
+
 export const loginUser = createAsyncThunk(
     "auth/loginUser",
-    async (form, { rejectWithValue }) => {
+    async (form, { rejectWithValue, dispatch }) => {
         try {
+            dispatch(setLoading(true))
             const response = await axios.post("http://localhost:3000/api/auth/login", form);
             console.log(response)
             const { token } = response.data;
@@ -20,6 +24,8 @@ export const loginUser = createAsyncThunk(
             }
         } catch (error) {
             return rejectWithValue(error.response?.data?.message || "Login failed");
+        } finally {
+            setTimeout(() => {dispatch(setLoading(false));}, 300);
         }
     }
 );
@@ -45,14 +51,11 @@ const authSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(loginUser.pending, (state) => {
-            console.log("pending", state);
             state.isLoggedIn = false;
         }).addCase(loginUser.fulfilled, (state, action) => {
-            console.log("fulfilled", state);
             state.isLoggedIn = true;
             state.userData = action.payload;
         }).addCase(loginUser.rejected, (state, payload) => {
-            console.log("rejected", state);
             state.isLoggedIn = false;
         })
     }
