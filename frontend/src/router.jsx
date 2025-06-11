@@ -3,23 +3,32 @@ import Homepage from "./components/Homepage";
 import Login from "./components/Auth/Login";
 import Signup from "./components/Auth/Signup";
 import App from "./App";
+import PublicRoute from "./components/Auth/PublicRoute"
 
 const router = createBrowserRouter([
     {
         path: '/',
-        element: <App/>,
+        element: <App />,
         children: [
             {
                 path: '',
-                element: <Homepage/>
+                element: <Homepage />
             },
             {
                 path: 'login',
-                element: <Login/>
+                element: (
+                    <PublicRoute>
+                        <Login />
+                    </PublicRoute>
+                )
             },
             {
                 path: 'register',
-                element: <Signup/>
+                element: (
+                    <PublicRoute>
+                        <Signup />
+                    </PublicRoute>
+                )
             },
         ],
     },
