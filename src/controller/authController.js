@@ -1,5 +1,7 @@
 import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
+import dotenv from "dotenv"
+dotenv.config()
 
 import userService from "../services/userService.js";
 import validateUserInput  from "../utils/validateUserInput.js";
@@ -41,7 +43,14 @@ export const userLogin = async (req,res) => {
       sameSite: "strict",
       maxAge: 30 * 60 * 1000
     });
-    return res.status(200).json({ message: "Logged in" }); //remove accessToken from here
+    return res.status(200).json({ 
+      message: "Logged in", 
+      token: accessToken,
+      user: {
+        id: user.id,
+        email: user.email,
+        role: user.role
+      }});
     
   } catch(error) {
     console.error('Error:', error);
@@ -62,10 +71,14 @@ export const userSignup = async (req,res) => {
       return res.status(400).json({message: message});
     }
     const newUser = await userService.userSignupService(validatedData);
-    res.status(201).json({message:'User Created', data:newUser});
+    if(newUser){
+      return res.status(200).json({message:'User Created', data:newUser});
+    }else{
+      return res.status(400).json({message:'Failed to Create', data:newUser});
+    }
   }catch(error){
     console.error('Error creating user:', error);
-    res.status(500).json({ message: 'Something went wrong'});
+    return res.status(500).json({ message: 'Something went wrong'});
   }
 };
 

@@ -38,6 +38,7 @@ export const getUserByPhoneService = async (userPhone) => {
 export const userSignupService = async (userData) => {
   const hashedPassword = await bcrypt.hash(userData.password,10);
   delete userData.role;
+  console.log(userData)
   const newUser = await db.user.create({
     data: {
       ...userData,

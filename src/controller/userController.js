@@ -22,7 +22,10 @@ export const getUserById = async (req, res) => {
   try{
     const user = await userService.getUserByIdService(userId);
     if (!user) return res.status(404).json({ message: "User Not Found"});
-    res.status(200).json({data: user});
+    const {password,created_at,updated_at, ...withoutPassword} = user
+    res.status(200).json({
+      data:withoutPassword
+    });
   }catch(error){
     console.error('Error fetching user:', error);
     res.status(500).json({ message: 'Internal server error' });

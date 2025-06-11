@@ -1,13 +1,25 @@
-import { use, useState } from 'react'
-import { Routes, Route, Outlet} from "react-router";
+import { useEffect } from 'react'
+import { Outlet } from "react-router";
+import { jwtDecode } from "jwt-decode";
+import { useDispatch } from 'react-redux';
+import axios from 'axios';
 
 import Navbar from "./components/Navbar/Navbar"
-import Homepage from "./components/Homepage"
-import Login from "./components/Auth/Login";
-import Signup from "./components/Auth/Signup"
+import { restoreLogin } from './store/features/auth/authSlice';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const dispatch = useDispatch();
+
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const { id, email, role } = jwtDecode(token);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      dispatch(restoreLogin({ id, email, role }));
+    }
+  }, []);
+
 
   return (
     <div className='bg-background text-text smooth-transition p-4 lg:px-8 py-4 h-screen flex flex-col'>
