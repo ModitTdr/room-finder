@@ -1,6 +1,5 @@
 import userService from "../services/userService.js";
 import validateUserInput  from "../utils/validateUserInput.js";
-import { userLogout } from "./authController.js";
 
 export const getAllUser = async (req, res) => {
   try{

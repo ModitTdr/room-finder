@@ -2,20 +2,20 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useNavigate } from "react-router";
 
-//redux
-import { loginUser } from "../../store/features/auth/authSlice";
 //components
-import { Button } from "../ui/button"
-import { Card, CardContent } from "../ui/card"
-import { Input } from "../ui/input"
-import { Label } from "../ui/label"
-import { Alert, AlertDescription, AlertTitle } from "../ui/alert"
+import { Button } from "../../components/ui/button"
+import { Card, CardContent } from "../../components/ui/card"
+import { Label } from "../../components/ui/label"
+import { Alert, AlertDescription, AlertTitle } from "../../components/ui/alert"
 
 //icons
 import { FaGoogle } from "react-icons/fa";
 import { Info, CheckCircle } from "lucide-react"
-import { useDispatch } from "react-redux";
+import FormData from "./FormData";
 
+//redux
+import { useUserLoginMutation } from "../../features/auth/authApi";
+import LoadingPage from "../LoadingPage";
 
 const Login = () => {
   const [form, setForm] = useState({
@@ -23,8 +23,9 @@ const Login = () => {
     password: ''
   });
   const [message, setMessage] = useState(null);
+  const [loginFn, { error, isSuccess, isLoading }] = useUserLoginMutation();
+
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -36,15 +37,14 @@ const Login = () => {
 
   const userLogin = async (e) => {
     e.preventDefault();
-    dispatch(loginUser(form))
-      .unwrap()
-      .then(() => {
-        navigate('/');
-      })
-      .catch((err) => {
-        setMessage({ status: "Error", data: { message: err } });
-      });
+    loginFn(form);
   }
+  if (isSuccess) { navigate('/') }
+  useEffect(() => {
+    if (error) {
+      setMessage(error?.data?.message || "Login Failed");
+    }
+  }, [error])
 
   useEffect(() => {
     if (message) {
@@ -54,7 +54,7 @@ const Login = () => {
   }, [message]);
 
   return (
-    <div className="flex justify-center items-center md:h-full h-[80dvh] flex-col xl:flex-row gap-x-32 px-4 gap-y-8">
+    <div className="flex justify-center items-center md:h-full h-[80dvh] flex-col xl:flex-row gap-x-32 p-4 gap-y-8">
       {/* left */}
       <div >
         <h2 className="text-4xl xl:text-6xl xl:w-[550px] text-center font-[Montserrat]">Welcome Back..</h2>
@@ -67,8 +67,8 @@ const Login = () => {
             <div className="flex flex-col gap-6">
               {/* email */}
               <div className="grid gap-3">
-                <Label htmlFor="email">Email</Label>
-                <Input
+                <FormData
+                  label="Email"
                   id="email"
                   type="email"
                   name="email"
@@ -90,7 +90,7 @@ const Login = () => {
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" type="password" name="password" value={form.password} onChange={handleChange} required />
+                <FormData id="password" type="password" name="password" value={form.password} onChange={handleChange} required />
               </div>
 
               {/* submit/google login */}
@@ -134,7 +134,7 @@ const Login = () => {
               <Info className="h-4 w-4" />
               <AlertTitle>{`Error`}</AlertTitle>
               <AlertDescription>
-                {message.data.message}
+                {message}
               </AlertDescription>
             </Alert>
           </motion.div>

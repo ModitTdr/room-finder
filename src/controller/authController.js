@@ -22,7 +22,7 @@ export const userLogin = async (req,res) => {
 
   try{
     const user = await userService.getUserByEmailService(email);
-    if(!user) return res.status(404).json({message: "Email not found" });
+    if(!user) return res.status(404).json({message: "Invalid Credentials" });
     
     if(password.length < 8) return res.status(400).json({message: "Password must be atleast 8 characters" });
     const match = await bcrypt.compare(password, user.password);
@@ -39,7 +39,7 @@ export const userLogin = async (req,res) => {
     );
     res.cookie("token" , accessToken,{
       httpOnly: true,
-      secure: true,
+      secure: false,
       sameSite: "strict",
       maxAge: 30 * 60 * 1000
     });
@@ -113,8 +113,18 @@ export const userLogout = (req, res) => {
   res.status(200).json({ message: "Logged out" });
 };
 
+export const userStatus = (req, res) => {
+  res.status(200).json({
+    message: "User is logged in",
+    user: req.user,
+  });
+}
+
+
+
 export default {
     userLogin,
     userSignup,
-    userLogout
+    userLogout,
+    userStatus
 };
