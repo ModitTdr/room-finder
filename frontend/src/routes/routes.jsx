@@ -1,10 +1,11 @@
 import { createBrowserRouter } from "react-router";
 import App from "../App";
 
-import Homepage from "../pages/HomePage";
+import Homepage from "../pages/Homepage/HomePage.jsx";
 import LoginPage from "../pages/auth/LoginPage";
 import SignupPage from "../pages/auth/SignupPage";
-import Dashboard from "../pages/Dashboard";
+import Dashboard from "../pages/Dashboard/Dashboard";
+import Logout from "../pages/auth/Logout";
 
 import { ApiProvider } from "@reduxjs/toolkit/query/react";
 import { authApi } from "../features/auth/authApi.js";
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
          {
             path: 'dashboard',
             element: <Dashboard />
+         },
+         {
+            path: 'logout',      // <-- add this
+            element: <Logout />  // <-- and this
          },
       ],
    },
