@@ -4,7 +4,6 @@ import { useContext, useMemo, useState } from "react";
 import { FaHouseChimney, FaUser } from "react-icons/fa6";
 import { IoIosMenu, IoIosSearch, IoIosAdd, IoIosList } from "react-icons/io";
 import { FaRegUser } from "react-icons/fa";
-import { BiLogInCircle, BiLogOutCircle } from "react-icons/bi";
 
 import { Button } from "@/components/ui/button";
 import DarkModeButton from "@/components/DarkModeButton";
@@ -37,10 +36,10 @@ const NavLinks = ({ isAuthenticated }) => {
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
-                <Link to='/dashboard'>Dashboard</Link>
+                <Link to='/dashboard' className="w-full">Dashboard</Link>
               </DropdownMenuItem>
-              <DropdownMenuItem >
-                <Link to='/logout'>Logout</Link>
+              <DropdownMenuItem>
+                <Link to='/logout' className="w-full">Logout</Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -75,7 +74,7 @@ const Navbar = ({ title }) => {
       title: "User",
       icon: FaUser,
       subtitle: [
-        { title: 'Profile', isActive: true },
+        { title: 'Profile', link: '/dashboard', isActive: true },
         { title: 'Logout', link: '/logout', isActive: isAuthenticated },
       ]
     }
