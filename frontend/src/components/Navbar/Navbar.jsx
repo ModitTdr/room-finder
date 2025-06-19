@@ -30,7 +30,9 @@ const NavLinks = ({ isAuthenticated }) => {
         isAuthenticated ?
           <DropdownMenu>
             <DropdownMenuTrigger>
-              <FaRegUser size="20" className="text-" />
+              <p className="cursor-pointer border rounded-full p-[6px] text-muted-foreground bg-muted flex justify-center items-center">
+                <FaRegUser size="20" />
+              </p>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
@@ -99,13 +101,13 @@ const Navbar = ({ title }) => {
             <div className="relative hidden md:block">
               <input
                 type="text"
-                placeholder="Search"
-                className="border border-text rounded-lg px-2 py-1 smooth-transition focus:border-text focus:border-opacity-100 focus:outline-none placeholder-text lg:w-[300px]"
+                placeholder="Search.."
+                className="border border-text rounded-xl px-4 py-1 smooth-transition focus:border-text focus:border-opacity-100 focus:outline-none placeholder-text lg:w-[300px]"
               />
-              <IoIosSearch className="absolute top-[8px] right-3 cursor-pointer text-lg" />
+              <IoIosSearch className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground text-lg" />
             </div>
             <div className="hidden md:flex gap-4 items-center">
-              {isAuthenticated && <Button className="text-sm" variant="outline">Become a Landlord</Button>}
+              {isAuthenticated && <Button className="text-sm rounded-xl" variant="outline">Become a Landlord</Button>}
               <DarkModeButton />
               <NavLinks isAuthenticated={isAuthenticated} />
             </div>
