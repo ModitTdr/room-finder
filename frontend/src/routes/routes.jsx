@@ -11,6 +11,7 @@ import { ApiProvider } from "@reduxjs/toolkit/query/react";
 import { authApi } from "../features/auth/authApi.js";
 import AuthContextProvider from "../context/AuthContextProvider.jsx";
 import { ThemeProvider } from "../context/ThemeContext.jsx";
+import DashboardIndex from "../pages/Dashboard/Userlist/DashboardIndex.jsx";
 
 
 const router = createBrowserRouter([
@@ -39,13 +40,20 @@ const router = createBrowserRouter([
             element: <SignupPage />
          },
          {
-            path: 'dashboard',
-            element: <Dashboard />
-         },
-         {
             path: 'logout',      // <-- add this
             element: <Logout />  // <-- and this
          },
+         {
+            path: 'dashboard',
+            element: <Dashboard />,
+            children: [
+               {
+                  path: 'userlist',
+                  element: <DashboardIndex />
+               },
+            ]
+         },
+
       ],
    },
 ])

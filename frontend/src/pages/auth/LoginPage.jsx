@@ -59,7 +59,7 @@ const Login = () => {
   }, [message]);
 
   return (
-    <div className="flex justify-center items-center h-[80dvh] flex-col xl:flex-row gap-x-32 p-4 gap-y-8">
+    <div className="flex justify-center items-center h-[80dvh] flex-col xl:flex-row gap-x-32 p-4 gap-y-8 mt-4">
       {/* left */}
       <div >
         <h2 className="text-4xl xl:text-6xl xl:w-[550px] text-center font-[Montserrat]">Welcome Back..</h2>

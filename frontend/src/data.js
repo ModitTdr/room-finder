@@ -1,0 +1,110 @@
+export const data = [
+      {
+         id: 1,
+         name: "Exteriror House Painting",
+         status: "Active",
+         category: "Home Sewa > Painting",
+         price: "Rs.200/sq",
+         discount: "30%-Rs.100",
+         listingdate: "2024-12-22",
+         pictures: "img",
+         loactions: "Kathmandu, Bhaktapur, Patan",
+         description: "At our salon, we believe that our customer is our top priority."
+      },
+      {
+         id: 2,
+         name: "Exteriror House Painting",
+         status: "Inactive",
+         category: "Home Sewa > Painting",
+         price: "Rs.200/sq",
+         discount: "30%-Rs.100",
+         listingdate: "2024-12-22",
+         pictures: "img",
+         loactions: "Kathmandu, Bhaktapur, Patan",
+         description: "At our salon, we believe that our customer is our top priority."
+      },
+      {
+         id: 3,
+         name: "Exteriror House Painting",
+         status: "Active",
+         category: "Home Sewa > Painting",
+         price: "Rs.200/sq",
+         discount: "30%-Rs.100",
+         listingdate: "2024-12-22",
+         pictures: "img",
+         loactions: "Kathmandu, Bhaktapur, Patan",
+         description: "At our salon, we believe that our customer is our top priority."
+      },
+      {
+         id: 4,
+         name: "Exteriror House Painting",
+         status: "Active",
+         category: "Home Sewa > Painting",
+         price: "Rs.200/sq",
+         discount: "30%-Rs.100",
+         listingdate: "2024-12-22",
+         pictures: "img",
+         loactions: "Kathmandu, Bhaktapur, Patan",
+         description: "At our salon, we believe that our customer is our top priority."
+      },
+      {
+         id: 5,
+         name: "Exteriror House Painting",
+         status: "Inactive",
+         category: "Home Sewa > Painting",
+         price: "Rs.200/sq",
+         discount: "30%-Rs.100",
+         listingdate: "2024-12-22",
+         pictures: "img",
+         loactions: "Kathmandu, Bhaktapur, Patan",
+         description: "At our salon, we believe that our customer is our top priority."
+      },
+      {
+         id: 6,
+         name: "Exteriror House Painting",
+         status: "Inactive",
+         category: "Home Sewa > Painting",
+         price: "Rs.200/sq",
+         discount: "30%-Rs.100",
+         listingdate: "2024-12-22",
+         pictures: "img",
+         loactions: "Kathmandu, Bhaktapur, Patan",
+         description: "At our salon, we believe that our customer is our top priority."
+      },
+      {
+         id: 7,
+         name: "Exteriror House Painting",
+         status: "Inactive",
+         category: "Home Sewa > Painting",
+         price: "Rs.200/sq",
+         discount: "30%-Rs.100",
+         listingdate: "2024-12-22",
+         pictures: "img",
+         loactions: "Kathmandu, Bhaktapur, Patan",
+         description: "At our salon, we believe that our customer is our top priority."
+      },
+      {
+         id: 8,
+         name: "Exteriror House Painting",
+         status: "Inactive",
+         category: "Home Sewa > Painting",
+         price: "Rs.200/sq",
+         discount: "30%-Rs.100",
+         listingdate: "2024-12-22",
+         pictures: "img",
+         loactions: "Kathmandu, Bhaktapur, Patan",
+         description: "At our salon, we believe that our customer is our top priority."
+      },
+      {
+         id: 9,
+         name: "Exteriror House Painting",
+         status: "Inactive",
+         category: "Home Sewa > Painting",
+         price: "Rs.200/sq",
+         discount: "30%-Rs.100",
+         listingdate: "2024-12-22",
+         pictures: "img",
+         loactions: "Kathmandu, Bhaktapur, Patan",
+         description: "At our salon, we believe that our customer is our top priority."
+      }
+   ]

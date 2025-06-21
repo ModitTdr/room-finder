@@ -56,7 +56,7 @@ const SignupPage = () => {
    }, [message]);
 
    return (
-      <div className="flex justify-center items-center md:h-full min-h-[85dvh] flex-col xl:flex-row gap-x-32 px-4 gap-y-8">
+      <div className="flex justify-center items-center md:h-full min-h-[85dvh] flex-col xl:flex-row gap-x-32 px-4 gap-y-8 mt-4">
          {/* left */}
          <div>
             <h2 className="text-4xl xl:text-6xl xl:w-[550px] text-center font-[Montserrat]">Create Your Account..</h2>

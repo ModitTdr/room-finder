@@ -1,7 +1,6 @@
 import { Link } from "react-router";
 import { useContext, useMemo, useState } from "react";
 
-import { FaHouseChimney, FaUser } from "react-icons/fa6";
 import { IoIosMenu, IoIosSearch, IoIosAdd, IoIosList } from "react-icons/io";
 import { FaRegUser } from "react-icons/fa";
 
@@ -18,6 +17,7 @@ import {
 
 import AuthContext from "../../context/AuthContext";
 import { Sidebar } from "./Sidebar";
+import sidebarLinks from "../../data/sidebarLinks"
 
 
 
@@ -48,7 +48,7 @@ const NavLinks = ({ isAuthenticated }) => {
           :
           <>
             <Link to="/login" className={linkStyle}>
-              <Button variant="outline">Login</Button>
+              <Button className="bg-transparent text-foreground hover:text-background">Login</Button>
             </Link>
             <Link to="/register" className={linkStyle}>
               <Button>SignUp</Button>
@@ -62,30 +62,12 @@ const NavLinks = ({ isAuthenticated }) => {
 
 const Navbar = ({ title }) => {
   const { isAuthenticated } = useContext(AuthContext);
-  const sidebarLinks = useMemo(() => [
-    {
-      title: "Room",
-      icon: FaHouseChimney,
-      subtitle: [
-        { title: 'Browse Rooms', icon: IoIosAdd, isActive: true },
-        { title: 'List Rooms', icon: IoIosAdd, isActive: isAuthenticated },
-        { title: 'Add a Room', icon: IoIosList, isActive: isAuthenticated },
-      ]
-    },
-    {
-      title: "User",
-      icon: FaUser,
-      subtitle: [
-        { title: 'Profile', link: '/dashboard', isActive: true },
-        { title: 'Logout', link: '/logout', isActive: isAuthenticated },
-      ]
-    }
-  ], [isAuthenticated]);
+  const sidebar = useMemo(() => sidebarLinks(isAuthenticated), [isAuthenticated]);
 
   const [isOpen, setIsOpen] = useState(false);
   return (
     <>
-      <Sidebar isOpen={isOpen} sidebarLinks={sidebarLinks} NavLinks={isAuthenticated ? null : <NavLinks isAuthenticated={isAuthenticated} />} />
+      <Sidebar isOpen={isOpen} sidebar={sidebar} NavLinks={isAuthenticated ? null : <NavLinks isAuthenticated={isAuthenticated} />} />
       {/* Overlay for mobile */}
       {isOpen && (
         <div
@@ -93,32 +75,34 @@ const Navbar = ({ title }) => {
           onClick={() => setIsOpen(false)}
         />
       )}
-      <nav className='flex justify-between items-center flex-wrap w-full container m-auto z-10 bg-background/5 p-4 rounded-md'>
-        <Link to='/' className="text-3xl font-[Montserrat] shrink">{title}</Link>
-        <div className="flex items-center justify-end box-border">
-          <div className="flex items-center justify-between gap-8">
-            {/* desktop view*/}
-            <div className="relative hidden md:block">
-              <input
-                type="text"
-                placeholder="Search.."
-                className="border border-text rounded-xl px-4 py-1 smooth-transition focus:border-text focus:border-opacity-100 focus:outline-none placeholder-text lg:w-[300px]"
-              />
-              <IoIosSearch className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground text-lg" />
-            </div>
-            <div className="hidden md:flex gap-4 items-center">
-              {isAuthenticated && <Button className="text-sm rounded-xl" variant="outline">Become a Landlord</Button>}
-              <DarkModeButton />
-              <NavLinks isAuthenticated={isAuthenticated} />
-            </div>
+      <nav className=' w-full m-auto p-4 fixed top-0 z-50 border-b border-b-muted bg-gradient-to-r from-background/90 to-muted/80 backdrop-blur-md '>
+        <div className="container mx-auto flex justify-between items-center flex-wrap px-4">
+          <Link to='/' className="text-3xl font-[Montserrat] shrink">{title}</Link>
+          <div className="flex items-center justify-end box-border">
+            <div className="flex items-center justify-between gap-8">
+              {/* desktop view*/}
+              <div className="relative hidden md:block">
+                <input
+                  type="text"
+                  placeholder="Search.."
+                  className="border border-text rounded-xl px-4 py-1 smooth-transition focus:border-text focus:border-opacity-100 focus:outline-none placeholder-text lg:w-[300px]"
+                />
+                <IoIosSearch className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground text-lg" />
+              </div>
+              <div className="hidden md:flex gap-4 items-center">
+                {isAuthenticated && <Button className="text-sm rounded-xl" variant="outline">Become a Landlord</Button>}
+                <DarkModeButton />
+                <NavLinks isAuthenticated={isAuthenticated} />
+              </div>
 
-          </div>
-          {/* mobile view */}
-          <div className="block md:hidden gap-3 flex">
-            <DarkModeButton />
-            <IoIosMenu
-              className="block md:hidden cursor-pointer text-3xl"
-              onClick={() => setIsOpen(!isOpen)} />
+            </div>
+            {/* mobile view */}
+            <div className="block md:hidden gap-3 flex">
+              <DarkModeButton />
+              <IoIosMenu
+                className="block md:hidden cursor-pointer text-3xl"
+                onClick={() => setIsOpen(!isOpen)} />
+            </div>
           </div>
         </div>
       </nav>

@@ -2,10 +2,9 @@
 import { ChevronDown } from "lucide-react";
 
 import { Link } from "react-router";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger, } from "@/components/ui/collapsible"
 
-import { Collapsible, CollapsibleContent, CollapsibleTrigger, } from "../ui/collapsible"
-
-export function Sidebar({ isOpen, sidebarLinks: navlink, NavLinks }) {
+export function Sidebar({ isOpen, sidebar: navlink, NavLinks }) {
 
     return (
 

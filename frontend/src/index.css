@@ -77,7 +77,7 @@
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
+  --background: oklch(0 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
@@ -118,13 +118,13 @@
     @apply bg-background text-foreground w-full;
   }
   .bg-hero {
-    @apply bg-cover bg-center bg-no-repeat;
-    background-image: url('/ktm.png');
+    @apply bg-cover bg-center bg-no-repeat w-full h-full opacity-40;
+    background-image: url('/img.png');
   }
 }
 @layer utilities {
   .h-screen-hero {
-    height: calc(100svh - 85px);
+    height: calc(100dvh - 64px);
   }
   .smooth-transition{
     transition: all;
