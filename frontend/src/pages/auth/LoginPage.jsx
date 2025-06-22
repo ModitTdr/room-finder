@@ -133,7 +133,7 @@ const Login = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
-            className="absolute top-12 smooth-transition"
+            className="absolute top-18 smooth-transition z-999"
           >
             <Alert variant="destructive">
               <Info className="h-4 w-4" />
