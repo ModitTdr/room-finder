@@ -1,5 +1,6 @@
 
 import HeroSection from './HeroSection'
+import MainSection from './MainSection'
 import {
    Card,
    CardAction,
@@ -13,10 +14,7 @@ const HomePage = () => {
    return (
       <div>
          <HeroSection />
-         <section className='py-18 container mx-auto text-center'>
-            <h1 className='text-4xl'>Featured Rooms</h1>
-
-         </section>
+         <MainSection />
       </div>
    )
 }

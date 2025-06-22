@@ -48,10 +48,10 @@ const NavLinks = ({ isAuthenticated }) => {
           :
           <>
             <Link to="/login" className={linkStyle}>
-              <Button className="bg-transparent text-foreground hover:text-background">Login</Button>
+              <Button className="bg-transparent border border-transparent text-foreground hover:text-accent hover:bg-transparent hover:border-accent">Login</Button>
             </Link>
             <Link to="/register" className={linkStyle}>
-              <Button>SignUp</Button>
+              <Button variant="accent">SignUp</Button>
             </Link>
           </>
 
@@ -75,8 +75,8 @@ const Navbar = ({ title }) => {
           onClick={() => setIsOpen(false)}
         />
       )}
-      <nav className=' w-full m-auto p-4 fixed top-0 z-50 border-b border-b-muted bg-gradient-to-r from-background/90 to-muted/80 backdrop-blur-md '>
-        <div className="container mx-auto flex justify-between items-center flex-wrap px-4">
+      <nav className=' w-full m-auto p-4 fixed top-0 z-50 border-b border-b-accent bg-gradient-to-r from-background/90 to-muted/80 backdrop-blur-md '>
+        <div className="container mx-auto flex justify-between items-center flex-wrap">
           <Link to='/' className="text-3xl font-[Montserrat] shrink">{title}</Link>
           <div className="flex items-center justify-end box-border">
             <div className="flex items-center justify-between gap-8">
@@ -97,10 +97,10 @@ const Navbar = ({ title }) => {
 
             </div>
             {/* mobile view */}
-            <div className="block md:hidden gap-3 flex">
+            <div className="block md:hidden gap-3 flex items-center">
               <DarkModeButton />
               <IoIosMenu
-                className="block md:hidden cursor-pointer text-3xl"
+                className="block md:hidden cursor-pointer text-3xl text-accent"
                 onClick={() => setIsOpen(!isOpen)} />
             </div>
           </div>
