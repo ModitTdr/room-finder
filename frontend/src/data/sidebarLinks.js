@@ -1,24 +1,23 @@
-import { FaHouseChimney, FaUser } from "react-icons/fa6";
-import { IoIosAdd, IoIosList } from "react-icons/io";
-const sidebarLinks = (isAuthenticated) => [
-    {
-      title: "Room",
-      icon: FaHouseChimney,
-      subtitle: [
-        { id:1,title: 'Browse Rooms', icon: IoIosAdd, isActive: true },
-        { id:2,title: 'List Rooms', icon: IoIosAdd, isActive: isAuthenticated },
-        { id:3,title: 'Add a Room', icon: IoIosList, isActive: isAuthenticated },
-      ]
-    },
-    {
-      title: "User",
-      icon: FaUser,
-      subtitle: [
-        { id:1,title: 'Profile', icon: IoIosList,link: 'dashboard', isActive: true },
-        { id:2,title: 'All Users',icon: IoIosList, link: 'userlist', isActive: isAuthenticated },
-        { id:3,title: 'Logout',icon: IoIosList, link: '/logout', isActive: isAuthenticated },
-      ]
-    }
-  ]
+import { House, List, ListFilterPlus, Search, SquareUser, Unplug, User, UsersRound } from "lucide-react";
+const sidebarLinks = (isAuthenticated, isDashboard = false) => [
+  {
+    title: "Room",
+    icon: House,
+    subtitle: [
+      { title: 'Browse Rooms', icon: Search, isActive: true },
+      { title: 'List Rooms', icon: ListFilterPlus, isActive: isAuthenticated },
+      { title: 'Add a Room', icon: List, isActive: isAuthenticated },
+    ]
+  },
+  {
+    title: "User",
+    icon: User,
+    subtitle: [
+      { title: 'Profile', icon: SquareUser, link: '/dashboard', isActive: true },
+      { title: 'All Users', icon: UsersRound, link: 'userlist', isActive: isAuthenticated },
+      { title: 'Logout', icon: Unplug, link: '/logout', isActive: isAuthenticated },
+    ]
+  }
+]
 
-  export default sidebarLinks
+export default sidebarLinks
