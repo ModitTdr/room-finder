@@ -3,10 +3,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link, useNavigate } from "react-router";
 
 //components
-import { Button } from "../../components/ui/button"
-import { Card, CardContent } from "../../components/ui/card"
-import { Label } from "../../components/ui/label"
-import { Alert, AlertDescription, AlertTitle } from "../../components/ui/alert"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Label } from "@/components/ui/label"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
 //icons
 import { FaGoogle } from "react-icons/fa";
@@ -14,7 +14,7 @@ import { Info, CheckCircle } from "lucide-react"
 import FormData from "./FormData";
 
 //redux
-import { useUserLoginMutation } from "../../features/auth/authApi";
+import { useUserLoginMutation } from "@/app/auth/authApi";
 import LoadingPage from "../LoadingPage";
 
 const Login = () => {
@@ -23,6 +23,7 @@ const Login = () => {
     password: ''
   });
   const [message, setMessage] = useState(null);
+  
   const [loginFn, { error, isSuccess, isLoading }] = useUserLoginMutation();
 
   const navigate = useNavigate();
@@ -39,6 +40,7 @@ const Login = () => {
     e.preventDefault();
     loginFn(form);
   }
+  
   useEffect(() => {
     if (isSuccess) {
       navigate('/');

@@ -1,7 +1,9 @@
-import AuthContext from "./AuthContext";
-import { useUserLoginMutation, useUserStatusQuery, useUserLogoutMutation } from "../features/auth/authApi";
+import { createContext } from "react";
+import { useUserStatusQuery } from "@/app/auth/authApi";
 
-const AuthContextProvider = ({ children }) => {
+export const AuthContext = createContext();
+
+export const AuthProvider = ({ children }) => {
    const { data: user, isLoading, isError, refetch:refetchUser } = useUserStatusQuery();
 
    const isAuthenticated = !!user && !isError;
@@ -23,4 +25,3 @@ const AuthContextProvider = ({ children }) => {
       </AuthContext.Provider>
    )
 }
-export default AuthContextProvider;

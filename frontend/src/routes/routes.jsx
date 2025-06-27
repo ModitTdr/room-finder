@@ -7,24 +7,22 @@ import SignupPage from "../pages/auth/SignupPage";
 import Dashboard from "../pages/Dashboard/Dashboard";
 import Logout from "../pages/auth/Logout";
 
-import { ApiProvider } from "@reduxjs/toolkit/query/react";
-import { authApi } from "../features/auth/authApi.js";
-import AuthContextProvider from "../context/AuthContextProvider.jsx";
+import { Provider } from "react-redux";
+import store from "../app/store.js";
+
 import { ThemeProvider } from "../context/ThemeContext.jsx";
 import DashboardIndex from "../pages/Dashboard/Userlist/DashboardIndex.jsx";
-
+import { userApi } from "../app/user/userApi.js";
 
 const router = createBrowserRouter([
    {
       path: '/',
       element: (
-         <ApiProvider api={authApi}>
-            <AuthContextProvider>
-               <ThemeProvider>
-                  <App />
-               </ThemeProvider>
-            </AuthContextProvider>
-         </ApiProvider>
+         <Provider store={store}>
+            <ThemeProvider>
+               <App />
+            </ThemeProvider>
+         </Provider>
       ),
       children: [
          {

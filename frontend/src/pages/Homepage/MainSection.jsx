@@ -19,7 +19,7 @@ const MainSection = () => {
             <div className='grid sm:grid-cols-2 xl:grid-cols-4 gap-4 justify-items-center mb-18'>
                <Cards rooms={rooms} />
             </div>
-            <Button className="p-6 py-8 text-3xl font-bold bg-accent text-accent-foreground border hover:bg-accent-foreground hover:text-accent hover:border-accent">View All</Button>
+            <Button className="p-4 py-6 text-xl font-bold bg-accent text-accent-foreground border hover:bg-accent-foreground hover:text-accent hover:border-accent">View All</Button>
          </section>
          
          <section className='container mx-auto text-center px-4 py-18'>
@@ -30,7 +30,7 @@ const MainSection = () => {
                <p className='text-lg font-light text-muted-foreground'>List your room today and, reach thousands of potential tenants quickly and easily.</p>
             </div>
             {/* cards */}
-            <Button className="p-6 py-8 text-3xl font-bold bg-accent text-accent-foreground border hover:bg-accent-foreground hover:text-accent hover:border-accent">List Your Room</Button>
+            <Button className="p-4 py-6 text-xl font-bold bg-accent text-accent-foreground border hover:bg-accent-foreground hover:text-accent hover:border-accent">List Your Room</Button>
          </section>
       </>
    )

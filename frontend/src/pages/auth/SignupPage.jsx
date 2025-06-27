@@ -3,15 +3,15 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router";
 
 //components
-import { Button } from "../../components/ui/button"
-import { Card, CardContent } from "../../components/ui/card"
-import { Label } from "../../components/ui/label"
-import { Alert, AlertDescription, AlertTitle } from "../../components/ui/alert"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Label } from "@/components/ui/label"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
 //icons
 import { FaGoogle } from "react-icons/fa";
 import { Info } from "lucide-react"
-import { useUserRegisterMutation } from "../../features/auth/authApi";
+import { useUserRegisterMutation } from "@/app/auth/authApi";
 import FormData from "./FormData";
 
 

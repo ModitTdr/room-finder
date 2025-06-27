@@ -1,7 +1,7 @@
 import { Link } from "react-router";
-import { useContext, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
-import { IoIosMenu, IoIosSearch, IoIosAdd, IoIosList } from "react-icons/io";
+import { IoIosMenu, IoIosSearch } from "react-icons/io";
 import { FaRegUser } from "react-icons/fa";
 
 import { Button } from "@/components/ui/button";
@@ -15,10 +15,9 @@ import {
   DropdownMenuItem
 } from "@/components/ui/dropdown-menu"
 
-import AuthContext from "../../context/AuthContext";
 import { Sidebar } from "./Sidebar";
 import sidebarLinks from "../../data/sidebarLinks"
-
+import { useAuth } from "@/hooks/useAuth";
 
 
 const NavLinks = ({ isAuthenticated }) => {
@@ -61,7 +60,7 @@ const NavLinks = ({ isAuthenticated }) => {
 }
 
 const Navbar = ({ title }) => {
-  const { isAuthenticated } = useContext(AuthContext);
+  const { isAuthenticated } = useAuth();
   const sidebar = useMemo(() => sidebarLinks(isAuthenticated), [isAuthenticated]);
 
   const [isOpen, setIsOpen] = useState(false);

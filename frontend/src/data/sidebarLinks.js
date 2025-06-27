@@ -5,18 +5,18 @@ const sidebarLinks = (isAuthenticated) => [
       title: "Room",
       icon: FaHouseChimney,
       subtitle: [
-        { title: 'Browse Rooms', icon: IoIosAdd, isActive: true },
-        { title: 'List Rooms', icon: IoIosAdd, isActive: isAuthenticated },
-        { title: 'Add a Room', icon: IoIosList, isActive: isAuthenticated },
+        { id:1,title: 'Browse Rooms', icon: IoIosAdd, isActive: true },
+        { id:2,title: 'List Rooms', icon: IoIosAdd, isActive: isAuthenticated },
+        { id:3,title: 'Add a Room', icon: IoIosList, isActive: isAuthenticated },
       ]
     },
     {
       title: "User",
       icon: FaUser,
       subtitle: [
-        { title: 'Profile', icon: IoIosList,link: 'dashboard', isActive: true },
-        { title: 'All Users',icon: IoIosList, link: 'userlist', isActive: isAuthenticated },
-        { title: 'Logout',icon: IoIosList, link: '/logout', isActive: isAuthenticated },
+        { id:1,title: 'Profile', icon: IoIosList,link: 'dashboard', isActive: true },
+        { id:2,title: 'All Users',icon: IoIosList, link: 'userlist', isActive: isAuthenticated },
+        { id:3,title: 'Logout',icon: IoIosList, link: '/logout', isActive: isAuthenticated },
       ]
     }
   ]

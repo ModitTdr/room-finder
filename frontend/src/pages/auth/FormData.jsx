@@ -1,5 +1,5 @@
-import { Input } from "../../components/ui/input"
-import { Label } from "../../components/ui/label"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 
 const FormData = ({ label, id, type = "text", name, value, onChange, placeholder = "", required = true }) => {
    return (

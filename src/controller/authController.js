@@ -39,7 +39,7 @@ export const userLogin = async (req,res) => {
     );
     res.cookie("token" , accessToken,{
       httpOnly: true,
-      secure: false,
+      secure: true,
       sameSite: "strict",
       maxAge: 30 * 60 * 1000
     });
@@ -109,17 +109,22 @@ export const userLogout = (req, res) => {
     httpOnly: true,
     secure: true,
     sameSite: "strict",
+    expires: new Date(0),
+    path: '/', 
   });
   res.status(200).json({ message: "Logged out" });
 };
 
 export const userStatus = (req, res) => {
-  res.status(200).json({
-    message: "User is logged in",
-    user: req.user,
-  });
+  if (req.user) {
+    res.status(200).json({
+      message: "User is logged in",
+      user: req.user,
+    });
+  } else{
+    res.status(401).json({ message: "User not authenticated" });
+  }
 }
-
 
 
 export default {

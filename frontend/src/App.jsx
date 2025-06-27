@@ -1,10 +1,14 @@
-import { useContext } from 'react'
 import Navbar from '@/components/Navbar/Navbar'
 import { Outlet } from 'react-router'
-import { ThemeContext } from './context/ThemeContext'
+
+import { useAuth } from '@/hooks/useAuth'
 
 function App() {
-  const { isDark } = useContext(ThemeContext);
+
+  const data = useAuth();
+  console.log(data);
+  
+
   return (
     <div className="bg-background text-text smooth-transition min-h-screen flex flex-col">
       <Navbar title="Room Finder" />
