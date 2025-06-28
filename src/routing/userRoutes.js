@@ -16,20 +16,26 @@ router.get(
 router.get(
     '/:id',
     isLoggedIn,
-    permissionMiddleware, 
+    permissionMiddleware,
     userController.getUserById
 );
 router.delete(
     '/:id',
     isLoggedIn,
-    permissionMiddleware, 
+    permissionMiddleware,
     userController.deleteUser)
-;
+    ;
 router.put(
     '/:id',
     isLoggedIn,
     permissionMiddleware,
     userController.updateUser
 );
+router.get(
+    '/:id/userprofile',
+    isLoggedIn,
+    permissionMiddleware,
+    
+)
 
 export default router;

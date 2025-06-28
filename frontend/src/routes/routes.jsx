@@ -13,6 +13,7 @@ import store from "../app/store.js";
 import { ThemeProvider } from "../context/ThemeContext.jsx";
 import DashboardIndex from "../pages/Dashboard/Userlist/DashboardIndex.jsx";
 import { userApi } from "../app/user/userApi.js";
+import UserProfile from "../pages/Dashboard/UserProfile/UserProfile.jsx";
 
 const router = createBrowserRouter([
    {
@@ -48,6 +49,9 @@ const router = createBrowserRouter([
                {
                   path: 'userlist',
                   element: <DashboardIndex />
+               }, {
+                  path: 'userprofile',
+                  element: <UserProfile />
                },
             ]
          },

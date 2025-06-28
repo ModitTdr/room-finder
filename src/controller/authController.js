@@ -4,103 +4,104 @@ import dotenv from "dotenv"
 dotenv.config()
 
 import userService from "../services/userService.js";
-import validateUserInput  from "../utils/validateUserInput.js";
+import validateUserInput from "../utils/validateUserInput.js";
 
 
-export const userLogin = async (req,res) => {
+export const userLogin = async (req, res) => {
 
-  if(!req.body || Object.keys(req.body).length === 0 )
-      return res.status(400).json("Request Body Missing")
+  if (!req.body || Object.keys(req.body).length === 0)
+    return res.status(400).json("Request Body Missing")
 
-  const {email,password} = req.body;
-  
+  const { email, password } = req.body;
+
   if (!email || !password) {
     return res.status(400).json({ message: "Email and password are required." });
   }
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) return res.status(400).json({message: "Invalid email format" });
+  if (!emailRegex.test(email)) return res.status(400).json({ message: "Invalid email format" });
 
-  try{
+  try {
     const user = await userService.getUserByEmailService(email);
-    if(!user) return res.status(404).json({message: "Invalid Credentials" });
-    
-    if(password.length < 8) return res.status(400).json({message: "Password must be atleast 8 characters" });
+    if (!user) return res.status(404).json({ message: "Invalid Credentials" });
+
+    if (password.length < 8) return res.status(400).json({ message: "Password must be atleast 8 characters" });
     const match = await bcrypt.compare(password, user.password);
-    if(!match) return res.status(400).json({message: "Invalid Credentials" });
+    if (!match) return res.status(400).json({ message: "Invalid Credentials" });
 
     let accessToken = jwt.sign(
-    {
-      id : user.id,
-      email : user.email,
-      role : user.role,
-    },
-    process.env.JWT_SECRET,
-    {expiresIn: '15m'}
+      {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: '15m' }
     );
-    res.cookie("token" , accessToken,{
+    res.cookie("token", accessToken, {
       httpOnly: true,
       secure: true,
       sameSite: "strict",
       maxAge: 30 * 60 * 1000
     });
-    return res.status(200).json({ 
-      message: "Logged in", 
+    return res.status(200).json({
+      message: "Logged in",
       token: accessToken,
       user: {
         id: user.id,
         email: user.email,
         role: user.role
-      }});
-    
-  } catch(error) {
+      }
+    });
+
+  } catch (error) {
     console.error('Error:', error);
-    return res.status(500).json({ message: 'Something went wrong'});
+    return res.status(500).json({ message: 'Something went wrong' });
   }
 
 
 };
 
-export const userSignup = async (req,res) => {
+export const userSignup = async (req, res) => {
+  if (!req.body || Object.keys(req.body).length === 0)
+    return res.status(404).json("Request Body Missing")
 
-  if(!req.body || Object.keys(req.body).length === 0 )
-      return res.status(404).json("Request Body Missing")
-    
-  try{
-    const {valid,message,validatedData} = await validateUserInput(req.body);
-    if(!valid){
-      return res.status(400).json({message: message});
+  try {
+    const { valid, message, validatedData } = await validateUserInput(req.body);
+    if (!valid) {
+      return res.status(400).json({ message: message });
     }
     const user = await userService.userSignupService(validatedData);
-    if(user){
+    if (user) {
       let accessToken = jwt.sign(
-      {
-        id : user.id,
-        email : user.email,
-        role : user.role,
-      },
-      process.env.JWT_SECRET,
-      {expiresIn: '15m'}
+        {
+          id: user.id,
+          email: user.email,
+          role: user.role,
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: '15m' }
       );
-      res.cookie("token" , accessToken,{
+      res.cookie("token", accessToken, {
         httpOnly: true,
         secure: true,
         sameSite: "strict",
         maxAge: 30 * 60 * 1000
       });
-      return res.status(200).json({ 
-        message: "User Created", 
+      return res.status(200).json({
+        message: "User Created",
         token: accessToken,
         user: {
           id: user.id,
           email: user.email,
           role: user.role
-        }});
-    }else{
-      return res.status(400).json({message:'Failed to Create'});
+        }
+      });
+    } else {
+      return res.status(400).json({ message: 'Failed to Create' });
     }
-  }catch(error){
+  } catch (error) {
     console.error('Error creating user:', error);
-    return res.status(500).json({ message: 'Something went wrong'});
+    return res.status(500).json({ message: 'Something went wrong' });
   }
 };
 
@@ -110,7 +111,7 @@ export const userLogout = (req, res) => {
     secure: true,
     sameSite: "strict",
     expires: new Date(0),
-    path: '/', 
+    path: '/',
   });
   res.status(200).json({ message: "Logged out" });
 };
@@ -121,15 +122,15 @@ export const userStatus = (req, res) => {
       message: "User is logged in",
       user: req.user,
     });
-  } else{
+  } else {
     res.status(401).json({ message: "User not authenticated" });
   }
 }
 
 
 export default {
-    userLogin,
-    userSignup,
-    userLogout,
-    userStatus
+  userLogin,
+  userSignup,
+  userLogout,
+  userStatus
 };

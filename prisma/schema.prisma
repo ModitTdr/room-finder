@@ -14,21 +14,34 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum UserRole{
+enum UserRole {
   OWNER
   SEEKER
   ADMIN
 }
 
-model User{
-  id          Int         @id @default(autoincrement())
-  name        String      
-  email       String      @unique
-  password    String      @unique
-  phone       String
-  address     String
-  role        UserRole    @default(SEEKER)
+model User {
+  id       String   @id @default(uuid())
+  name     String
+  email    String   @unique
+  password String
+  role     UserRole @default(SEEKER)
 
-  created_at  DateTime    @default(now())
-  updated_at  DateTime    @default(now()) @updatedAt
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  profile Profile?
+}
+
+model Profile {
+  id         String  @id @default(uuid())
+  address    String?
+  phone      String? @unique
+  profilePic String?
+  nationalId String?
+  userId     String  @unique
+  user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

@@ -11,12 +11,14 @@ const Dashboard = () => {
    const { pathname: currentPath } = useLocation();
    const { isAuthenticated, userData, isLoading } = useAuth();
    const { data } = useGetUserQuery(userData?.id, { skip: !userData?.id });
+   console.log(data);
+   
    const navlink = useMemo(() => sidebarLinks(isAuthenticated, true), [isAuthenticated]);
    if (isLoading) { return <div>test</div> }
 
    return (
-      <div className="grid grid-cols-[200px_auto] gap-4 ">
-         <aside className="bg-neutral-900 h-screen-hero text-foreground hidden md:block px-2 py-4 space-y-4 ">
+      <div className="grid grid-cols-[200px_auto] gap-4 h-screen-hero ">
+         <aside className="bg-neutral-900 text-foreground hidden md:block px-2 py-4 space-y-4 ">
             <div className="pb-4 border-b border-neutral-600">
                <h1 className="text-xl font-bold">Welcome Back,</h1>
                <p className="text-xs text-muted-foreground font-medium">{data?.name}</p>
@@ -37,9 +39,8 @@ const Dashboard = () => {
                         <CollapsibleContent>
                            {
                               subtitle.map(({ title, icon: Icon, link = "#", isActive }) => (
-                                 <div className={`flex items-center gap-3 p-2 leading-none w-full rounded-md hover:bg-foreground/5 pl-5 pt-[10px] ${currentPath.endsWith(link) && 'font-bold'}`}>
+                                 <div key={title} className={`flex items-center gap-3 p-2 leading-none w-full rounded-md hover:bg-foreground/5 pl-5 pt-[10px] ${currentPath.endsWith(link) && 'font-bold'}`}>
                                     <Icon size={16} />
-                                    {console.log(currentPath.startsWith(link))}
                                     <Link to={link} className="text-sm">{title}</Link>
                                  </div>
                               ))
@@ -50,7 +51,7 @@ const Dashboard = () => {
                }
             </div>
          </aside>
-         <main className="w-full overflow-hidden">
+         <main className="w-full overflow-y-scroll">
             <Outlet />
          </main>
       </div>

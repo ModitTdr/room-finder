@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 //components
 import { Button } from "@/components/ui/button"
@@ -21,11 +21,10 @@ const SignupPage = () => {
       lastname: '',
       email: '',
       password: '',
-      address: '',
-      phone: ''
    });
    const [message, setMessage] = useState(null)
    const [registerFn, { error, isSuccess }] = useUserRegisterMutation();
+   const navigate = useNavigate();
 
 
    const handleChange = (e) => {
@@ -39,6 +38,11 @@ const SignupPage = () => {
       e.preventDefault();
       registerFn(userData);
    }
+   useEffect(() => {
+      if (isSuccess) {
+         navigate('/');
+      }
+   }, [isSuccess, navigate]);
    useEffect(() => {
       if (error) {
          setMessage(error?.data?.message || "Registration failed.");
@@ -110,29 +114,6 @@ const SignupPage = () => {
                            placeholder="m@example.com" />
                      </div>
 
-                     <div className="grid grid-cols-2 gap-4">
-                        {/* phone */}
-                        <div className="grid gap-3">
-                           <FormData
-                              label="Phone Number"
-                              id="phone"
-                              type="number"
-                              name="phone"
-                              value={userData.phone}
-                              onChange={handleChange} />
-                        </div>
-                        {/* address */}
-                        <div className="grid gap-3">
-                           <FormData
-                              label="Address"
-                              id="address"
-                              type="string"
-                              name="address"
-                              value={userData.address}
-                              onChange={handleChange} />
-                        </div>
-                     </div>
-
                      {/* password */}
                      <div className="grid gap-3">
                         <div className="flex items-center">
@@ -189,7 +170,7 @@ const SignupPage = () => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.3 }}
-                  className="absolute top-12 smooth-transition"
+                  className="absolute top-18 smooth-transition z-999"
                >
                   <Alert variant="destructive">
                      <Info className="h-4 w-4" />
