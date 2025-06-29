@@ -14,19 +14,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum UserRole {
-  OWNER
-  SEEKER
-  ADMIN
-}
-
 model User {
-  id       String   @id @default(uuid())
-  name     String
-  email    String   @unique
-  password String
-  role     UserRole @default(SEEKER)
-
+  id         String   @id @default(uuid())
+  name       String
+  email      String   @unique
+  password   String
+  role       UserRole @default(SEEKER)
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) @updatedAt
 
@@ -34,14 +27,44 @@ model User {
 }
 
 model Profile {
-  id         String  @id @default(uuid())
-  address    String?
-  phone      String? @unique
-  profilePic String?
-  nationalId String?
-  userId     String  @unique
-  user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                  String    @id @default(uuid())
+  //basic
+  phone               String?   @unique
+  profilePic          String?
+  dateOfBirth         DateTime?
+  gender              Gender?
+  citizenshipID       String?   @unique
+  citizenshipFrontImg String?
+  citizenshipBackImg  String?
+  address             String?
+
+  //preference
+  preferredCity String?
+  preferredArea String?
+  latitude      Float?
+  longitude     Float?
+  maxBudget     Int?
+  minBudget     Int?
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([preferredCity, preferredArea])
+}
+
+//-----enums-----
+enum UserRole {
+  OWNER
+  SEEKER
+  ADMIN
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+  PREFER_NOT_TO_SAY
 }

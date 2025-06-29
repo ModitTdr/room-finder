@@ -4,6 +4,7 @@ import userController from "../controller/userController.js";
 import isLoggedIn from "../middleware/isLoggedIn.js";
 import authorize from "../middleware/roleMiddleware.js";
 import permissionMiddleware from "../middleware/permissionMiddleware.js";
+import userProfileController from "../controller/userProfileController.js";
 const router = express.Router();
 
 //User Controller
@@ -33,9 +34,15 @@ router.put(
 );
 router.get(
     '/:id/userprofile',
-    isLoggedIn,
-    permissionMiddleware,
-    
-)
+    // isLoggedIn,
+    // permissionMiddleware,
+    userProfileController.getUserProfile
+);
+router.post(
+    '/:id/userprofile',
+    // isLoggedIn,
+    // permissionMiddleware,
+    userProfileController.createUserProfile
+);
 
 export default router;
