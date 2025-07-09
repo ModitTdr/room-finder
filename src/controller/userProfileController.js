@@ -4,7 +4,7 @@ import { userProfileSchema } from "../utils/validateUserProfile.js"
 export const getUserProfile = async (req, res) => {
   const user = await getUserProfileService(req.params.id);
   if (!user) return res.status(400).json({ message: 'Profile not found' });
-  return res.status(400).json(user);
+  return res.status(200).json(user);
 }
 
 export const createUserProfile = async (req, res) => {

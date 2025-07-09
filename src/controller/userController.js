@@ -13,10 +13,7 @@ export const getAllUser = async (req, res) => {
 }
 
 export const getUserById = async (req, res) => {
-  const userId = req.params.id;
-  if (userId === null || userId === undefined || userId === '') {
-    return res.status(400).json({ message: 'Invalid user ID' });
-  }
+  const userId = req.user.id;
 
   try {
     const user = await userService.getUserByIdService(userId);
@@ -31,15 +28,11 @@ export const getUserById = async (req, res) => {
 };
 
 export const deleteUser = async (req, res) => {
-  const userId = req.params.id;
-  if (userId === null || userId === undefined || userId === '') {
-    return res.status(400).json({ message: "Invalid user ID" });
-  }
-
+  const userId = req.user.id;
   try {
     if (!await userService.getUserByIdService(userId)) return res.status(400).json({ message: 'User Not Found' });
     const deletedUser = await userService.deleteUserService(userId);
-    res.status(200).json({ message: 'User Deleted', data: delUser });
+    res.status(200).json({ message: 'User Deleted' });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Something went wrong" });
@@ -50,10 +43,7 @@ export const updateUser = async (req, res) => {
   if (!req.body || Object.keys(req.body).length === 0)
     return res.status(404).json("Request Body Missing")
 
-  const userId = req.params.id;
-  if (userId === null || userId === undefined || userId === '') {
-    return res.status(400).json({ message: "Invalid user ID" });
-  }
+  const userId = req.user.id;
 
   const { valid, message, validatedData } = await validateUserInput(req.body, userId, true);
   if (!valid) {

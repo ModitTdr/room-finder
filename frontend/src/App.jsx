@@ -5,10 +5,6 @@ import { useAuth } from '@/hooks/useAuth'
 
 function App() {
 
-  const data = useAuth();
-  console.log(data);
-  
-
   return (
     <div className="bg-background text-text smooth-transition min-h-screen flex flex-col">
       <Navbar title="Room Finder" />

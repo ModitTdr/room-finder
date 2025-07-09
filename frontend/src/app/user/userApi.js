@@ -1,14 +1,27 @@
-// store/api/userApi.js
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
+const BASE_URL = "http://localhost:3000/api/users/"
 export const userApi = createApi({
   reducerPath: 'userApi',
-  baseQuery: fetchBaseQuery({ baseUrl: '/api/' }), // Your base API URL
+  baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
   endpoints: (builder) => ({
+    //user info
     getUser: builder.query({
-      query: (userId) => `users/${userId}`,
+      query: () => ({
+        url: `me`,
+        method: 'GET',
+        credentials: "include"
+      }),
     }),
+    //user profile
+    getUserProfile: builder.query({
+      query: () => ({
+        url: `me/userprofile`,
+        method: 'GET',
+        credentials: "include",
+      })
+    })
   }),
 });
 
-export const { useGetUserQuery } = userApi;
+export const { useGetUserQuery, useGetUserProfileQuery } = userApi;

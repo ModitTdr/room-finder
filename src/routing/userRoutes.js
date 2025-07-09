@@ -3,7 +3,6 @@ import express from "express";
 import userController from "../controller/userController.js";
 import isLoggedIn from "../middleware/isLoggedIn.js";
 import authorize from "../middleware/roleMiddleware.js";
-import permissionMiddleware from "../middleware/permissionMiddleware.js";
 import userProfileController from "../controller/userProfileController.js";
 const router = express.Router();
 
@@ -15,33 +14,28 @@ router.get(
     userController.getAllUser
 );
 router.get(
-    '/:id',
+    '/me',
     isLoggedIn,
-    permissionMiddleware,
     userController.getUserById
 );
 router.delete(
-    '/:id',
+    '/me',
     isLoggedIn,
-    permissionMiddleware,
     userController.deleteUser)
     ;
 router.put(
-    '/:id',
+    '/me',
     isLoggedIn,
-    permissionMiddleware,
     userController.updateUser
 );
 router.get(
-    '/:id/userprofile',
-    // isLoggedIn,
-    // permissionMiddleware,
+    '/me/userprofile',
+    isLoggedIn,
     userProfileController.getUserProfile
 );
 router.post(
-    '/:id/userprofile',
-    // isLoggedIn,
-    // permissionMiddleware,
+    '/me/userprofile',
+    isLoggedIn,
     userProfileController.createUserProfile
 );
 

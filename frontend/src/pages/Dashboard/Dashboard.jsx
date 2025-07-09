@@ -9,10 +9,9 @@ import { useGetUserQuery } from "../../app/user/userApi.js";
 
 const Dashboard = () => {
    const { pathname: currentPath } = useLocation();
-   const { isAuthenticated, userData, isLoading } = useAuth();
-   const { data } = useGetUserQuery(userData?.id, { skip: !userData?.id });
-   console.log(data);
-   
+   const { isAuthenticated, isLoading } = useAuth();
+   const { data } = useGetUserQuery();
+
    const navlink = useMemo(() => sidebarLinks(isAuthenticated, true), [isAuthenticated]);
    if (isLoading) { return <div>test</div> }
 
