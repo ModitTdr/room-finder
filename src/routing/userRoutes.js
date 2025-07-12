@@ -33,7 +33,7 @@ router.get(
     isLoggedIn,
     userProfileController.getUserProfile
 );
-router.post(
+router.put(
     '/me/userprofile',
     isLoggedIn,
     userProfileController.createUserProfile

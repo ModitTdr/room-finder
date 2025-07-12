@@ -35,13 +35,13 @@ export const userLogin = async (req, res) => {
         role: user.role,
       },
       process.env.JWT_SECRET,
-      { expiresIn: '15m' }
+      { expiresIn: '60m' }
     );
     res.cookie("token", accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: "strict",
-      maxAge: 30 * 60 * 1000
+      maxAge: 60 * 60 * 1000
     });
     return res.status(200).json({
       message: "Logged in",
@@ -85,7 +85,7 @@ export const userSignup = async (req, res) => {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: "strict",
-        maxAge: 30 * 60 * 1000
+        maxAge: 60 * 60 * 1000
       });
       return res.status(200).json({
         message: "User Created",

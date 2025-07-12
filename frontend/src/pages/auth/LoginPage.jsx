@@ -10,12 +10,11 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
 //icons
 import { FaGoogle } from "react-icons/fa";
-import { Info, CheckCircle } from "lucide-react"
+import { Info } from "lucide-react"
 import FormData from "./FormData";
 
 //redux
 import { useUserLoginMutation } from "@/app/auth/authApi";
-import LoadingPage from "../LoadingPage";
 
 const Login = () => {
   const [form, setForm] = useState({
@@ -23,8 +22,8 @@ const Login = () => {
     password: ''
   });
   const [message, setMessage] = useState(null);
-  
-  const [loginFn, { error, isSuccess, isLoading }] = useUserLoginMutation();
+
+  const [loginFn, { error, isSuccess }] = useUserLoginMutation();
 
   const navigate = useNavigate();
 
@@ -40,7 +39,7 @@ const Login = () => {
     e.preventDefault();
     loginFn(form);
   }
-  
+
   useEffect(() => {
     if (isSuccess) {
       navigate('/');

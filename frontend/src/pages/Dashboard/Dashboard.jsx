@@ -11,18 +11,17 @@ const Dashboard = () => {
    const { pathname: currentPath } = useLocation();
    const { isAuthenticated, isLoading } = useAuth();
    const { data } = useGetUserQuery();
-
    const navlink = useMemo(() => sidebarLinks(isAuthenticated, true), [isAuthenticated]);
    if (isLoading) { return <div>test</div> }
 
    return (
-      <div className="grid grid-cols-[200px_auto] gap-4 h-screen-hero ">
+      <div className="grid md:grid-cols-[200px_auto] gap-4 h-screen-hero ">
          <aside className="bg-neutral-900 text-foreground hidden md:block px-2 py-4 space-y-4 ">
             <div className="pb-4 border-b border-neutral-600">
                <h1 className="text-xl font-bold">Welcome Back,</h1>
                <p className="text-xs text-muted-foreground font-medium">{data?.name}</p>
             </div>
-            <div className="space-y-3  ">
+            <div className="space-y-3">
                {
                   navlink.map(({ title, icon: Icon, subtitle }) => (
                      <Collapsible key={title} className="group/collapsible" defaultOpen={true}>
@@ -51,7 +50,7 @@ const Dashboard = () => {
             </div>
          </aside>
          <main className="w-full overflow-y-scroll">
-            <Outlet />
+            <Outlet context={{ user: data }} />
          </main>
       </div>
    )

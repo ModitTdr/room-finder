@@ -2,7 +2,7 @@ import { getUserProfileService, getCreateUserProfileService } from "../services/
 import { userProfileSchema } from "../utils/validateUserProfile.js"
 
 export const getUserProfile = async (req, res) => {
-  const user = await getUserProfileService(req.params.id);
+  const user = await getUserProfileService(req.user.id);
   if (!user) return res.status(400).json({ message: 'Profile not found' });
   return res.status(200).json(user);
 }
@@ -12,12 +12,14 @@ export const createUserProfile = async (req, res) => {
     return res.status(400).json("Response Body Missing");
 
   try {
-    const userId = req.params.id;
+    const userId = req.user.id;
     if (userId === null || userId === undefined || userId === '') {
       return res.status(400).json({ message: "Invalid user ID" });
     }
     const validatedData = userProfileSchema.safeParse(req.body);
-    if (!validatedData.success) return res.status(400).json({ message: validatedData.error.errors[0].message });
+    if (!validatedData.success) {
+      return res.status(400).json({ message: validatedData.error.errors[0].message });
+    }
     const response = await getCreateUserProfileService(userId, validatedData);
     return res.status(200).json(response);
   } catch (error) {
