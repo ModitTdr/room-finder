@@ -1,6 +1,6 @@
-import { featuredRooms } from '../../data'
+import { featuredRooms } from "../../../data.js"
 import Cards from './Cards';
-import {Button} from '@/components/ui/button'
+import { Button } from '@/components/ui/button'
 
 const MainSection = () => {
    const rooms = featuredRooms;
@@ -21,10 +21,10 @@ const MainSection = () => {
             </div>
             <Button className="p-4 py-6 text-xl font-bold bg-accent text-accent-foreground border hover:bg-accent-foreground hover:text-accent hover:border-accent">View All</Button>
          </section>
-         
+
          <section className='container mx-auto text-center px-4 py-18'>
             <div className="space-y-4 text-center mb-12">
-               <h1 className='text-5xl md:text-7xl font-bold tracking-tighter'>GOT A ROOM TO 
+               <h1 className='text-5xl md:text-7xl font-bold tracking-tighter'>GOT A ROOM TO
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-accent"> LIST</span>?
                </h1>
                <p className='text-lg font-light text-muted-foreground'>List your room today and, reach thousands of potential tenants quickly and easily.</p>

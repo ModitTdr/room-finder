@@ -1,4 +1,3 @@
-import React from 'react'
 import { Button } from '@/components/ui/button'
 
 const Cards = ({ rooms }) => {
@@ -19,7 +18,7 @@ const Cards = ({ rooms }) => {
                         {
                             room.features.map((item, index) => (
                                 index !== 3 &&
-                                <li key={index+item} className='py-1 px-3 border shadow-sm'>
+                                <li key={index + item} className='py-1 px-3 border shadow-sm'>
                                     {item}
                                 </li>
                             ))

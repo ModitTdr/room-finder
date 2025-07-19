@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 
 const HeroSection = () => {
-   const {isAuthenticated} = useAuth();
+   const { isAuthenticated } = useAuth();
    return (
       <div className="relative h-screen-hero flex items-center overflow-hidden pt-18">
 
@@ -18,7 +18,7 @@ const HeroSection = () => {
                   <h1 className='text-5xl md:text-7xl xl:text-8xl 2xl:text-9xl leading-14 md:leading-none md:tracking-tighter font-bold'>
                      YOUR NEW CITY,
                      <br />
-                     <span>YOUR 
+                     <span>YOUR
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-accent"> PERFECT</span>
                      </span>
                      <br />

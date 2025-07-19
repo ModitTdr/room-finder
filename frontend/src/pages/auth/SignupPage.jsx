@@ -1,189 +1,158 @@
-import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Link, useNavigate } from "react-router";
-
-//components
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-
-//icons
+import { useForm } from "react-hook-form";
+import { queryClient } from "@/lib/react-query";
+import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
 import { FaGoogle } from "react-icons/fa";
-import { Info } from "lucide-react"
-import { useUserRegisterMutation } from "@/app/auth/authApi";
-import FormData from "./FormData";
+
+// components
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+
+// services
+import { signupUser } from "@/services/authServices";
 
 
-const SignupPage = () => {
-   const [userData, setUserData] = useState({
-      firstname: '',
-      lastname: '',
-      email: '',
-      password: '',
-   });
-   const [message, setMessage] = useState(null)
-   const [registerFn, { error, isSuccess }] = useUserRegisterMutation();
+export default function SignupPage() {
    const navigate = useNavigate();
 
+   const {
+      register,
+      handleSubmit,
+      formState: { errors },
+   } = useForm();
 
-   const handleChange = (e) => {
-      const { name, value } = e.target;
-      setUserData((prev) => ({
-         ...prev,
-         [name]: value
-      }))
-   }
-   const userRegister = (e) => {
-      e.preventDefault();
-      registerFn(userData);
-   }
-   useEffect(() => {
-      if (isSuccess) {
-         navigate('/');
-      }
-   }, [isSuccess, navigate]);
-   useEffect(() => {
-      if (error) {
-         setMessage(error?.data?.message || "Registration failed.");
-      }
-   }, [error]);
+   const mutation = useMutation({
+      mutationFn: signupUser,
+      onSuccess: (data) => {
+         toast.success(data.message || "Account created!");
+         queryClient.invalidateQueries({ queryKey: ["auth"] });
+         navigate("/");
+      },
+      onError: (err) => {
+         toast.error(err.message);
+      },
+   });
 
-   useEffect(() => {
-      if (message) {
-         const timer = setTimeout(() => {
-            setMessage(null);
-         }, 3000);
-
-         return () => clearTimeout(timer);
-      }
-   }, [message]);
+   const onSubmit = (data) => {
+      mutation.mutate(data);
+   };
 
    return (
       <div className="flex justify-center items-center md:h-full min-h-[85dvh] flex-col xl:flex-row gap-x-32 px-4 gap-y-8 mt-4">
          {/* left */}
          <div>
-            <h2 className="text-4xl xl:text-6xl xl:w-[550px] text-center font-[Montserrat]">Create Your Account..</h2>
+            <h2 className="text-4xl xl:text-6xl xl:w-[550px] text-center font-[Montserrat]">
+               Create Your Account..
+            </h2>
          </div>
 
          {/* right */}
-         <Card className="w-full max-w-sm smooth-transition">
+         <Card className="w-full max-w-sm">
             <CardContent>
-               <form onSubmit={userRegister}>
-                  {/* forms */}
-                  <div className="flex flex-col gap-6">
-                     {/* names */}
-                     <div className="grid grid-cols-2 gap-4">
-                        {/* firstname */}
-                        <div className="grid gap-3">
-                           <FormData
-                              label="First name"
-                              id="firstname"
-                              type="text"
-                              name="firstname"
-                              value={userData.firstname}
-                              onChange={handleChange}
-                              placeholder="John"
-                              required
-                           />
-                        </div>
-                        {/* lastname */}
-                        <div className="grid gap-3">
-                           <FormData
-                              label="Last Name"
-                              id="lastname"
-                              type="text"
-                              name="lastname"
-                              value={userData.lastname}
-                              onChange={handleChange}
-                              placeholder="Doe"
-                              required
-                           />
-                        </div>
+               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 mt-6">
+                  {/* names */}
+                  <div className="grid grid-cols-2 gap-4">
+                     {/* first name */}
+                     <div className="space-y-2">
+                        <Label htmlFor="firstname">First Name</Label>
+                        <Input
+                           id="firstname"
+                           type="text"
+                           placeholder="John"
+                           {...register("firstname", { required: "First name is required" })}
+                        />
+                        {errors.firstname && (
+                           <p className="text-red-500 text-sm">{errors.firstname.message}</p>
+                        )}
                      </div>
 
-                     {/* email */}
-                     <div className="grid gap-3">
-                        <FormData
-                           label="Email"
-                           id="email"
-                           type="email"
-                           name="email"
-                           value={userData.email}
-                           onChange={handleChange}
-                           placeholder="m@example.com" />
-                     </div>
-
-                     {/* password */}
-                     <div className="grid gap-3">
-                        <div className="flex items-center">
-                           <Label htmlFor="password">Password</Label>
-                           <a
-                              href="#"
-                              className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                           >
-                              Forgot your password?
-                           </a>
-                        </div>
-                        <FormData
-                           id="password"
-                           type="password"
-                           name="password"
-                           value={userData.password}
-                           onChange={handleChange}
-                           required />
-                     </div>
-
-                     {/* submit/google login */}
-                     <div className="flex flex-col gap-3 smooth-transition">
-                        <Button type="submit" className="w-full">
-                           Login
-                        </Button>
-                        <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
-                           <span className="bg-card text-muted-foreground relative z-10 px-2">
-                              Or Continue With
-                           </span>
-                        </div>
-                        <Button variant="outline" className="w-full">
-                           <FaGoogle />Login with Google
-                        </Button>
+                     {/* last name */}
+                     <div className="space-y-2">
+                        <Label htmlFor="lastname">Last Name</Label>
+                        <Input
+                           id="lastname"
+                           type="text"
+                           placeholder="Doe"
+                           {...register("lastname", { required: "Last name is required" })}
+                        />
+                        {errors.lastname && (
+                           <p className="text-red-500 text-sm">{errors.lastname.message}</p>
+                        )}
                      </div>
                   </div>
 
-                  {/* route to register */}
+                  {/* email */}
+                  <div className="space-y-2">
+                     <Label htmlFor="email">Email</Label>
+                     <Input
+                        id="email"
+                        type="email"
+                        placeholder="m@example.com"
+                        {...register("email", { required: "Email is required" })}
+                     />
+                     {errors.email && (
+                        <p className="text-red-500 text-sm">{errors.email.message}</p>
+                     )}
+                  </div>
+
+                  {/* password */}
+                  <div className="space-y-2">
+                     <div className="flex items-center justify-between">
+                        <Label htmlFor="password">Password</Label>
+                        <a
+                           href="#"
+                           className="text-sm underline hover:opacity-80"
+                        >
+                           Forgot your password?
+                        </a>
+                     </div>
+                     <Input
+                        id="password"
+                        type="password"
+                        {...register("password", {
+                           required: "Password is required",
+                           minLength: {
+                              value: 8,
+                              message: "Password must be at least 8 characters",
+                           },
+                        })}
+                     />
+                     {errors.password && (
+                        <p className="text-red-500 text-sm">{errors.password.message}</p>
+                     )}
+                  </div>
+
+                  {/* buttons */}
+                  <div className="flex flex-col gap-3">
+                     <Button type="submit" className="w-full" disabled={mutation.isPending}>
+                        {mutation.isPending ? "Creating Account..." : "Sign Up"}
+                     </Button>
+
+                     <div className="relative text-center text-sm after:border-border after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
+                        <span className="bg-card text-muted-foreground relative z-10 px-2">
+                           Or Continue With
+                        </span>
+                     </div>
+
+                     <Button variant="outline" className="w-full">
+                        <FaGoogle className="mr-2" />
+                        Sign up with Google
+                     </Button>
+                  </div>
+
+                  {/* login route */}
                   <div className="mt-4 text-center text-sm">
                      Already have an account?{" "}
-                     <Link to="/login" className="underline underline-offset-4">
+                     <a href="/login" className="underline underline-offset-4">
                         Login
-                     </Link>
+                     </a>
                   </div>
                </form>
             </CardContent>
          </Card>
-
-         {/* alert message */}
-         <AnimatePresence>
-            {
-               message &&
-               <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3 }}
-                  className="absolute top-18 smooth-transition z-999"
-               >
-                  <Alert variant="destructive">
-                     <Info className="h-4 w-4" />
-                     <AlertTitle>{`Error`}</AlertTitle>
-                     <AlertDescription>
-                        {message}
-                     </AlertDescription>
-                  </Alert>
-               </motion.div>
-            }
-         </AnimatePresence>
       </div>
-   )
+   );
 }
-
-export default SignupPage;

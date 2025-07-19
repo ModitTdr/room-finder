@@ -13,9 +13,9 @@ const sidebarLinks = (isAuthenticated, isDashboard = false) => [
     title: "User",
     icon: User,
     subtitle: [
-      { title: 'Profile', icon: SquareUser, link: 'userprofile', isActive: true },
+      { title: 'Profile', icon: SquareUser, link: 'userprofile', isActive: isAuthenticated },
       { title: 'All Users', icon: UsersRound, link: 'userlist', isActive: isAuthenticated },
-      { title: 'Logout', icon: Unplug, link: '/logout', isActive: isAuthenticated },
+      { title: 'Logout', icon: Unplug, isActive: isAuthenticated },
     ]
   }
 ]

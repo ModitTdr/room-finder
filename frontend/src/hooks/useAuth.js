@@ -1,12 +1,35 @@
-import { useUserStatusQuery } from "@/app/auth/authApi";
+import { useQuery } from "@tanstack/react-query";
+import { checkAuth } from "@/services/authServices";
 
-export const useAuth = () => {
-    const { data, error, isLoading, refetch } = useUserStatusQuery();
-    return {
-        userData: data?.user || null,
-        isAuthenticated: !!(data?.user),
+export function useAuth() {
+    const {
+        data,
         isLoading,
-        error: error?.data?.message || error?.message,
-        refreshUser: refetch,
-    }
+        isError,
+        error,
+        isSuccess,
+        refetch
+    } = useQuery({
+        queryKey: ["auth"],
+        queryFn: checkAuth,
+        retry: false,
+        refetchOnWindowFocus: false,
+        staleTime: 1000 * 60 * 30,
+        onError: (error) => {
+            console.warn("Auth check failed:", error);
+        },
+        throwOnError: false,
+    });
+
+    const isAuthenticated = !!data?.user && !isError;
+
+    return {
+        user: data?.user,
+        isAuthenticated,
+        isLoading,
+        isError,
+        isSuccess,
+        error,
+        refetch,
+    };
 }

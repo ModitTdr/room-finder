@@ -3,6 +3,7 @@ import { userProfileSchema } from "../utils/validateUserProfile.js"
 
 export const getUserProfile = async (req, res) => {
   const user = await getUserProfileService(req.user.id);
+  console.log(req.user.id)
   if (!user) return res.status(400).json({ message: 'Profile not found' });
   return res.status(200).json(user);
 }

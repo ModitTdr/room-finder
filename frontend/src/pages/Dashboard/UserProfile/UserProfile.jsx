@@ -8,10 +8,11 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import toast from 'react-hot-toast';
 
-import { CalendarIcon, Check, Save } from "lucide-react";
+import { CalendarIcon, Check, UploadCloud } from "lucide-react";
 
 import { useUpdateUserProfileMutation } from "@/app/user/userApi";
-
+import UploadWidget from "@/components/UploadWidget"
+import { fetchAddressSuggestions } from "@/utils/opencage.js"
 /* -------- shadcn components ------- */
 import {
     Form,
@@ -31,13 +32,17 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover";
 import {
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
+} from "@/components/ui/tooltip"
+import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-
 
 /* -------------- enums ------------- */
 const Gender = {
@@ -70,16 +75,6 @@ const profileSchema = z.object({
     // Preferences
     preferredCity: z.string().max(100, 'Preferred city must be less than 100 characters').optional().nullable(),
     preferredArea: z.string().max(100, 'Preferred area must be less than 100 characters').optional().nullable(),
-    latitude: z.number()
-        .min(-90, 'Latitude must be between -90 and 90')
-        .max(90, 'Latitude must be between -90 and 90')
-        .optional()
-        .nullable(),
-    longitude: z.number()
-        .min(-180, 'Longitude must be between -180 and 180')
-        .max(180, 'Longitude must be between -180 and 180')
-        .optional()
-        .nullable(),
     maxBudget: z.number()
         .int('Max budget must be an integer')
         .positive('Max budget must be positive')
@@ -209,7 +204,7 @@ const PreferencesSection = ({ control }) => {
                     <FormItem>
                         <FormLabel>Preferred City</FormLabel>
                         <FormControl>
-                            <Input placeholder="e.g., New York" {...field} />
+                            <Input placeholder="e.g., Kathmandu" {...field} />
                         </FormControl>
                         <FormDescription>Your preferred city for services/residence.</FormDescription>
                         <FormMessage />
@@ -223,37 +218,9 @@ const PreferencesSection = ({ control }) => {
                     <FormItem>
                         <FormLabel>Preferred Area</FormLabel>
                         <FormControl>
-                            <Input placeholder="e.g., Downtown" {...field} />
+                            <Input placeholder="e.g., New Road" {...field} />
                         </FormControl>
                         <FormDescription>Your preferred area within the city.</FormDescription>
-                        <FormMessage />
-                    </FormItem>
-                )}
-            />
-            <FormField
-                control={control}
-                name="latitude"
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Latitude</FormLabel>
-                        <FormControl>
-                            <Input type="number" placeholder="e.g., 34.0522" {...field} onChange={e => field.onChange(parseFloat(e.target.value))} />
-                        </FormControl>
-                        <FormDescription>Geographical latitude for your preferred location.</FormDescription>
-                        <FormMessage />
-                    </FormItem>
-                )}
-            />
-            <FormField
-                control={control}
-                name="longitude"
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Longitude</FormLabel>
-                        <FormControl>
-                            <Input type="number" placeholder="e.g., -118.2437" {...field} onChange={e => field.onChange(parseFloat(e.target.value))} />
-                        </FormControl>
-                        <FormDescription>Geographical longitude for your preferred location.</FormDescription>
                         <FormMessage />
                     </FormItem>
                 )}
@@ -293,8 +260,12 @@ const PreferencesSection = ({ control }) => {
 const UserProfile = () => {
     const { user } = useOutletContext();
     const [message, setMessage] = useState(null);
-    const [updateUserProfile, { error, isSuccess }] = useUpdateUserProfileMutation();
-    const [profilePicPreview, setProfilePicPreview] = useState(user?.profile?.profilePic || null);
+    const [updateUserProfile, { error }] = useUpdateUserProfileMutation();
+    const [profilePicPreview, setProfilePicPreview] = useState(null);
+
+    const [suggestions, setSuggestions] = useState([]);
+    const [selected, setSelected] = useState(false);
+
 
     useEffect(() => {
         return () => {
@@ -317,8 +288,6 @@ const UserProfile = () => {
             address: user?.profile?.address || undefined,
             preferredCity: user?.profile?.preferredCity || undefined,
             preferredArea: user?.profile?.preferredArea || undefined,
-            latitude: user?.profile?.latitude || undefined,
-            longitude: user?.profile?.longitude || undefined,
             maxBudget: user?.profile?.maxBudget || undefined,
             minBudget: user?.profile?.minBudget || undefined,
         },
@@ -350,13 +319,63 @@ const UserProfile = () => {
         }
     }, [message]);
 
+
+    /* -------- location handling ------- */
+    const address = form.watch("address");
+
+    useEffect(() => {
+        const delayDebounce = setTimeout(() => {
+            if (address && !selected) {
+                fetchAddressSuggestions(address).then((results) => {
+                    setSuggestions(results);
+                })
+            }
+        }, 500);
+        return () => clearTimeout(delayDebounce);
+    }, [address, selected])
+    const handleSuggestionSelect = (value) => {
+        form.setValue("address", value);
+        setSelected(true);
+        setSuggestions([]);
+    };
+
+    // }
+
     return (
-        <div className="py-8 container mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <div className="py-8 container mx-auto px-4 sm:px-6 lg:px-8 relative ">
             {/* Topbar - Adjusted for better responsiveness */}
             <div className='flex flex-col sm:flex-row items-center gap-4 p-4 bg-red-300/30 rounded-lg shadow-md mb-8'>
-                <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-2 border-muted-foreground/40 overflow-hidden flex-shrink-0">
-                    <img src={profilePicPreview || user?.profile?.profilePic || "/ktm.png"} alt="Profile" className="w-full h-full rounded-full object-cover" />
-                </div>
+                <Tooltip>
+                    <TooltipTrigger>
+                        <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-2 border-muted-foreground/40 overflow-hidden flex-shrink-0 relative group">
+                            <img
+                                src={profilePicPreview || user?.profile?.profilePic || "/ktm.png"}
+                                alt="Profile Picture"
+                                loading="lazy"
+                                className="w-full h-full rounded-full object-cover" />
+                            <div className="absolute top-0 left-0 bg-black/50 w-full h-full flex justify-center items-center opacity-0 group-hover:opacity-100 cursor-pointer">
+                                <UploadWidget
+                                    onUpload={async (url) => {
+                                        setProfilePicPreview(url);
+                                        form.setValue("profilePic", url);
+                                        try {
+                                            await updateUserProfile({ ...form.getValues(), profilePic: url }).unwrap();
+                                            toast.success("Profile picture updated");
+                                        } catch (error) {
+                                            toast.error("Failed to update profile picture");
+                                        }
+                                    }}
+                                >
+                                    <UploadCloud size={24} />
+                                </UploadWidget>
+                            </div>
+                        </div>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                        {user?.profile?.profilePic ? 'Change Profile Image' : 'Upload Profile Image'}
+                    </TooltipContent>
+                </Tooltip>
+
                 <div className="space-y-2 text-center sm:text-left">
                     <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">{user?.name || "User Name"}</h1>
                     <div>
@@ -429,53 +448,52 @@ const UserProfile = () => {
                                 </FormItem>
                             )}
                         />
-                        {/* Profile Picture */}
-                        <FormField
-                            control={form.control}
-                            name="profilePic"
-                            render={({ field: { value, onChange, ...fieldProps } }) => (
-                                <FormItem className="col-span-full">
-                                    <FormLabel>Profile Picture</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            type="file"
-                                            accept="image/*"
-                                            onChange={(event) => {
-                                                const file = event.target.files && event.target.files[0];
-                                                onChange(file);
-                                                if (file) {
-                                                    setProfilePicPreview(URL.createObjectURL(file));
-                                                } else {
-                                                    setProfilePicPreview(null);
-                                                }
-                                            }}
-                                            {...fieldProps}
-                                        />
-                                    </FormControl>
-                                    <FormDescription>Upload your profile image.</FormDescription>
-                                    <FormMessage />
-                                    {profilePicPreview && (
-                                        <div className="mt-2">
-                                            <p className="text-sm text-muted-foreground">Preview:</p>
-                                            <img src={profilePicPreview} alt="Profile Picture Preview" className="max-w-xs h-auto rounded-md border border-gray-200" />
-                                        </div>
-                                    )}
-                                    {value instanceof File && !profilePicPreview && (
-                                        <p className="text-sm text-muted-foreground mt-2">Selected file: {value.name}</p>
-                                    )}
-                                </FormItem>
-                            )}
-                        />
+
                         {/* Address */}
                         <FormField
                             control={form.control}
                             name="address"
                             render={({ field }) => (
-                                <FormItem>
+                                <FormItem className="relative">
                                     <FormLabel>Address</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="e.g., 123 Main St, City, Country" {...field} />
+                                        <Input
+                                            {...field}
+                                            onChange={(e) => {
+                                                field.onChange(e);
+                                                setSelected(false);
+                                            }}
+                                            onBlur={() => {
+                                                setTimeout(() => {
+                                                    if (!selected) {
+                                                        setSuggestions([]);
+                                                    }
+                                                }, 100);
+                                            }}
+                                            onFocus={() => {
+                                                if (address && suggestions.length === 0) {
+                                                    fetchAddressSuggestions(address).then((results) => {
+                                                        setSuggestions(results);
+                                                    });
+                                                }
+                                            }}
+                                            placeholder="Start typing your address"
+                                            autoComplete="off"
+                                        />
                                     </FormControl>
+                                    {suggestions.length > 0 && (
+                                        <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto top-14">
+                                            {suggestions.map((s, idx) => (
+                                                <div
+                                                    key={idx}
+                                                    onClick={() => handleSuggestionSelect(s.formatted)}
+                                                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm border-b border-gray-100 last:border-b-0 text-gray-800"
+                                                >
+                                                    {s.formatted}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
                                     <FormMessage />
                                 </FormItem>
                             )}

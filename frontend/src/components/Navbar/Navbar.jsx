@@ -18,11 +18,12 @@ import {
 import { Sidebar } from "./Sidebar";
 import sidebarLinks from "../../data/sidebarLinks"
 import { useAuth } from "@/hooks/useAuth";
+import { useLogout } from "@/hooks/useLogout";
 
 
 const NavLinks = ({ isAuthenticated }) => {
   const linkStyle = "flex items-center gap-2"
-
+  const { mutate: logout, isPending } = useLogout();
   return (
     <>
       {
@@ -39,18 +40,18 @@ const NavLinks = ({ isAuthenticated }) => {
               <DropdownMenuItem>
                 <Link to='/dashboard' className="w-full">Dashboard</Link>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Link to='/logout' className="w-full">Logout</Link>
+              <DropdownMenuItem className="cursor-pointer" onClick={logout}>
+                {isPending ? "Logging out..." : "Logout"}
               </DropdownMenuItem>
             </DropdownMenuContent>
-          </DropdownMenu>
+          </DropdownMenu >
           :
           <>
             <Link to="/login" className={linkStyle}>
               <Button className="bg-transparent border border-transparent text-foreground hover:text-accent hover:bg-transparent hover:border-accent">Login</Button>
             </Link>
-            <Link to="/register" className={linkStyle}>
-              <Button variant="accent">SignUp</Button>
+            <Link to="/signup" className={linkStyle}>
+              <Button variant="outline" className="hover:text-accent hover:border-accent">Get Started</Button>
             </Link>
           </>
 
@@ -60,13 +61,19 @@ const NavLinks = ({ isAuthenticated }) => {
 }
 
 const Navbar = ({ title }) => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
   const sidebar = useMemo(() => sidebarLinks(isAuthenticated), [isAuthenticated]);
+  const navLinksContent = <NavLinks isAuthenticated={isAuthenticated} />;
+  if (isLoading) return null;
 
   const [isOpen, setIsOpen] = useState(false);
   return (
     <>
-      <Sidebar isOpen={isOpen} sidebar={sidebar} NavLinks={isAuthenticated ? null : <NavLinks isAuthenticated={isAuthenticated} />} />
+      <Sidebar
+        isOpen={isOpen}
+        sidebar={sidebar}
+        NavLinks={!isAuthenticated ? navLinksContent : null}
+      />
       {/* Overlay for mobile */}
       {isOpen && (
         <div
@@ -96,7 +103,7 @@ const Navbar = ({ title }) => {
 
             </div>
             {/* mobile view */}
-            <div className="block md:hidden gap-3 flex items-center">
+            <div className="md:hidden gap-3 flex items-center">
               <DarkModeButton />
               <IoIosMenu
                 className="block md:hidden cursor-pointer text-3xl text-accent"

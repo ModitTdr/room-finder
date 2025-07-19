@@ -1,5 +1,5 @@
 
-// import { Spinner } from '../components/ui/spinner';
+import { Spinner } from '../components/ui/spinner';
 const LoadingPage = () => {
    return (
       <div className="flex items-center gap-3 justify-center h-screen text-2xl">

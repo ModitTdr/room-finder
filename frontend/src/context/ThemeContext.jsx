@@ -1,29 +1,23 @@
-import React, { createContext, useState, useEffect } from 'react';
+import { createContext, useEffect, useState } from "react";
 
 export const ThemeContext = createContext();
 
-export const ThemeProvider = ({children}) => {
-   const [isDark, setIsDark] = useState(() => {
-       const currentMode = localStorage.getItem("darkMode");
-       return currentMode === "true";
-     }
-   );
-   const element = document.documentElement;
-   useEffect(() => {
-      if (isDark) {
-         element.classList.add("dark");
-         localStorage.setItem("darkMode", "true");
-      } else {
-         element.classList.remove("dark");
-         localStorage.setItem("darkMode", "false");
-      }
-   },[isDark]);
-   const toggleDarkMode = () => {
-      setIsDark(prev => !prev);
-   };
-   return(
-      <ThemeContext.Provider value= {{isDark, toggleDarkMode}}>
-         {children}
-      </ThemeContext.Provider>
-   )
+export const ThemeProvider = ({ children }) => {
+  const [darkMode, setDarkMode] = useState(() => {
+    const currentMode = localStorage.getItem("theme");
+    return currentMode ? currentMode === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+  });
+  const element = document.documentElement;
+  useEffect(() => {
+    element.classList.toggle("dark", darkMode);
+    localStorage.setItem("theme", darkMode ? "dark" : "light");
+  }, [darkMode])
+  const toggleDarkMode = () => {
+    setDarkMode(prev => !prev);
+  };
+  return (
+    <ThemeContext.Provider value={{ darkMode, toggleDarkMode }}>
+      {children}
+    </ThemeContext.Provider>
+  )
 }
