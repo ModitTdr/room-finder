@@ -10,7 +10,7 @@ import toast from 'react-hot-toast';
 
 import { CalendarIcon, Check, UploadCloud } from "lucide-react";
 
-// import UploadWidget from "@/components/UploadWidget"
+import UploadWidget from "@/components/UploadWidget"
 import { updateUserProfile } from "@/services/userServices"
 /* -------- shadcn components ------- */
 import {
@@ -297,6 +297,7 @@ const UserProfile = () => {
         };
     }, [profilePicPreview]);
 
+    /* - form default values and submit - */
     const form = useForm({
         resolver: zodResolver(profileSchema),
         defaultValues: {
@@ -314,8 +315,6 @@ const UserProfile = () => {
             minBudget: null,
         },
     });
-
-    // Reset form when user data is available
     useEffect(() => {
         if (user?.profile) {
             const formData = {
@@ -335,7 +334,6 @@ const UserProfile = () => {
             form.reset(formData);
         }
     }, [user, form]);
-
     const onSubmit = async (values) => {
         try {
             const response = await updateProfile(values);
@@ -380,14 +378,6 @@ const UserProfile = () => {
         setSuggestions([]);
     };
 
-    // Show loading state while user data is being fetched
-    if (!user) {
-        return (
-            <div className="py-8 container mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="text-center">Loading...</div>
-            </div>
-        );
-    }
 
     return (
         <div className="py-8 container mx-auto px-4 sm:px-6 lg:px-8 relative ">
@@ -402,20 +392,16 @@ const UserProfile = () => {
                                 loading="lazy"
                                 className="w-full h-full rounded-full object-cover" />
                             <div className="absolute top-0 left-0 bg-black/50 w-full h-full flex justify-center items-center opacity-0 group-hover:opacity-100 cursor-pointer">
-                                {/* <UploadWidget
+                                <UploadWidget
                                     onUpload={async (url) => {
                                         setProfilePicPreview(url);
                                         form.setValue("profilePic", url);
-                                        try {
-                                            await updateUserProfile({ ...form.getValues(), profilePic: url }).unwrap();
-                                            toast.success("Profile picture updated");
-                                        } catch (error) {
-                                            toast.error("Failed to update profile picture");
-                                        }
+                                        // Remove the immediate update - let the form handle it
+                                        // toast.success("Profile picture uploaded");
                                     }}
                                 >
                                     <UploadCloud size={24} />
-                                </UploadWidget> */}
+                                </UploadWidget>
                             </div>
                         </div>
                     </TooltipTrigger>
