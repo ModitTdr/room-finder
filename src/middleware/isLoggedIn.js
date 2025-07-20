@@ -4,33 +4,33 @@ import userService from "../services/userService.js";
 
 dotenv.config();
 
-const isLoggedIn = async (req,res,next) => {
+const isLoggedIn = async (req, res, next) => {
     let token;
     let authHeaders = req.headers.Authorization || req.headers.authorization;
 
-    if(authHeaders && authHeaders.startsWith("Bearer")){
+    if (authHeaders && authHeaders.startsWith("Bearer")) {
         token = authHeaders.split(" ")[1];
-    }else if(req.cookies && req.cookies.token){
+    } else if (req.cookies && req.cookies.token) {
         token = req.cookies.token;
     }
 
-    if(!token){
-        return res.status(404).json({message: "No token! Authorization Denied"});
+    if (!token) {
+        return res.status(404).json({ message: "No token! Authorization Denied" });
     }
 
-    try{
+    try {
         const decode = jwt.verify(token, process.env.JWT_SECRET);
-        const user = await userService.getUserByIdService(decode.id)
+        const user = await userService.getUserByIdService(decode.id);
         if (!user) {
-            return res.status(401).json({ 
+            return res.status(401).json({
                 error: 'Authentication failed',
-                code: 'USER_NOT_FOUND' 
+                code: 'USER_NOT_FOUND'
             });
         }
         req.user = decode;
         next();
-    }catch(error){
-        res.status(500).json({message: "Token is not valid"});
+    } catch (error) {
+        res.status(500).json({ message: "Token is not valid" });
     }
 };
 

@@ -9,12 +9,14 @@ export const userProfileSchema = z.object({
         .nullable()
         .optional(),
     profilePic: z.string().url('Invalid profile picture URL').optional().nullable(),
-    dateOfBirth: z.date()
-        .max(new Date(), 'Date of birth cannot be in the future')
+    dateOfBirth: z.string()
+        .datetime('Invalid date format')
+        .transform(str => new Date(str))
+        .refine(date => date <= new Date(), 'Date of birth cannot be in the future')
         .refine(date => {
             const age = new Date().getFullYear() - date.getFullYear();
             return age >= 16;
-        }, 'Age must be between at least 16')
+        }, 'Age must be at least 16')
         .optional()
         .nullable(),
     gender: Gender.optional().nullable(),

@@ -1,4 +1,5 @@
 const API = import.meta.env.VITE_API_URL
+
 export async function loginUser(formData) {
     try {
         const res = await fetch(`${API}/auth/login`, {
@@ -9,15 +10,14 @@ export async function loginUser(formData) {
             credentials: "include",
             body: JSON.stringify(formData)
         });
-
         if (!res.ok) {
             const err = await res.json();
             throw new Error(err.message || "Login failed");
         }
         return res.json();
     } catch (error) {
-        console.warn("Auth check network error:", error);
-        return { user: null };
+        console.error("Auth check network error:", error);
+        throw error;
     }
 
 }
@@ -46,7 +46,6 @@ export async function checkAuth() {
             method: "GET",
             credentials: "include",
         });
-
         if (!res.ok) {
             return { user: null };
         }

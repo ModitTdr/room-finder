@@ -14,11 +14,16 @@ export const getAllUserService = async () => {
 };
 
 export const getUserByIdService = async (userId) => {
-  const user = await db.user.findFirst({
-    where: { id: userId },
-    include: {profile:true}
-  });
-  return user;
+  try {
+    const user = await db.user.findFirst({
+      where: { id: userId },
+      include: { profile: true }
+    });
+    return user;
+  } catch (error) {
+    console.error("Database query failed:", error);
+    return null;
+  }
 }
 
 export const getUserByEmailService = async (userEmail) => {

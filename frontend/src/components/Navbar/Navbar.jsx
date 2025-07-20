@@ -61,12 +61,12 @@ const NavLinks = ({ isAuthenticated }) => {
 }
 
 const Navbar = ({ title }) => {
+  const [isOpen, setIsOpen] = useState(false);
   const { isAuthenticated, isLoading } = useAuth();
   const sidebar = useMemo(() => sidebarLinks(isAuthenticated), [isAuthenticated]);
   const navLinksContent = <NavLinks isAuthenticated={isAuthenticated} />;
   if (isLoading) return null;
 
-  const [isOpen, setIsOpen] = useState(false);
   return (
     <>
       <Sidebar

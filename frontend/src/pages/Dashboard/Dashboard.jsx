@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Link, useLocation } from "react-router";
-import { getProfile } from "@/services/userServices"
+import { Link, Outlet, useLocation } from "react-router";
+import { getUser } from "@/services/userServices"
 /* -------------- icons ------------- */
 import { ChevronDown } from "lucide-react";
 
@@ -23,18 +23,13 @@ const Dashboard = () => {
    const queryClient = useQueryClient();
    const { data: user } = useQuery({
       queryKey: ["userprofile"],
-      queryFn: getProfile,
-
+      queryFn: getUser,
    })
 
-   const navlink = useMemo(() =>
-      sidebarLinks(isAuthenticated, true),
-      [isAuthenticated]
-   );
+   const navlink = useMemo(() => sidebarLinks(isAuthenticated, true)
+      , [isAuthenticated]);
 
-   if (isLoading) {
-      return <LoadingPage />;
-   }
+   if (isLoading) return <LoadingPage />
 
    if (isError) {
       return (
@@ -53,7 +48,7 @@ const Dashboard = () => {
             <div className="pb-4 border-b border-neutral-600 px-2">
                <h1 className="text-xl font-bold">Welcome Back,</h1>
                <p className="text-xs text-muted-foreground font-medium">
-                  {user?.email || "Loading..."}
+                  {user?.name || "Loading..."}
                </p>
             </div>
             <div className="space-y-3">
@@ -84,15 +79,7 @@ const Dashboard = () => {
 
          {/* Main Content */}
          <main className="w-full overflow-y-scroll">
-            <div className="p-8 animate-pulse">
-               <div className="h-8 bg-neutral-100 rounded w-64 mb-6"></div>
-               <div className="space-y-4">
-                  <div className="h-4 bg-neutral-100 rounded w-full"></div>
-                  <div className="h-4 bg-neutral-100 rounded w-3/4"></div>
-                  <div className="h-4 bg-neutral-100 rounded w-1/2"></div>
-               </div>
-            </div>
-            {/* <Outlet context={{ user }} /> */}
+            <Outlet context={{ user }} />
          </main>
       </div>
    );

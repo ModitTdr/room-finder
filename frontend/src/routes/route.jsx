@@ -2,13 +2,13 @@ import { createBrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "../context/ThemeContext";
 
 /* ------------- routes ------------- */
+import ProtectedRoute from "@/routes/ProtectedRoute"
 import App from "../App";
 import Homepage from "@/pages/Homepage/HomePage"
 import LoginPage from "@/pages/auth/LoginPage";
 import SignupPage from "@/pages/auth/SignupPage";
 import Dashboard from "@/pages/Dashboard/Dashboard"
-import ProtectedRoute from "@/routes/ProtectedRoute"
-
+import UserProfile from "@/pages/Dashboard/UserProfile/UserProfile"
 
 const router = createBrowserRouter([
     {
@@ -30,6 +30,12 @@ const router = createBrowserRouter([
             {
                 path: "/dashboard",
                 element: <ProtectedRoute><Dashboard /></ProtectedRoute>,
+                children: [
+                    {
+                        path: "userprofile",
+                        element: <UserProfile />
+                    }
+                ]
             },
 
         ]

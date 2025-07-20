@@ -10,9 +10,8 @@ import toast from 'react-hot-toast';
 
 import { CalendarIcon, Check, UploadCloud } from "lucide-react";
 
-import { useUpdateUserProfileMutation } from "@/app/user/userApi";
-import UploadWidget from "@/components/UploadWidget"
-import { fetchAddressSuggestions } from "@/utils/opencage.js"
+// import UploadWidget from "@/components/UploadWidget"
+import { updateUserProfile } from "@/services/userServices"
 /* -------- shadcn components ------- */
 import {
     Form,
@@ -43,6 +42,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 /* -------------- enums ------------- */
 const Gender = {
@@ -193,6 +193,7 @@ const CitizenshipSection = ({ control }) => {
         </div>
     );
 };
+
 const PreferencesSection = ({ control }) => {
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border p-4 rounded-lg shadow-sm">
@@ -232,7 +233,13 @@ const PreferencesSection = ({ control }) => {
                     <FormItem>
                         <FormLabel>Minimum Budget</FormLabel>
                         <FormControl>
-                            <Input type="number" placeholder="e.g., 500" {...field} onChange={e => field.onChange(parseInt(e.target.value, 10))} />
+                            <Input
+                                type="number"
+                                placeholder="e.g., 500"
+                                {...field}
+                                value={field.value || ''} // Convert null/undefined to empty string
+                                onChange={e => field.onChange(e.target.value ? parseInt(e.target.value, 10) : null)}
+                            />
                         </FormControl>
                         <FormDescription>Your minimum budget for services/residence.</FormDescription>
                         <FormMessage />
@@ -246,7 +253,13 @@ const PreferencesSection = ({ control }) => {
                     <FormItem>
                         <FormLabel>Maximum Budget</FormLabel>
                         <FormControl>
-                            <Input type="number" placeholder="e.g., 2000" {...field} onChange={e => field.onChange(parseInt(e.target.value, 10))} />
+                            <Input
+                                type="number"
+                                placeholder="e.g., 2000"
+                                {...field}
+                                value={field.value || ''} // Convert null/undefined to empty string
+                                onChange={e => field.onChange(e.target.value ? parseInt(e.target.value, 10) : null)}
+                            />
                         </FormControl>
                         <FormDescription>Your maximum budget for services/residence.</FormDescription>
                         <FormMessage />
@@ -258,14 +271,23 @@ const PreferencesSection = ({ control }) => {
 }
 
 const UserProfile = () => {
+    const queryClient = useQueryClient();
     const { user } = useOutletContext();
     const [message, setMessage] = useState(null);
-    const [updateUserProfile, { error }] = useUpdateUserProfileMutation();
     const [profilePicPreview, setProfilePicPreview] = useState(null);
-
     const [suggestions, setSuggestions] = useState([]);
     const [selected, setSelected] = useState(false);
 
+    const { mutateAsync: updateProfile } = useMutation({
+        mutationFn: updateUserProfile,
+        onSuccess: () => {
+            toast.success("Profile updated");
+            queryClient.invalidateQueries({ queryKey: ["userprofile"] });
+        },
+        onError: (error) => {
+            toast.error(error?.response?.data?.message || "Update Failed");
+        },
+    });
 
     useEffect(() => {
         return () => {
@@ -278,39 +300,58 @@ const UserProfile = () => {
     const form = useForm({
         resolver: zodResolver(profileSchema),
         defaultValues: {
-            phone: user?.profile?.phone || undefined,
+            phone: "",
             profilePic: undefined,
-            dateOfBirth: user?.profile?.dateOfBirth ? new Date(user.profile.dateOfBirth) : undefined,
-            gender: user?.profile?.gender || undefined,
-            citizenshipID: user?.profile?.citizenshipID || undefined,
+            dateOfBirth: undefined,
+            gender: undefined,
+            citizenshipID: "",
             citizenshipFrontImg: undefined,
             citizenshipBackImg: undefined,
-            address: user?.profile?.address || undefined,
-            preferredCity: user?.profile?.preferredCity || undefined,
-            preferredArea: user?.profile?.preferredArea || undefined,
-            maxBudget: user?.profile?.maxBudget || undefined,
-            minBudget: user?.profile?.minBudget || undefined,
+            address: "",
+            preferredCity: "",
+            preferredArea: "",
+            maxBudget: null,
+            minBudget: null,
         },
     });
+
+    // Reset form when user data is available
+    useEffect(() => {
+        if (user?.profile) {
+            const formData = {
+                phone: user.profile.phone || "",
+                profilePic: undefined,
+                dateOfBirth: user.profile.dateOfBirth ? new Date(user.profile.dateOfBirth) : undefined,
+                gender: user.profile.gender || "",
+                citizenshipID: user.profile.citizenshipID || "",
+                citizenshipFrontImg: undefined,
+                citizenshipBackImg: undefined,
+                address: user.profile.address || "",
+                preferredCity: user.profile.preferredCity || "",
+                preferredArea: user.profile.preferredArea || "",
+                maxBudget: user.profile.maxBudget || null,
+                minBudget: user.profile.minBudget || null,
+            };
+            form.reset(formData);
+        }
+    }, [user, form]);
+
     const onSubmit = async (values) => {
         try {
-            const response = await updateUserProfile(values).unwrap();
-            if (response && response.message && (response.message === "Phone number already exists" || response.message === "Citizenship ID already exists")) {
+            const response = await updateProfile(values);
+            if (
+                response?.message === "Phone number already exists" ||
+                response?.message === "Citizenship ID already exists"
+            ) {
                 setMessage(response.message);
                 toast.error(response.message);
                 return;
             }
             setMessage(null);
-            toast.success('Profile Updated');
         } catch (error) {
-            toast.error(error?.data?.message || "Update Failed");
         }
-    }
-    useEffect(() => {
-        if (error) {
-            toast.error(error.message);
-        }
-    }, [error]);
+    };
+
     /* ---------- alert messgge --------- */
     useEffect(() => {
         if (message) {
@@ -318,7 +359,6 @@ const UserProfile = () => {
             return () => clearTimeout(timer);
         }
     }, [message]);
-
 
     /* -------- location handling ------- */
     const address = form.watch("address");
@@ -333,13 +373,21 @@ const UserProfile = () => {
         }, 500);
         return () => clearTimeout(delayDebounce);
     }, [address, selected])
+
     const handleSuggestionSelect = (value) => {
         form.setValue("address", value);
         setSelected(true);
         setSuggestions([]);
     };
 
-    // }
+    // Show loading state while user data is being fetched
+    if (!user) {
+        return (
+            <div className="py-8 container mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="text-center">Loading...</div>
+            </div>
+        );
+    }
 
     return (
         <div className="py-8 container mx-auto px-4 sm:px-6 lg:px-8 relative ">
@@ -354,7 +402,7 @@ const UserProfile = () => {
                                 loading="lazy"
                                 className="w-full h-full rounded-full object-cover" />
                             <div className="absolute top-0 left-0 bg-black/50 w-full h-full flex justify-center items-center opacity-0 group-hover:opacity-100 cursor-pointer">
-                                <UploadWidget
+                                {/* <UploadWidget
                                     onUpload={async (url) => {
                                         setProfilePicPreview(url);
                                         form.setValue("profilePic", url);
@@ -367,7 +415,7 @@ const UserProfile = () => {
                                     }}
                                 >
                                     <UploadCloud size={24} />
-                                </UploadWidget>
+                                </UploadWidget> */}
                             </div>
                         </div>
                     </TooltipTrigger>
@@ -441,6 +489,7 @@ const UserProfile = () => {
                                                     date > new Date() || date < new Date("1900-01-01")
                                                 }
                                                 initialFocus
+                                                captionLayout="dropdown"
                                             />
                                         </PopoverContent>
                                     </Popover>
@@ -505,7 +554,7 @@ const UserProfile = () => {
                             render={({ field }) => (
                                 <FormItem >
                                     <FormLabel>Gender</FormLabel>
-                                    <Select onValueChange={field.onChange} defaultValue={field.value || undefined}>
+                                    <Select key={field.value} onValueChange={field.onChange} value={field.value || ""}>
                                         <FormControl>
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Select your gender" />
