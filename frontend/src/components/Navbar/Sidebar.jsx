@@ -1,4 +1,4 @@
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, LayoutDashboardIcon } from "lucide-react";
 
 import { Link, useLocation } from "react-router";
 import {
@@ -20,7 +20,12 @@ export function Sidebar({ isOpen, sidebar: navlink, NavLinks }) {
         Room Finder
       </h1>
       <ul>
-        <li>abcdord</li>
+        <li>
+          <div className="flex items-center gap-2 bg-background cursor-pointer hover:bg-muted rounded-md p-2">
+            <LayoutDashboardIcon size="16" />
+            <Link to='/dashboard'>Dashboard</Link>
+          </div>
+        </li>
       </ul>
       <ul className="flex-grow">
         {navlink.map((link) => (

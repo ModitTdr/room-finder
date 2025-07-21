@@ -25,7 +25,8 @@ const Dashboard = () => {
       queryKey: ["userprofile"],
       queryFn: getUser,
    })
-   const navlink = useMemo(() => sidebarLinks(isAuthenticated, user?.role), [isAuthenticated]);
+   const userRole = user?.role | "SEEKER";
+   const navlink = useMemo(() => sidebarLinks(isAuthenticated, userRole), [isAuthenticated]);
 
    if (isLoading) return <LoadingPage />
 

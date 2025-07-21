@@ -1,12 +1,13 @@
-import { House, List, ListFilterPlus, Search, SquareUser, Unplug, User, UsersRound } from "lucide-react";
+import { Heart, House, List, ListFilterPlus, Search, SquareUser, Unplug, User, UsersRound } from "lucide-react";
 const sidebarLinks = (isAuthenticated = false, userRole) => [
   {
     title: "Room",
     icon: House,
     subtitle: [
       { title: 'Browse Rooms', icon: Search, isActive: true },
-      { title: 'List Rooms', icon: ListFilterPlus, isActive: isAuthenticated },
-      { title: 'Add a Room', icon: List, isActive: isAuthenticated },
+      { title: 'List Rooms', icon: ListFilterPlus, isActive: (isAuthenticated, (userRole === "OWNER")) },
+      { title: 'Add a Room', icon: List, isActive: (isAuthenticated, (userRole === "OWNER")) },
+      { title: 'Favourites', icon: Heart, isActive: isAuthenticated },
     ]
   },
   {

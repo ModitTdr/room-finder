@@ -16,7 +16,7 @@ export const getCreateUserProfileService = async (id, validatedData) => {
       }
     });
     if (phoneExists) {
-      return { message: "Phone number already exists" };
+      throw new Error("Phone number already exists");
     }
   }
   if (validatedData.data.citizenshipID) {
@@ -38,7 +38,8 @@ export const getCreateUserProfileService = async (id, validatedData) => {
     const create = await db.profile.create({
       data: {
         userId: id,
-        ...validatedData.data
+        ...validatedData.data,
+        amenityPreferences: validatedData.data.amenityPreferences || [],
       }
     })
     return { message: "Profile created", create };

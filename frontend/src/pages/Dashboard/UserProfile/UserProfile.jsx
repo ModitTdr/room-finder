@@ -407,13 +407,13 @@ const UserProfile = () => {
                 dateOfBirth: user.profile.dateOfBirth ? new Date(user.profile.dateOfBirth) : undefined,
                 gender: user.profile.gender || "",
                 citizenshipID: user.profile.citizenshipID || "",
-                citizenshipFrontImg: "",
-                citizenshipBackImg: "",
+                citizenshipFrontImg: undefined,
+                citizenshipBackImg: undefined,
                 address: user.profile.address || "",
                 preferredAddress: user.profile.preferredAddress || "",
                 maxBudget: user.profile.maxBudget || null,
                 minBudget: user.profile.minBudget || null,
-                preferredRoomType: user.profile.preferredRoomType || "",
+                preferredRoomType: user.profile.preferredRoomType || undefined,
                 amenityPreferences: user.profile.amenityPreferences || [],
             };
             form.reset(formData);
@@ -588,7 +588,7 @@ const UserProfile = () => {
                     <PreferencesSection control={form.control} />
 
                     {/* Citizenship Information Section */}
-                    <CitizenshipSection control={form.control} />
+                    {user?.role === "OWNER" && <CitizenshipSection control={form.control} />}
                     <button type='submit' className='fixed bottom-12 right-12 w-12 h-12 bg-green-400 rounded-full flex items-center justify-center shadow-lg hover:scale-105 smooth-transition cursor-pointer'>
                         <Check size={28} color="black" />
                     </button>
