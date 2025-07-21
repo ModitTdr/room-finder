@@ -1,9 +1,9 @@
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "@/lib/react-query";
 import { toast } from "react-hot-toast";
-import { FaGoogle } from "react-icons/fa";
+import GoogleLoginButton from "@/components/GoogleLoginButton"
 
 // Services
 import { loginUser } from "@/services/authServices";
@@ -68,7 +68,7 @@ const LoginPage = () => {
               <div className="flex items-center justify-between">
                 <Label htmlFor="password">Password</Label>
                 <a
-                  href="#"
+                  href="/forgot-password"
                   className="text-sm underline hover:opacity-80"
                 >
                   Forgot your password?
@@ -102,10 +102,7 @@ const LoginPage = () => {
                 </span>
               </div>
 
-              <Button variant="outline" className="w-full">
-                <FaGoogle className="mr-2" />
-                Login with Google
-              </Button>
+              <GoogleLoginButton />
             </div>
 
             {/* Signup Link */}

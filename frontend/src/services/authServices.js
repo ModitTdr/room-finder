@@ -1,3 +1,5 @@
+
+import axios from "axios";
 const API = import.meta.env.VITE_API_URL
 
 export async function loginUser(formData) {
@@ -68,3 +70,9 @@ export async function logoutUser() {
 
     return res.json();
 }
+
+export const forgotPasswordRequest = (email) =>
+    axios.post(`${API}/auth/forgot-password`, { email });
+
+export const resetPassword = ({ id, token, newPassword }) =>
+    axios.post(`${API}/auth/reset-password`, { id, token, newPassword });

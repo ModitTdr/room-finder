@@ -1,3 +1,4 @@
+import { PrismaClient } from "@prisma/client";
 import db from "../prismaClient.js";
 import bcrypt from "bcrypt";
 
@@ -71,6 +72,37 @@ export const updateUserService = async (userData, userId, isAdmin = false) => {
   })
   return updatedUser;
 };
+const prisma = new PrismaClient();
+const savePasswordResetToken = async (userId, token, expiry) => {
+  return await prisma.user.update({
+    where: { id: userId },
+    data: { resetToken: token, resetTokenExpiry: BigInt(expiry) }
+  });
+};
+
+const getUserByResetToken = async (id, token) => {
+  return await prisma.user.findFirst({
+    where: {
+      id,
+      resetToken: token,
+    }
+  });
+};
+
+const updatePassword = async (id, newHashedPassword) => {
+  return await prisma.user.update({
+    where: { id },
+    data: { password: newHashedPassword }
+  });
+};
+
+const clearResetToken = async (id) => {
+  return await prisma.user.update({
+    where: { id },
+    data: { resetToken: null, resetTokenExpiry: null }
+  });
+};
+
 
 
 export default {
@@ -81,4 +113,8 @@ export default {
   userSignupService,
   deleteUserService,
   updateUserService,
+  savePasswordResetToken,
+  getUserByResetToken,
+  updatePassword,
+  clearResetToken,
 };
