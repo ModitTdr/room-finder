@@ -1,5 +1,5 @@
 import { House, List, ListFilterPlus, Search, SquareUser, Unplug, User, UsersRound } from "lucide-react";
-const sidebarLinks = (isAuthenticated, isDashboard = false) => [
+const sidebarLinks = (isAuthenticated = false, userRole) => [
   {
     title: "Room",
     icon: House,
@@ -14,7 +14,7 @@ const sidebarLinks = (isAuthenticated, isDashboard = false) => [
     icon: User,
     subtitle: [
       { title: 'Profile', icon: SquareUser, link: 'userprofile', isActive: isAuthenticated },
-      { title: 'All Users', icon: UsersRound, link: 'userlist', isActive: isAuthenticated },
+      { title: 'All Users', icon: UsersRound, link: 'userlist', isActive: (isAuthenticated, (userRole === "ADMIN")) },
       { title: 'Logout', icon: Unplug, isActive: isAuthenticated },
     ]
   }

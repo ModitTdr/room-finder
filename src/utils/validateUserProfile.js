@@ -1,13 +1,13 @@
 import { z } from "zod";
 
-const Gender = z.enum(['MALE', 'FEMALE', 'OTHER', 'PREFER_NOT_TO_SAY']);
+const Gender = z.enum(["MALE", "FEMALE", "OTHER", "PREFER_NOT_TO_SAY"]);
+const RoomType = z.enum(["SINGLE", "DOUBLE", "FLAT", "APARTMENT", "HOSTEL"]);
 
 export const userProfileSchema = z.object({
-    address: z.string().min(1, "Address cannot be empty").nullable().optional(),
     phone: z.string()
         .regex(/^(\+977)?[9][6-9]\d{8}$/, 'Invalid number format')
-        .nullable()
-        .optional(),
+        .optional()
+        .nullable(),
     profilePic: z.string().url('Invalid profile picture URL').optional().nullable(),
     dateOfBirth: z.string()
         .datetime('Invalid date format')
@@ -20,14 +20,13 @@ export const userProfileSchema = z.object({
         .optional()
         .nullable(),
     gender: Gender.optional().nullable(),
-    citizenshipID: z.string().optional(),
-    citizenshipFrontImg: z.string().url("Must be a valid URL").optional(),
-    citizenshipBackImg: z.string().url("Must be a valid URL").optional(),
+    citizenshipID: z.string().optional().nullable(),
+    citizenshipFrontImg: z.string().url("Must be a valid URL").optional().nullable(),
+    citizenshipBackImg: z.string().url("Must be a valid URL").optional().nullable(),
     address: z.string().max(500, 'Address must be less than 500 characters').optional().nullable(),
 
     // Preferences
-    preferredCity: z.string().max(100, 'Preferred city must be less than 100 characters').optional().nullable(),
-    preferredArea: z.string().max(100, 'Preferred area must be less than 100 characters').optional().nullable(),
+    preferredAddress: z.string().max(500, 'Preferred Address must be less than 500 characters').optional().nullable(),
     latitude: z.number()
         .min(-90, 'Latitude must be between -90 and 90')
         .max(90, 'Latitude must be between -90 and 90')
@@ -48,6 +47,12 @@ export const userProfileSchema = z.object({
         .int('Min budget must be an integer')
         .positive('Min budget must be positive')
         .max(1000000, 'Min budget seems unrealistic')
+        .optional()
+        .nullable(),
+    preferredRoomType: RoomType.optional().nullable(),
+
+    amenityPreferences: z
+        .array(z.string().min(1))
         .optional()
         .nullable(),
 

@@ -26,6 +26,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
     Popover,
     PopoverContent,
@@ -51,13 +52,31 @@ const Gender = {
     FEMALE: "FEMALE",
     OTHER: "OTHER",
 };
+const RoomType = {
+    SINGLE: "SINGLE",
+    DOUBLE: "DOUBLE",
+    FLAT: "FLAT",
+    APARTMENT: "APARTMENT",
+    HOSTEL: "HOSTEL"
+}
+const Amenities = [
+    "wifi",
+    "parking",
+    "ac",
+    "laundry",
+    "furnished",
+    "tv",
+    "kitchen",
+    "private_bathroom"
+];
+
 
 /* ------- validation schemas ------- */
 const profileSchema = z.object({
     phone: z.string()
         .regex(/^(\+977)?[9][6-9]\d{8}$/, 'Invalid number format')
-        .nullable()
-        .optional(),
+        .optional()
+        .nullable(),
     profilePic: z.string().url('Invalid profile picture URL').optional().nullable(),
     dateOfBirth: z.date()
         .max(new Date(), 'Date of birth cannot be in the future')
@@ -67,15 +86,14 @@ const profileSchema = z.object({
         }, 'Age must be between at least 16')
         .optional()
         .nullable(),
-    gender: z.nativeEnum(Gender).optional().nullable(),
-    citizenshipID: z.string().optional(),
-    citizenshipFrontImg: z.string().url("Must be a valid URL").nullable().optional(),
-    citizenshipBackImg: z.string().url("Must be a valid URL").nullable().optional(),
+    gender: z.enum(Gender).optional().nullable(),
+    citizenshipID: z.string().optional().nullable(),
+    citizenshipFrontImg: z.string().url("Must be a valid URL").optional().nullable(),
+    citizenshipBackImg: z.string().url("Must be a valid URL").optional().nullable(),
     address: z.string().max(500, 'Address must be less than 500 characters').nullable().optional(),
 
     // Preferences
-    preferredCity: z.string().max(100, 'Preferred city must be less than 100 characters').optional().nullable(),
-    preferredArea: z.string().max(100, 'Preferred area must be less than 100 characters').optional().nullable(),
+    preferredAddress: z.string().max(500, 'Preferred Address must be less than 500 characters').optional().nullable(),
     maxBudget: z.number()
         .int('Max budget must be an integer')
         .positive('Max budget must be positive')
@@ -86,6 +104,11 @@ const profileSchema = z.object({
         .int('Min budget must be an integer')
         .positive('Min budget must be positive')
         .max(1000000, 'Min budget seems unrealistic')
+        .optional()
+        .nullable(),
+    preferredRoomType: z.enum(RoomType).optional().nullable(),
+    amenityPreferences: z
+        .array(z.string().min(1))
         .optional()
         .nullable(),
 });
@@ -199,34 +222,26 @@ const PreferencesSection = ({ control }) => {
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border p-4 rounded-lg shadow-sm">
             <h3 className="text-xl font-semibold col-span-full text-foreground">Preferences</h3>
+            {/* -------- Preffered Address ------- */}
             <FormField
                 control={control}
-                name="preferredCity"
+                name="preferredAddress"
                 render={({ field }) => (
                     <FormItem>
-                        <FormLabel>Preferred City</FormLabel>
+                        <FormLabel>Preferred Address</FormLabel>
                         <FormControl>
-                            <Input placeholder="e.g., Kathmandu" {...field} />
+                            <AddressAutocomplete
+                                value={field.value}
+                                onChange={field.onChange}
+                                placeholder="e.g., Basundhara, Kathmandu"
+                            />
                         </FormControl>
                         <FormDescription>Your preferred city for services/residence.</FormDescription>
                         <FormMessage />
                     </FormItem>
                 )}
             />
-            <FormField
-                control={control}
-                name="preferredArea"
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Preferred Area</FormLabel>
-                        <FormControl>
-                            <Input placeholder="e.g., New Road" {...field} />
-                        </FormControl>
-                        <FormDescription>Your preferred area within the city.</FormDescription>
-                        <FormMessage />
-                    </FormItem>
-                )}
-            />
+            {/* ----------- Min Budget ----------- */}
             <FormField
                 control={control}
                 name="minBudget"
@@ -247,6 +262,7 @@ const PreferencesSection = ({ control }) => {
                     </FormItem>
                 )}
             />
+            {/* /* ----------- Max Budget ----------- */}
             <FormField
                 control={control}
                 name="maxBudget"
@@ -267,6 +283,75 @@ const PreferencesSection = ({ control }) => {
                     </FormItem>
                 )}
             />
+            {/* ------------ Room Type ----------- */}
+            <FormField
+                control={control}
+                name="preferredRoomType"
+                render={({ field }) => (
+                    <FormItem >
+                        <FormLabel>Preffered Room Type</FormLabel>
+                        <Select key={field.value} onValueChange={field.onChange} value={field.value || ""}>
+                            <FormControl>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select Room Type" />
+                                </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                                {Object.values(RoomType).map((roomOption) => (
+                                    <SelectItem key={roomOption} value={roomOption}>
+                                        {roomOption.charAt(0).toUpperCase() + roomOption.slice(1).toLowerCase()}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        <FormDescription>Your preffered room type.</FormDescription>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+            {/* ----------- Ammenities ----------- */}
+            <FormField
+                control={control}
+                name="amenityPreferences"
+                render={() => (
+                    <FormItem>
+                        <FormLabel>Amenities</FormLabel>
+                        <div className="grid gap-2">
+                            {Amenities.map((amenity) => (
+                                <FormField
+                                    key={amenity}
+                                    control={control}
+                                    name="amenityPreferences"
+                                    render={({ field }) => {
+                                        return (
+                                            <FormItem key={amenity} className="flex flex-row items-start space-x-2 space-y-0">
+                                                <FormControl>
+                                                    <Checkbox
+                                                        checked={field.value?.includes(amenity)}
+                                                        onCheckedChange={(checked) => {
+                                                            if (checked) {
+                                                                field.onChange([...field.value || [], amenity]);
+                                                            } else {
+                                                                field.onChange(field.value?.filter((val) => val !== amenity));
+                                                            }
+                                                        }}
+                                                    />
+                                                </FormControl>
+                                                <FormLabel className="text-sm font-normal">
+                                                    {amenity.replace("_", " ").toUpperCase()}
+                                                </FormLabel>
+                                            </FormItem>
+                                        );
+                                    }}
+                                />
+                            ))}
+                        </div>
+                        <FormDescription>Select your preferred amenities</FormDescription>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+
         </div>
     )
 }
@@ -274,10 +359,7 @@ const PreferencesSection = ({ control }) => {
 const UserProfile = () => {
     const queryClient = useQueryClient();
     const { user } = useOutletContext();
-    const [message, setMessage] = useState(null);
     const [profilePicPreview, setProfilePicPreview] = useState(null);
-    const [suggestions, setSuggestions] = useState([]);
-    const [selected, setSelected] = useState(false);
 
     const { mutateAsync: updateProfile } = useMutation({
         mutationFn: updateUserProfile,
@@ -310,10 +392,11 @@ const UserProfile = () => {
             citizenshipFrontImg: undefined,
             citizenshipBackImg: undefined,
             address: "",
-            preferredCity: "",
-            preferredArea: "",
+            preferredAddress: "",
             maxBudget: null,
             minBudget: null,
+            preferredRoomType: undefined,
+            amenityPreferences: [],
         },
     });
     useEffect(() => {
@@ -324,13 +407,14 @@ const UserProfile = () => {
                 dateOfBirth: user.profile.dateOfBirth ? new Date(user.profile.dateOfBirth) : undefined,
                 gender: user.profile.gender || "",
                 citizenshipID: user.profile.citizenshipID || "",
-                citizenshipFrontImg: undefined,
-                citizenshipBackImg: undefined,
+                citizenshipFrontImg: "",
+                citizenshipBackImg: "",
                 address: user.profile.address || "",
-                preferredCity: user.profile.preferredCity || "",
-                preferredArea: user.profile.preferredArea || "",
+                preferredAddress: user.profile.preferredAddress || "",
                 maxBudget: user.profile.maxBudget || null,
                 minBudget: user.profile.minBudget || null,
+                preferredRoomType: user.profile.preferredRoomType || "",
+                amenityPreferences: user.profile.amenityPreferences || [],
             };
             form.reset(formData);
         }
@@ -342,24 +426,13 @@ const UserProfile = () => {
                 response?.message === "Phone number already exists" ||
                 response?.message === "Citizenship ID already exists"
             ) {
-                setMessage(response.message);
                 toast.error(response.message);
                 return;
             }
-            setMessage(null);
         } catch (error) {
-            // Re-throw the error so the mutation knows it failed
             throw error;
         }
     };
-
-    const handleAddressSelect = (addressData) => {
-        console.log('Address selected:', addressData);
-        // You can store additional address data if needed
-        // setValue('addressData', addressData);
-    };
-
-    const watchedAddress = form.watch('address');
 
     return (
         <div className="py-8 container mx-auto px-4 sm:px-6 lg:px-8 relative ">

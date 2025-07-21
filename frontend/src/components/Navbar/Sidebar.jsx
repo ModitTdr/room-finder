@@ -10,7 +10,7 @@ import { useLogout } from "@/hooks/useLogout";
 
 export function Sidebar({ isOpen, sidebar: navlink, NavLinks }) {
   const { pathname: currentPath } = useLocation();
-  const { mutate: logout, isPending } = useLogout();
+  const { mutate: logout } = useLogout();
   return (
     <div
       className={`bg-background border-r p-4 smooth-transition h-dvh z-55 w-62 fixed top-0 left-0 md:hidden flex flex-col z-55 ${isOpen ? "translate-x-0 lg:static" : "-translate-x-full"

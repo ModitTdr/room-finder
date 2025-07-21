@@ -25,9 +25,7 @@ const Dashboard = () => {
       queryKey: ["userprofile"],
       queryFn: getUser,
    })
-
-   const navlink = useMemo(() => sidebarLinks(isAuthenticated, true)
-      , [isAuthenticated]);
+   const navlink = useMemo(() => sidebarLinks(isAuthenticated, user?.role), [isAuthenticated]);
 
    if (isLoading) return <LoadingPage />
 
@@ -64,15 +62,18 @@ const Dashboard = () => {
                         </div>
                      </CollapsibleTrigger>
                      <CollapsibleContent className="pl-4">
-                        {subtitle.map(({ title, icon: Icon, link = "#" }) => (
-                           <div key={title} className={`flex gap-2 items-center cursor-pointer p-2 leading-none w-full rounded-md hover:bg-foreground/5 pt-[10px] ${currentPath.endsWith(link) && 'font-bold'}`}>
-                              <Icon size={16} />
-                              <Link to={link} className="text-sm">{title}</Link>
-                           </div>
-                        ))}
+                        {subtitle
+                           .filter((sub) => sub.isActive)
+                           .map(({ title, icon: Icon, link = "#" }) => (
+                              <div key={title} className={`flex gap-2 items-center cursor-pointer p-2 leading-none w-full rounded-md hover:bg-foreground/5 pt-[10px] ${currentPath.endsWith(link) && 'font-bold'}`}>
+                                 <Icon size={16} />
+                                 <Link to={link} className="text-sm">{title}</Link>
+                              </div>
+                           ))}
                      </CollapsibleContent>
                   </Collapsible>
-               ))}
+               ))
+               }
             </div>
          </aside>
 
