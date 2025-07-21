@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser"
 
 import userRoute from "./routing/userRoutes.js"
 import authRoute from "./routing/authRoutes.js"
+import roomRoute from "./routing/roomRoutes.js"
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -19,6 +20,7 @@ app.use(cookieParser());
 //routing
 app.use('/api/auth', authRoute);
 app.use('/api/users', userRoute);
+app.use('/api/rooms', roomRoute);
 app.listen(PORT, () => {
   console.log(`Server started at http://localhost:${PORT}`)
 })
