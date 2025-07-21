@@ -12,6 +12,7 @@ import { CalendarIcon, Check, UploadCloud } from "lucide-react";
 
 import UploadWidget from "@/components/UploadWidget"
 import { updateUserProfile } from "@/services/userServices"
+import AddressAutocomplete from "@/components/AddressAutocomplete";
 /* -------- shadcn components ------- */
 import {
     Form,
@@ -347,41 +348,22 @@ const UserProfile = () => {
             }
             setMessage(null);
         } catch (error) {
+            // Re-throw the error so the mutation knows it failed
+            throw error;
         }
     };
 
-    /* ---------- alert messgge --------- */
-    useEffect(() => {
-        if (message) {
-            const timer = setTimeout(() => setMessage(null), 3000);
-            return () => clearTimeout(timer);
-        }
-    }, [message]);
-
-    /* -------- location handling ------- */
-    const address = form.watch("address");
-
-    useEffect(() => {
-        const delayDebounce = setTimeout(() => {
-            if (address && !selected) {
-                fetchAddressSuggestions(address).then((results) => {
-                    setSuggestions(results);
-                })
-            }
-        }, 500);
-        return () => clearTimeout(delayDebounce);
-    }, [address, selected])
-
-    const handleSuggestionSelect = (value) => {
-        form.setValue("address", value);
-        setSelected(true);
-        setSuggestions([]);
+    const handleAddressSelect = (addressData) => {
+        console.log('Address selected:', addressData);
+        // You can store additional address data if needed
+        // setValue('addressData', addressData);
     };
 
+    const watchedAddress = form.watch('address');
 
     return (
         <div className="py-8 container mx-auto px-4 sm:px-6 lg:px-8 relative ">
-            {/* Topbar - Adjusted for better responsiveness */}
+            {/* --------- Topbar Section --------- */}
             <div className='flex flex-col sm:flex-row items-center gap-4 p-4 bg-red-300/30 rounded-lg shadow-md mb-8'>
                 <Tooltip>
                     <TooltipTrigger>
@@ -421,7 +403,6 @@ const UserProfile = () => {
             </div>
 
             <h2 className="text-2xl font-semibold mb-6 text-foreground">Edit Profile</h2>
-
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                     {/* Basic Information */}
@@ -492,43 +473,12 @@ const UserProfile = () => {
                                 <FormItem className="relative">
                                     <FormLabel>Address</FormLabel>
                                     <FormControl>
-                                        <Input
-                                            {...field}
-                                            onChange={(e) => {
-                                                field.onChange(e);
-                                                setSelected(false);
-                                            }}
-                                            onBlur={() => {
-                                                setTimeout(() => {
-                                                    if (!selected) {
-                                                        setSuggestions([]);
-                                                    }
-                                                }, 100);
-                                            }}
-                                            onFocus={() => {
-                                                if (address && suggestions.length === 0) {
-                                                    fetchAddressSuggestions(address).then((results) => {
-                                                        setSuggestions(results);
-                                                    });
-                                                }
-                                            }}
-                                            placeholder="Start typing your address"
-                                            autoComplete="off"
+                                        <AddressAutocomplete
+                                            value={field.value}
+                                            onChange={field.onChange}
+                                            placeholder="e.g., New Road, Kathmandu"
                                         />
                                     </FormControl>
-                                    {suggestions.length > 0 && (
-                                        <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto top-14">
-                                            {suggestions.map((s, idx) => (
-                                                <div
-                                                    key={idx}
-                                                    onClick={() => handleSuggestionSelect(s.formatted)}
-                                                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm border-b border-gray-100 last:border-b-0 text-gray-800"
-                                                >
-                                                    {s.formatted}
-                                                </div>
-                                            ))}
-                                        </div>
-                                    )}
                                     <FormMessage />
                                 </FormItem>
                             )}

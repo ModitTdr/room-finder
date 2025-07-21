@@ -39,13 +39,24 @@ export const updateUserProfile = async (formData) => {
             credentials: "include",
             body: JSON.stringify(formData),
         });
-        if (!res.ok) {
-            const err = await res.json();
-            throw new Error(err.message || "Nothing updated");
+
+        const data = await res.json();
+
+        if (data.message === "Phone number already exists" ||
+            data.message === "Citizenship ID already exists") {
+            const error = new Error(data.message);
+            error.response = { data };
+            throw error;
         }
-        return res.json();
+        if (!res.ok) {
+            const error = new Error(data.message || "Nothing updated");
+            error.response = { data };
+            throw error;
+        }
+
+        return data;
     } catch (error) {
-        console.error(error)
+        console.error(error);
         throw error;
     }
 }
