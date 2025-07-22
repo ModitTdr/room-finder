@@ -76,6 +76,10 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* Custom design tokens */
+  --glow-primary: 0 0 40px hsl(263 70% 50% / 0.3);
+  --glow-secondary: 0 0 80px hsl(280 85% 65% / 0.2);
 }
 
 .dark {
@@ -112,7 +116,31 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+
+  /* Custom design tokens */
+  --glow-primary: 0 0 40px hsl(263 70% 50% / 0.3);
+  --glow-secondary: 0 0 80px hsl(280 85% 65% / 0.2);
 }
+
+/* For Webkit-based browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 6px;
+  border: 1px solid var(--background);
+  cursor: pointer;
+}
+
+
 
 @layer base {
   * {
@@ -144,21 +172,35 @@
     box-shadow: 0px 0px 4px 0px var(--primary);
   }
 
+  /* You already have these, but ensure they are here for completeness if you want to hide scrollbars */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
 
   .no-scrollbar {
     -ms-overflow-style: none;
+    /* IE and Edge */
     scrollbar-width: none;
-  }
-}
-
-@utility scrollbar-hidden {
-  &::-webkit-scrollbar {
-    display: none;
+    /* Firefox */
   }
 
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+  .scrollbar-md::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .scrollbar-md::-webkit-scrollbar-track {
+    background: var(--muted);
+  }
+
+  .scrollbar-md::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 6px;
+  }
+
+  .scrollbar-md {
+    /* For Firefox */
+    scrollbar-width: auto;
+    scrollbar-color: var(--primary) var(--muted);
+  }
 }

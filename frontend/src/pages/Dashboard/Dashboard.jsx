@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link, Outlet, useLocation } from "react-router";
 import { getUser } from "@/services/userServices"
@@ -25,8 +25,8 @@ const Dashboard = () => {
       queryKey: ["userprofile"],
       queryFn: getUser,
    })
-   const userRole = user?.role | "SEEKER";
-   const navlink = useMemo(() => sidebarLinks(isAuthenticated, userRole), [isAuthenticated]);
+   const userRole = user?.role || "SEEKER";
+   const navlink = useMemo(() => sidebarLinks(isAuthenticated, userRole), [isAuthenticated, userRole]);
 
    if (isLoading) return <LoadingPage />
 

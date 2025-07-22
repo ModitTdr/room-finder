@@ -1,25 +1,24 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useDebounce } from "use-debounce";
-import { useFormContext, Controller } from "react-hook-form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Skeleton } from "@/components/ui/skeleton";
 
 const fetchSuggestions = async (query) => {
    if (!query) return [];
    const res = await fetch(
-      `https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(
-         query
-      )}&key=${import.meta.env.VITE_API_OPENCAGE}&limit=5`
-   );
+      `https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(query)}&key=${import.meta.env.VITE_API_OPENCAGE}&limit=5`);
    const data = await res.json();
-   return data.results.map((r) => r.formatted);
+   return data.results.map((r) => ({
+      label: r.formatted,
+      lat: r.geometry.lat,
+      lng: r.geometry.lng,
+   }));
 };
 
 export default function AddressAutocomplete({
    value,
    onChange,
+   onSelect,
    placeholder = "Enter address...",
 }) {
    const [inputValue, setInputValue] = useState(value || "");
@@ -41,8 +40,7 @@ export default function AddressAutocomplete({
          <Input
             value={inputValue}
             onChange={(e) => {
-               const val = e.target.value;
-               setInputValue(val);
+               setInputValue(e.target.value);
                setShowDropdown(true);
             }}
             onFocus={() => setShowDropdown(true)}
@@ -59,12 +57,13 @@ export default function AddressAutocomplete({
                         key={i}
                         className="px-3 py-2 hover:bg-muted cursor-pointer text-sm"
                         onMouseDown={() => {
-                           setInputValue(suggestion);
-                           onChange(suggestion);
+                           setInputValue(suggestion.label);
+                           onChange(suggestion.label);
+                           if (onSelect) onSelect(suggestion);
                            setShowDropdown(false);
                         }}
                      >
-                        {suggestion}
+                        {suggestion.label}
                      </div>
                   ))
                ) : (

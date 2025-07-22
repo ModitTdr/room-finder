@@ -12,6 +12,8 @@ import UserProfile from "@/pages/Dashboard/UserProfile/UserProfile"
 import ForgotPasswordPage from "@/pages/auth/ForgotPasswordPage";
 import ResetPasswordPage from "@/pages/auth/ResetPasswordPage";
 
+import MissingPage from "../pages/MissingPage";
+
 const router = createBrowserRouter([
     {
         path: "/",
@@ -44,8 +46,24 @@ const router = createBrowserRouter([
                     {
                         path: "userprofile",
                         element: <UserProfile />
-                    }
+                    },
+                    {
+                        path: "addroom",
+                        element: <MissingPage />
+                    },
+                    {
+                        path: "favourites",
+                        element: <MissingPage />
+                    },
+                    {
+                        path: "myrooms",
+                        element: <MissingPage />
+                    },
                 ]
+            },
+            {
+                path: "/rooms",
+                element: <MissingPage />
             },
 
         ]

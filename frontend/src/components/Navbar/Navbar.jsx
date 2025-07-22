@@ -65,7 +65,6 @@ const Navbar = ({ title }) => {
   const { isAuthenticated, isLoading, user } = useAuth();
   const userRole = user?.role || "SEEKER";
   const sidebar = useMemo(() => sidebarLinks(isAuthenticated, userRole), [isAuthenticated]);
-  const navLinksContent = <NavLinks isAuthenticated={isAuthenticated} />;
   if (isLoading) return null;
 
   return (
@@ -73,7 +72,6 @@ const Navbar = ({ title }) => {
       <Sidebar
         isOpen={isOpen}
         sidebar={sidebar}
-        NavLinks={!isAuthenticated ? navLinksContent : null}
       />
       {/* Overlay for mobile */}
       {isOpen && (

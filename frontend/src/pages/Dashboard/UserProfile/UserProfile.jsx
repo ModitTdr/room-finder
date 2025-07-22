@@ -91,7 +91,8 @@ const profileSchema = z.object({
     citizenshipFrontImg: z.string().url("Must be a valid URL").optional().nullable(),
     citizenshipBackImg: z.string().url("Must be a valid URL").optional().nullable(),
     address: z.string().max(500, 'Address must be less than 500 characters').nullable().optional(),
-
+    latitude: z.number().nullable().optional(),
+    longitude: z.number().nullable().optional(),
     // Preferences
     preferredAddress: z.string().max(500, 'Preferred Address must be less than 500 characters').optional().nullable(),
     maxBudget: z.number()
@@ -218,7 +219,7 @@ const CitizenshipSection = ({ control }) => {
     );
 };
 
-const PreferencesSection = ({ control }) => {
+const PreferencesSection = ({ control, setFormValue }) => {
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border p-4 rounded-lg shadow-sm">
             <h3 className="text-xl font-semibold col-span-full text-foreground">Preferences</h3>
@@ -233,6 +234,10 @@ const PreferencesSection = ({ control }) => {
                             <AddressAutocomplete
                                 value={field.value}
                                 onChange={field.onChange}
+                                onSelect={(item) => {
+                                    setFormValue("latitude", item.lat);
+                                    setFormValue("longitude", item.lng);
+                                }}
                                 placeholder="e.g., Basundhara, Kathmandu"
                             />
                         </FormControl>
@@ -392,6 +397,8 @@ const UserProfile = () => {
             citizenshipFrontImg: undefined,
             citizenshipBackImg: undefined,
             address: "",
+            latitude: null,
+            longitude: null,
             preferredAddress: "",
             maxBudget: null,
             minBudget: null,
@@ -410,6 +417,8 @@ const UserProfile = () => {
                 citizenshipFrontImg: undefined,
                 citizenshipBackImg: undefined,
                 address: user.profile.address || "",
+                latitude: user.profile.latitude || null,
+                longitude: user.profile.longitude || null,
                 preferredAddress: user.profile.preferredAddress || "",
                 maxBudget: user.profile.maxBudget || null,
                 minBudget: user.profile.minBudget || null,
@@ -421,6 +430,7 @@ const UserProfile = () => {
     }, [user, form]);
     const onSubmit = async (values) => {
         try {
+            console.log(values)
             const response = await updateProfile(values);
             if (
                 response?.message === "Phone number already exists" ||
@@ -451,8 +461,6 @@ const UserProfile = () => {
                                     onUpload={async (url) => {
                                         setProfilePicPreview(url);
                                         form.setValue("profilePic", url);
-                                        // Remove the immediate update - let the form handle it
-                                        // toast.success("Profile picture uploaded");
                                     }}
                                 >
                                     <UploadCloud size={24} />
@@ -474,7 +482,7 @@ const UserProfile = () => {
                     </div>
                 </div>
             </div>
-
+            {/* ------------ Main Body ----------- */}
             <h2 className="text-2xl font-semibold mb-6 text-foreground">Edit Profile</h2>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -585,7 +593,7 @@ const UserProfile = () => {
                     </div>
 
                     {/* Preference Information */}
-                    <PreferencesSection control={form.control} />
+                    {user?.role === "SEEKER" && <PreferencesSection control={form.control} setFormValue={form.setValue} />}
 
                     {/* Citizenship Information Section */}
                     {user?.role === "OWNER" && <CitizenshipSection control={form.control} />}
