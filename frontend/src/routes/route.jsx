@@ -13,6 +13,9 @@ import ForgotPasswordPage from "@/pages/auth/ForgotPasswordPage";
 import ResetPasswordPage from "@/pages/auth/ResetPasswordPage";
 
 import MissingPage from "../pages/MissingPage";
+import AddRoom from "../pages/Dashboard/Room/AddRoom";
+import RoomsIndex from "../pages/Homepage/Rooms/RoomsIndex";
+import RoomList from "../pages/Dashboard/Room/RoomList";
 
 const router = createBrowserRouter([
     {
@@ -49,7 +52,7 @@ const router = createBrowserRouter([
                     },
                     {
                         path: "addroom",
-                        element: <MissingPage />
+                        element: <AddRoom />
                     },
                     {
                         path: "favourites",
@@ -57,13 +60,17 @@ const router = createBrowserRouter([
                     },
                     {
                         path: "myrooms",
-                        element: <MissingPage />
+                        element: <RoomList />
                     },
                 ]
             },
             {
                 path: "/rooms",
-                element: <MissingPage />
+                element: <RoomsIndex />,
+            },
+            {
+                path: "/rooms/:id",
+                element: <MissingPage />,
             },
 
         ]

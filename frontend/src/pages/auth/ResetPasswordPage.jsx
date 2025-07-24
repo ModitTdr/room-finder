@@ -46,7 +46,7 @@ const ResetPasswordPage = () => {
                />
                {errors.newPassword && <p className="text-red-500 text-sm">{errors.newPassword.message}</p>}
             </div>
-            <Button type="submit" className="w-full">Reset Password</Button>
+            <Button type="submit" className="w-full" variant="accent">Reset Password</Button>
          </form>
       </div>
    );

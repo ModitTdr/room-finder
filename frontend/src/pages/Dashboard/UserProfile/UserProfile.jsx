@@ -8,7 +8,7 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import toast from 'react-hot-toast';
 
-import { CalendarIcon, Check, UploadCloud } from "lucide-react";
+import { CalendarIcon, Check, House, IdCard, UploadCloud, User } from "lucide-react";
 
 import UploadWidget from "@/components/UploadWidget"
 import { updateUserProfile } from "@/services/userServices"
@@ -127,201 +127,221 @@ const CitizenshipSection = ({ control }) => {
     }, [frontImgPreview, backImgPreview]);
 
     return (
-        <div className="space-y-6 border p-4 rounded-lg shadow-sm">
-            <h3 className="text-xl font-semibold text-foreground">Citizenship Information</h3>
-            <FormField
-                control={control}
-                name="citizenshipID"
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Citizenship ID</FormLabel>
-                        <FormControl>
-                            <Input placeholder="e.g., 123456789" {...field} />
-                        </FormControl>
-                        <FormDescription>Your national identification number.</FormDescription>
-                        <FormMessage />
-                    </FormItem>
-                )}
-            />
-            <FormField
-                control={control}
-                name="citizenshipFrontImg"
-                render={({ field: { value, onChange, ...fieldProps } }) => (
-                    <FormItem>
-                        <FormLabel>Citizenship Front Image</FormLabel>
-                        <FormControl>
-                            <Input
-                                type="file"
-                                accept="image/*"
-                                onChange={(event) => {
-                                    const file = event.target.files && event.target.files[0];
-                                    onChange(file);
-                                    if (file) {
-                                        setFrontImgPreview(URL.createObjectURL(file));
-                                    } else {
-                                        setFrontImgPreview(null);
-                                    }
-                                }}
-                                {...fieldProps}
-                            />
-                        </FormControl>
-                        <FormDescription>Upload the front side of your citizenship ID.</FormDescription>
-                        <FormMessage />
-                        {frontImgPreview && (
-                            <div className="mt-2">
-                                <p className="text-sm text-muted-foreground">Preview:</p>
-                                <img src={frontImgPreview} alt="Citizenship Front Preview" className="max-w-xs h-auto rounded-md border border-gray-200" />
-                            </div>
-                        )}
-                        {value instanceof File && !frontImgPreview && (
-                            <p className="text-sm text-muted-foreground mt-2">Selected file: {value.name}</p>
-                        )}
-                    </FormItem>
-                )}
-            />
-            <FormField
-                control={control}
-                name="citizenshipBackImg"
-                render={({ field: { value, onChange, ...fieldProps } }) => (
-                    <FormItem>
-                        <FormLabel>Citizenship Back Image</FormLabel>
-                        <FormControl>
-                            <Input
-                                type="file"
-                                accept="image/*"
-                                onChange={(event) => {
-                                    const file = event.target.files && event.target.files[0];
-                                    onChange(file);
-                                    if (file) {
-                                        setBackImgPreview(URL.createObjectURL(file));
-                                    } else {
-                                        setBackImgPreview(null);
-                                    }
-                                }}
-                                {...fieldProps}
-                            />
-                        </FormControl>
-                        <FormDescription>Upload the back side of your citizenship ID.</FormDescription>
-                        <FormMessage />
-                        {backImgPreview && (
-                            <div className="mt-2">
-                                <p className="text-sm text-muted-foreground">Preview:</p>
-                                <img src={backImgPreview} alt="Citizenship Back Preview" className="max-w-xs h-auto rounded-md border border-gray-200" />
-                            </div>
-                        )}
-                        {value instanceof File && !backImgPreview && (
-                            <p className="text-sm text-muted-foreground mt-2">Selected file: {value.name}</p>
-                        )}
-                    </FormItem>
-                )}
-            />
+        <div className="gap-6 p-8 rounded-lg border-border/50 bg-card/50 backdrop-blur-sm shadow-lg hover:shadow-xl space-y-8">
+            <div className="overflow-hidden space-y-1">
+                <div className="flex items-center gap-3 text-xl relative z-10">
+                    <div className="p-2 bg-accent/10 rounded-lg">
+                        <IdCard className="h-5 w-5 text-accent" />
+                    </div>
+                    Citizenship Information
+                </div>
+                <p className='text-sm text-muted-foreground'>Provide or update details about your nationality and country of residence.</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 shadow-sm">
+                <FormField
+                    control={control}
+                    name="citizenshipID"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Citizenship ID</FormLabel>
+                            <FormControl>
+                                <Input placeholder="e.g., 123456789" {...field} />
+                            </FormControl>
+                            <FormDescription>Your national identification number.</FormDescription>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={control}
+                    name="citizenshipFrontImg"
+                    render={({ field: { value, onChange, ...fieldProps } }) => (
+                        <FormItem>
+                            <FormLabel>Citizenship Front Image</FormLabel>
+                            <FormControl>
+                                <Input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(event) => {
+                                        const file = event.target.files && event.target.files[0];
+                                        onChange(file);
+                                        if (file) {
+                                            setFrontImgPreview(URL.createObjectURL(file));
+                                        } else {
+                                            setFrontImgPreview(null);
+                                        }
+                                    }}
+                                    {...fieldProps}
+                                />
+                            </FormControl>
+                            <FormDescription>Upload the front side of your citizenship ID.</FormDescription>
+                            <FormMessage />
+                            {frontImgPreview && (
+                                <div className="mt-2">
+                                    <p className="text-sm text-muted-foreground">Preview:</p>
+                                    <img src={frontImgPreview} alt="Citizenship Front Preview" className="max-w-xs h-auto rounded-md border border-gray-200" />
+                                </div>
+                            )}
+                            {value instanceof File && !frontImgPreview && (
+                                <p className="text-sm text-muted-foreground mt-2">Selected file: {value.name}</p>
+                            )}
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={control}
+                    name="citizenshipBackImg"
+                    render={({ field: { value, onChange, ...fieldProps } }) => (
+                        <FormItem>
+                            <FormLabel>Citizenship Back Image</FormLabel>
+                            <FormControl>
+                                <Input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(event) => {
+                                        const file = event.target.files && event.target.files[0];
+                                        onChange(file);
+                                        if (file) {
+                                            setBackImgPreview(URL.createObjectURL(file));
+                                        } else {
+                                            setBackImgPreview(null);
+                                        }
+                                    }}
+                                    {...fieldProps}
+                                />
+                            </FormControl>
+                            <FormDescription>Upload the back side of your citizenship ID.</FormDescription>
+                            <FormMessage />
+                            {backImgPreview && (
+                                <div className="mt-2">
+                                    <p className="text-sm text-muted-foreground">Preview:</p>
+                                    <img src={backImgPreview} alt="Citizenship Back Preview" className="max-w-xs h-auto rounded-md border border-gray-200" />
+                                </div>
+                            )}
+                            {value instanceof File && !backImgPreview && (
+                                <p className="text-sm text-muted-foreground mt-2">Selected file: {value.name}</p>
+                            )}
+                        </FormItem>
+                    )}
+                />
+            </div>
         </div>
     );
 };
 
 const PreferencesSection = ({ control, setFormValue }) => {
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border p-4 rounded-lg shadow-sm">
-            <h3 className="text-xl font-semibold col-span-full text-foreground">Preferences</h3>
-            {/* -------- Preffered Address ------- */}
-            <FormField
-                control={control}
-                name="preferredAddress"
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Preferred Address</FormLabel>
-                        <FormControl>
-                            <AddressAutocomplete
-                                value={field.value}
-                                onChange={field.onChange}
-                                onSelect={(item) => {
-                                    setFormValue("latitude", item.lat);
-                                    setFormValue("longitude", item.lng);
-                                }}
-                                placeholder="e.g., Basundhara, Kathmandu"
-                            />
-                        </FormControl>
-                        <FormDescription>Your preferred city for services/residence.</FormDescription>
-                        <FormMessage />
-                    </FormItem>
-                )}
-            />
-            {/* ----------- Min Budget ----------- */}
-            <FormField
-                control={control}
-                name="minBudget"
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Minimum Budget</FormLabel>
-                        <FormControl>
-                            <Input
-                                type="number"
-                                placeholder="e.g., 500"
-                                {...field}
-                                value={field.value || ''} // Convert null/undefined to empty string
-                                onChange={e => field.onChange(e.target.value ? parseInt(e.target.value, 10) : null)}
-                            />
-                        </FormControl>
-                        <FormDescription>Your minimum budget for services/residence.</FormDescription>
-                        <FormMessage />
-                    </FormItem>
-                )}
-            />
-            {/* /* ----------- Max Budget ----------- */}
-            <FormField
-                control={control}
-                name="maxBudget"
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Maximum Budget</FormLabel>
-                        <FormControl>
-                            <Input
-                                type="number"
-                                placeholder="e.g., 2000"
-                                {...field}
-                                value={field.value || ''} // Convert null/undefined to empty string
-                                onChange={e => field.onChange(e.target.value ? parseInt(e.target.value, 10) : null)}
-                            />
-                        </FormControl>
-                        <FormDescription>Your maximum budget for services/residence.</FormDescription>
-                        <FormMessage />
-                    </FormItem>
-                )}
-            />
-            {/* ------------ Room Type ----------- */}
-            <FormField
-                control={control}
-                name="preferredRoomType"
-                render={({ field }) => (
-                    <FormItem >
-                        <FormLabel>Preffered Room Type</FormLabel>
-                        <Select key={field.value} onValueChange={field.onChange} value={field.value || ""}>
+        <div className="gap-6 p-8 rounded-lg border-border/50 bg-card/50 backdrop-blur-sm shadow-lg hover:shadow-xl space-y-8">
+            <div className="overflow-hidden space-y-1">
+                <div className="flex items-center gap-3 text-xl relative z-10">
+                    <div className="p-2 bg-accent/10 rounded-lg">
+                        <House className="h-5 w-5 text-accent" />
+                    </div>
+                    Preferences
+                </div>
+                <p className='text-sm text-muted-foreground'>Choose your desired locations to settle</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* -------- Preffered Address ------- */}
+                <FormField
+                    control={control}
+                    name="preferredAddress"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Preferred Address</FormLabel>
                             <FormControl>
-                                <SelectTrigger>
-                                    <SelectValue placeholder="Select Room Type" />
-                                </SelectTrigger>
+                                <AddressAutocomplete
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                    onSelect={(item) => {
+                                        setFormValue("latitude", item.lat);
+                                        setFormValue("longitude", item.lng);
+                                    }}
+                                    placeholder="e.g., Basundhara, Kathmandu"
+                                />
                             </FormControl>
-                            <SelectContent>
-                                {Object.values(RoomType).map((roomOption) => (
-                                    <SelectItem key={roomOption} value={roomOption}>
-                                        {roomOption.charAt(0).toUpperCase() + roomOption.slice(1).toLowerCase()}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                        <FormDescription>Your preffered room type.</FormDescription>
-                        <FormMessage />
-                    </FormItem>
-                )}
-            />
+                            <FormDescription>Your preferred city for services/residence.</FormDescription>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                {/* ----------- Min Budget ----------- */}
+                <FormField
+                    control={control}
+                    name="minBudget"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Minimum Budget</FormLabel>
+                            <FormControl>
+                                <Input
+                                    type="number"
+                                    placeholder="e.g., 500"
+                                    {...field}
+                                    value={field.value || ''} // Convert null/undefined to empty string
+                                    onChange={e => field.onChange(e.target.value ? parseInt(e.target.value, 10) : null)}
+                                />
+                            </FormControl>
+                            <FormDescription>Your minimum budget for services/residence.</FormDescription>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                {/* /* ----------- Max Budget ----------- */}
+                <FormField
+                    control={control}
+                    name="maxBudget"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Maximum Budget</FormLabel>
+                            <FormControl>
+                                <Input
+                                    type="number"
+                                    placeholder="e.g., 2000"
+                                    {...field}
+                                    value={field.value || ''} // Convert null/undefined to empty string
+                                    onChange={e => field.onChange(e.target.value ? parseInt(e.target.value, 10) : null)}
+                                />
+                            </FormControl>
+                            <FormDescription>Your maximum budget for services/residence.</FormDescription>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                {/* ------------ Room Type ----------- */}
+                <FormField
+                    control={control}
+                    name="preferredRoomType"
+                    render={({ field }) => (
+                        <FormItem >
+                            <FormLabel>Preffered Room Type</FormLabel>
+                            <Select key={field.value} onValueChange={field.onChange} value={field.value || ""}>
+                                <FormControl>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select Room Type" />
+                                    </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                    {Object.values(RoomType).map((roomOption) => (
+                                        <SelectItem key={roomOption} value={roomOption}>
+                                            {roomOption.charAt(0).toUpperCase() + roomOption.slice(1).toLowerCase()}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            <FormDescription>Your preffered room type.</FormDescription>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+            </div>
             {/* ----------- Ammenities ----------- */}
             <FormField
                 control={control}
                 name="amenityPreferences"
                 render={() => (
-                    <FormItem>
+                    <FormItem className="col-span-2">
                         <FormLabel>Amenities</FormLabel>
-                        <div className="grid gap-2">
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                             {Amenities.map((amenity) => (
                                 <FormField
                                     key={amenity}
@@ -333,6 +353,7 @@ const PreferencesSection = ({ control, setFormValue }) => {
                                                 <FormControl>
                                                     <Checkbox
                                                         checked={field.value?.includes(amenity)}
+                                                        className="data-[state=checked]:bg-accent data-[state=checked]:border-accent transition-all duration-200 cursor-pointer"
                                                         onCheckedChange={(checked) => {
                                                             if (checked) {
                                                                 field.onChange([...field.value || [], amenity]);
@@ -342,7 +363,7 @@ const PreferencesSection = ({ control, setFormValue }) => {
                                                         }}
                                                     />
                                                 </FormControl>
-                                                <FormLabel className="text-sm font-normal">
+                                                <FormLabel className="text-sm font-medium cursor-pointer hover:text-accent transition-colors duration-200">
                                                     {amenity.replace("_", " ").toUpperCase()}
                                                 </FormLabel>
                                             </FormItem>
@@ -351,7 +372,6 @@ const PreferencesSection = ({ control, setFormValue }) => {
                                 />
                             ))}
                         </div>
-                        <FormDescription>Select your preferred amenities</FormDescription>
                         <FormMessage />
                     </FormItem>
                 )}
@@ -389,11 +409,11 @@ const UserProfile = () => {
     const form = useForm({
         resolver: zodResolver(profileSchema),
         defaultValues: {
-            phone: "",
+            phone: undefined,
             profilePic: undefined,
             dateOfBirth: undefined,
             gender: undefined,
-            citizenshipID: "",
+            citizenshipID: undefined,
             citizenshipFrontImg: undefined,
             citizenshipBackImg: undefined,
             address: "",
@@ -413,7 +433,7 @@ const UserProfile = () => {
                 profilePic: undefined,
                 dateOfBirth: user.profile.dateOfBirth ? new Date(user.profile.dateOfBirth) : undefined,
                 gender: user.profile.gender || "",
-                citizenshipID: user.profile.citizenshipID || "",
+                citizenshipID: user.profile.citizenshipID || undefined,
                 citizenshipFrontImg: undefined,
                 citizenshipBackImg: undefined,
                 address: user.profile.address || "",
@@ -487,109 +507,118 @@ const UserProfile = () => {
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                     {/* Basic Information */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border p-4 rounded-lg shadow-sm">
-                        <h3 className="text-xl font-semibold col-span-full text-foreground">Basic Information</h3>
-                        {/* Phone and Date of Birth */}
-                        <FormField
-                            control={form.control}
-                            name="phone"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Phone Number</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="e.g., 9876543210" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="dateOfBirth"
-                            render={({ field }) => (
-                                <FormItem className="flex flex-col">
-                                    <FormLabel>Date of Birth</FormLabel>
-                                    <Popover>
-                                        <PopoverTrigger asChild>
-                                            <FormControl>
-                                                <Button
-                                                    variant={"outline"}
-                                                    className={cn(
-                                                        "w-full pl-3 text-left font-normal",
-                                                        !field.value && "text-muted-foreground"
-                                                    )}
-                                                >
-                                                    {field.value ? (
-                                                        format(field.value, "PPP")
-                                                    ) : (
-                                                        <span>Pick a date</span>
-                                                    )}
-                                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                                </Button>
-                                            </FormControl>
-                                        </PopoverTrigger>
-                                        <PopoverContent className="w-auto p-0" align="start">
-                                            <Calendar
-                                                mode="single"
-                                                selected={field.value || undefined}
-                                                onSelect={field.onChange}
-                                                disabled={(date) =>
-                                                    date > new Date() || date < new Date("1900-01-01")
-                                                }
-                                                initialFocus
-                                                captionLayout="dropdown"
-                                            />
-                                        </PopoverContent>
-                                    </Popover>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
-                        {/* Address */}
-                        <FormField
-                            control={form.control}
-                            name="address"
-                            render={({ field }) => (
-                                <FormItem className="relative">
-                                    <FormLabel>Address</FormLabel>
-                                    <FormControl>
-                                        <AddressAutocomplete
-                                            value={field.value}
-                                            onChange={field.onChange}
-                                            placeholder="e.g., New Road, Kathmandu"
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        {/* Gender */}
-                        <FormField
-                            control={form.control}
-                            name="gender"
-                            render={({ field }) => (
-                                <FormItem >
-                                    <FormLabel>Gender</FormLabel>
-                                    <Select key={field.value} onValueChange={field.onChange} value={field.value || ""}>
+                    <div className="gap-6 p-8 rounded-lg border-border/50 bg-card/50 backdrop-blur-sm shadow-lg hover:shadow-xl space-y-8">
+                        <div className="overflow-hidden space-y-1">
+                            <div className="flex items-center gap-3 text-xl relative z-10">
+                                <div className="p-2 bg-primary/10 rounded-lg">
+                                    <User className="h-5 w-5 text-primary" />
+                                </div>
+                                Basic Information
+                            </div>
+                            <p className='text-sm text-muted-foreground'>Update your name, contact details, and essential personal information</p>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 shadow-sm">
+                            {/* Phone and Date of Birth */}
+                            <FormField
+                                control={form.control}
+                                name="phone"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Phone Number</FormLabel>
                                         <FormControl>
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Select your gender" />
-                                            </SelectTrigger>
+                                            <Input placeholder="e.g., 9876543210" {...field} />
                                         </FormControl>
-                                        <SelectContent>
-                                            {Object.values(Gender).map((genderOption) => (
-                                                <SelectItem key={genderOption} value={genderOption}>
-                                                    {genderOption.charAt(0).toUpperCase() + genderOption.slice(1).toLowerCase()}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="dateOfBirth"
+                                render={({ field }) => (
+                                    <FormItem className="flex flex-col">
+                                        <FormLabel>Date of Birth</FormLabel>
+                                        <Popover>
+                                            <PopoverTrigger asChild>
+                                                <FormControl>
+                                                    <Button
+                                                        variant={"outline"}
+                                                        className={cn(
+                                                            "w-full pl-3 text-left font-normal",
+                                                            !field.value && "text-muted-foreground"
+                                                        )}
+                                                    >
+                                                        {field.value ? (
+                                                            format(field.value, "PPP")
+                                                        ) : (
+                                                            <span>Pick a date</span>
+                                                        )}
+                                                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                    </Button>
+                                                </FormControl>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-auto p-0" align="start">
+                                                <Calendar
+                                                    mode="single"
+                                                    selected={field.value || undefined}
+                                                    onSelect={field.onChange}
+                                                    disabled={(date) =>
+                                                        date > new Date() || date < new Date("1900-01-01")
+                                                    }
+                                                    initialFocus
+                                                    captionLayout="dropdown"
+                                                />
+                                            </PopoverContent>
+                                        </Popover>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
 
+                            {/* Address */}
+                            <FormField
+                                control={form.control}
+                                name="address"
+                                render={({ field }) => (
+                                    <FormItem className="relative">
+                                        <FormLabel>Address</FormLabel>
+                                        <FormControl>
+                                            <AddressAutocomplete
+                                                value={field.value}
+                                                onChange={field.onChange}
+                                                placeholder="e.g., New Road, Kathmandu"
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            {/* Gender */}
+                            <FormField
+                                control={form.control}
+                                name="gender"
+                                render={({ field }) => (
+                                    <FormItem >
+                                        <FormLabel>Gender</FormLabel>
+                                        <Select key={field.value} onValueChange={field.onChange} value={field.value || ""}>
+                                            <FormControl>
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="Select your gender" />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                {Object.values(Gender).map((genderOption) => (
+                                                    <SelectItem key={genderOption} value={genderOption}>
+                                                        {genderOption.charAt(0).toUpperCase() + genderOption.slice(1).toLowerCase()}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
                     </div>
 
                     {/* Preference Information */}

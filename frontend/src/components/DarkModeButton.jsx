@@ -10,7 +10,7 @@ const DarkModeButton = () => {
 
   return (
     <div
-      className="w-fit cursor-pointer relative border rounded-full p-1 h-fit bg-muted"
+      className="w-fit cursor-pointer relative border rounded-full p-1 h-fit text-neutral-300 border-neutral-600/70 bg-neutral-800/95 hover:text-accent"
       onClick={toggleDarkMode}
     >
       <div className="relative h-5 w-5 p-3">

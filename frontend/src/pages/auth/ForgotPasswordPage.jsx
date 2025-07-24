@@ -33,7 +33,7 @@ const ForgotPasswordPage = () => {
                />
                {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
             </div>
-            <Button type="submit" className="w-full">Send Reset Link</Button>
+            <Button type="submit" className="w-full" variant="accent">Send Reset Link</Button>
          </form>
       </div>
    );

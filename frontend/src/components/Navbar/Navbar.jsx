@@ -5,6 +5,7 @@ import { IoIosMenu, IoIosSearch } from "react-icons/io";
 import { FaRegUser } from "react-icons/fa";
 
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import DarkModeButton from "@/components/DarkModeButton";
 import {
   DropdownMenu,
@@ -19,6 +20,7 @@ import { Sidebar } from "./Sidebar";
 import sidebarLinks from "../../data/sidebarLinks"
 import { useAuth } from "@/hooks/useAuth";
 import { useLogout } from "@/hooks/useLogout";
+import { User } from "lucide-react";
 
 
 const NavLinks = ({ isAuthenticated }) => {
@@ -30,8 +32,8 @@ const NavLinks = ({ isAuthenticated }) => {
         isAuthenticated ?
           <DropdownMenu>
             <DropdownMenuTrigger>
-              <p className="cursor-pointer border rounded-full p-[6px] text-muted-foreground bg-muted flex justify-center items-center">
-                <FaRegUser size="20" />
+              <p className="cursor-pointer border rounded-full p-[6px] text-neutral-300 border-neutral-600/70 bg-neutral-800/95 flex justify-center items-center hover:text-accent">
+                <User size={21} />
               </p>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
@@ -48,10 +50,10 @@ const NavLinks = ({ isAuthenticated }) => {
           :
           <>
             <Link to="/login" className={linkStyle}>
-              <Button className="bg-transparent border border-transparent text-foreground hover:text-accent hover:bg-transparent hover:border-accent">Login</Button>
+              <Button className="bg-transparent border border-transparent text-neutral-100 hover:text-accent hover:bg-transparent hover:border-accent">Login</Button>
             </Link>
             <Link to="/signup" className={linkStyle}>
-              <Button variant="outline" className="hover:text-accent hover:border-accent">Get Started</Button>
+              <Button className="hover:text-accent hover:border-accent hover:bg-transparent bg-transparent text-neutral-100 border border-muted-foreground rounded-sm">Get Started</Button>
             </Link>
           </>
 
@@ -80,22 +82,23 @@ const Navbar = ({ title }) => {
           onClick={() => setIsOpen(false)}
         />
       )}
-      <nav className=' w-full m-auto p-4 fixed top-0 z-50 border-b border-b-accent bg-gradient-to-r from-background/90 to-muted/80 backdrop-blur-md '>
+      <nav className=' w-full m-auto p-4 fixed top-0 z-50 border-b border-b-accent bg-gradient-to-r from-black/90 to bg-black/85 backdrop-blur-md '>
         <div className="container mx-auto flex justify-between items-center flex-wrap">
-          <Link to='/' className="text-3xl font-[Montserrat] shrink">{title}</Link>
+          <Link to='/' className="text-3xl font-[Montserrat] shrink text-neutral-100">{title}</Link>
           <div className="flex items-center justify-end box-border">
             <div className="flex items-center justify-between gap-8">
               {/* desktop view*/}
               <div className="relative hidden md:block">
-                <input
+                <Input
                   type="text"
                   placeholder="Search.."
-                  className="border border-text rounded-xl px-4 py-1 smooth-transition focus:border-text focus:border-opacity-100 focus:outline-none placeholder-text lg:w-[300px]"
+
+                  className="lg:w-[300px] rounded-mdf"
                 />
                 <IoIosSearch className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground text-lg" />
               </div>
               <div className="hidden md:flex gap-4 items-center">
-                {isAuthenticated && <Button className="text-sm rounded-xl" variant="outline">Become a Landlord</Button>}
+                {isAuthenticated && <Button className="text-sm rounded-md bg-transparent border border-muted-foreground cursor-pointer text-neutral-100 hover:bg-transparent hover:text-accent hover:border-accent" >Become a Landlord</Button>}
                 <DarkModeButton />
                 <NavLinks isAuthenticated={isAuthenticated} />
               </div>

@@ -67,12 +67,6 @@ const LoginPage = () => {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password">Password</Label>
-                <a
-                  href="/forgot-password"
-                  className="text-sm underline hover:opacity-80"
-                >
-                  Forgot your password?
-                </a>
               </div>
               <Input
                 id="password"
@@ -92,10 +86,15 @@ const LoginPage = () => {
 
             {/* Buttons */}
             <div className="flex flex-col gap-3">
-              <Button type="submit" className="w-full" disabled={mutation.isPending}>
+              <Button type="submit" className="w-full" variant="accent" disabled={mutation.isPending}>
                 {mutation.isPending ? "Logging in..." : "Login"}
               </Button>
-
+              <a
+                href="/forgot-password"
+                className="text-sm underline hover:opacity-80 text-center"
+              >
+                Forgot your password?
+              </a>
               <div className="relative text-center text-sm after:border-border after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
                 <span className="bg-card text-muted-foreground relative z-10 px-2">
                   Or Continue With

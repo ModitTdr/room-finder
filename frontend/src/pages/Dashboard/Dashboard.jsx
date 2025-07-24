@@ -80,7 +80,7 @@ const Dashboard = () => {
 
 
          {/* Main Content */}
-         <main className="w-full overflow-y-scroll">
+         <main className="w-full overflow-y-scroll ">
             <Outlet context={{ user }} />
          </main>
       </div>

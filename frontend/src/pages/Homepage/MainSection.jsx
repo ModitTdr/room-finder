@@ -1,14 +1,12 @@
 import { Link } from "react-router";
-import { featuredRooms } from "../../../data.js"
-import Cards from './Cards';
 import { Button } from '@/components/ui/button'
-
+import RoomCards from "@/components/RoomCards"
+import { useAllRooms } from "@/hooks/rooms/useRooms"
 const MainSection = () => {
-   const rooms = featuredRooms;
-
+   const { data: rooms, isLoading } = useAllRooms();
    return (
       <>
-         <section className='py-18 container mx-auto text-center px-4 min-h-screen z-20'>
+         <section className='py-18 container text-center px-4 z-20 m-auto'>
             <div className="space-y-4 text-center mb-12">
                <h1 className='text-5xl md:text-7xl font-bold tracking-tighter'>FEATURED
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-accent"> ROOMS
@@ -17,8 +15,15 @@ const MainSection = () => {
                <p className='text-lg font-light text-muted-foreground'>Discover rooms that fit your needs and budget, with options for every lifestyle.</p>
             </div>
             {/* cards */}
-            <div className='grid sm:grid-cols-2 xl:grid-cols-4 gap-4 justify-items-center mb-18'>
-               <Cards rooms={rooms} />
+            <div className='grid sm:grid-cols-2 xl:grid-cols-2 gap-4 mb-18'>
+               {rooms && rooms.length > 0 ? (
+                  rooms.map((room) => (
+                     // <h1>test</h1>
+                     <RoomCards key={room.id} room={room} />
+                  ))
+               ) : (
+                  <p>No rooms available.</p>
+               )}
             </div>
             <Button className="p-4 py-6 text-xl font-bold bg-accent text-accent-foreground border hover:bg-accent-foreground hover:text-accent hover:border-accent">
                <Link to="rooms">View All</Link>

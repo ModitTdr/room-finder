@@ -102,12 +102,6 @@ export default function SignupPage() {
                   <div className="space-y-2">
                      <div className="flex items-center justify-between">
                         <Label htmlFor="password">Password</Label>
-                        <a
-                           href="#"
-                           className="text-sm underline hover:opacity-80"
-                        >
-                           Forgot your password?
-                        </a>
                      </div>
                      <Input
                         id="password"
@@ -127,7 +121,7 @@ export default function SignupPage() {
 
                   {/* buttons */}
                   <div className="flex flex-col gap-3">
-                     <Button type="submit" className="w-full" disabled={mutation.isPending}>
+                     <Button type="submit" className="w-full" variant="accent" disabled={mutation.isPending}>
                         {mutation.isPending ? "Creating Account..." : "Sign Up"}
                      </Button>
 
