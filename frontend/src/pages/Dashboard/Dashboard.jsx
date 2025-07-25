@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link, Outlet, useLocation } from "react-router";
 import { getUser } from "@/services/userServices"
 /* -------------- icons ------------- */
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, LayoutDashboardIcon } from "lucide-react";
 
 /* ------------ shadcn ui ----------- */
 import { Collapsible, CollapsibleContent, CollapsibleTrigger, } from "@/components/ui/collapsible"
@@ -20,7 +20,6 @@ const Dashboard = () => {
    const { pathname: currentPath } = useLocation();
    const { isAuthenticated, isLoading, isError } = useAuth();
 
-   const queryClient = useQueryClient();
    const { data: user } = useQuery({
       queryKey: ["userprofile"],
       queryFn: getUser,
@@ -44,6 +43,7 @@ const Dashboard = () => {
       <div className="grid md:grid-cols-[220px_auto] gap-4 h-screen-hero">
          {/* Sidebar */}
          <aside className="bg-muted text-foreground hidden md:block px-2 py-4 space-y-4">
+
             <div className="pb-4 border-b border-neutral-600 px-2">
                <h1 className="text-xl font-bold">Welcome Back,</h1>
                <p className="text-xs text-muted-foreground font-medium">
@@ -51,6 +51,12 @@ const Dashboard = () => {
                </p>
             </div>
             <div className="space-y-3">
+               <Link to='/dashboard'>
+                  <div className={`flex items-center gap-2 cursor-pointer hover:bg-foreground/5 rounded-md p-2 mb-3 ${currentPath.endsWith('/dashboard') && 'font-bold'}`} >
+                     <LayoutDashboardIcon size="16" />
+                     Dashboard
+                  </div>
+               </Link>
                {navlink.map(({ title, icon: Icon, subtitle }) => (
                   <Collapsible key={title} className="group/collapsible" defaultOpen={true}>
                      <CollapsibleTrigger className="w-full">
@@ -76,14 +82,14 @@ const Dashboard = () => {
                ))
                }
             </div>
-         </aside>
+         </aside >
 
 
          {/* Main Content */}
-         <main className="w-full overflow-y-scroll ">
+         < main className="w-full overflow-y-scroll">
             <Outlet context={{ user }} />
-         </main>
-      </div>
+         </main >
+      </div >
    );
 };
 

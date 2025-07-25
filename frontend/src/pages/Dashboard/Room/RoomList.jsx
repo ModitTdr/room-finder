@@ -3,7 +3,7 @@ import { useMyRooms } from "@/hooks/rooms/useRooms"
 
 const RoomList = () => {
    const { data: myrooms } = useMyRooms();
-   console.log(myrooms)
+
    return (
       <div className="container mx-auto p-8 space-y-6">
          {/* ------------- header ------------- */}

@@ -76,3 +76,14 @@ export const forgotPasswordRequest = (email) =>
 
 export const resetPassword = ({ id, token, newPassword }) =>
     axios.post(`${API}/auth/reset-password`, { id, token, newPassword });
+
+export const useGoogleLogin = async (accessToken, userInfo) => {
+    const res = await axios.post(`${API}/auth/google-login`,
+        {
+            credentials: accessToken,
+            userInfo: userInfo
+        },
+        { withCredentials: true }
+    );
+    return res.data;
+};

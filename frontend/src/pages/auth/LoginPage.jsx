@@ -3,10 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "@/lib/react-query";
 import { toast } from "react-hot-toast";
-import GoogleLoginButton from "@/components/GoogleLoginButton"
+import { GoogleLogin } from '@react-oauth/google';
 
 // Services
-import { loginUser } from "@/services/authServices";
+import { loginUser, useGoogleLogin } from "@/services/authServices";
 
 // UI components
 import { Button } from "@/components/ui/button";
@@ -18,7 +18,6 @@ import { Label } from "@/components/ui/label";
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  // const queryClient = useQueryClient();
   const { register, handleSubmit, formState: { errors }, } = useForm();
   const mutation = useMutation({
     mutationFn: loginUser,
@@ -36,6 +35,19 @@ const LoginPage = () => {
     mutation.mutate(data);
   };
 
+  const login = async (credentialResponse) => {
+    try {
+      const res = await useGoogleLogin(credentialResponse.credential);
+      console.log("Backend response on successful login:", res);
+      if (res) {
+        toast.success(res.message);
+        queryClient.invalidateQueries({ queryKey: ["auth"] });
+        navigate('/')
+      }
+    } catch (error) {
+      toast.error("Login Failed");
+    }
+  }
   return (
     <div className="flex justify-center items-center h-[80dvh] flex-col xl:flex-row gap-x-32 p-4 gap-y-8 mt-4">
       {/* Left Side */}
@@ -101,7 +113,17 @@ const LoginPage = () => {
                 </span>
               </div>
 
-              <GoogleLoginButton />
+              {/* ---------- google login ---------- */}
+              <GoogleLogin
+                onSuccess={login}
+                onError={() => toast.error('Google login failed')}
+                // type="icon"
+                size="medium"
+                text="continue_with"
+                shape="pill"
+                logo_alignment="center"
+                width="340"
+              />
             </div>
 
             {/* Signup Link */}

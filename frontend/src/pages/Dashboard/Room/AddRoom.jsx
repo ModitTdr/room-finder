@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -31,7 +29,6 @@ import {
    SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 
 /* -------------- enums ------------- */
@@ -50,7 +47,7 @@ const Amenities = [
    "furnished",
    "tv",
    "kitchen",
-   "private_bathroom"
+   "private bathroom"
 ];
 
 
@@ -73,8 +70,6 @@ const roomSchema = z.object({
 
 /* ----------- components ----------- */
 const AddRoom = () => {
-   const queryClient = useQueryClient();
-
    const { mutate: createNewRoom } = useCreateRoom();
 
    /* - form default values and submit - */

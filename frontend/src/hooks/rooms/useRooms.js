@@ -62,7 +62,7 @@ export const useDeleteRoom = () => {
    });
 };
 // /* ------- Update a room ------- */
-export const useUpdateRoom = () => {
+export const useUpdateRoom = (id, formData) => {
    const queryClient = useQueryClient();
 
    return useMutation({

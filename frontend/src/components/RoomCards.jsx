@@ -8,7 +8,7 @@ const RoomCards = ({ room }) => {
         <Link to={`/rooms/${room.id}`}>
             <div className="relative mx-auto w-full min-w-[350px] max-w-sm h-fit transform cursor-pointer overflow-hidden rounded-lg shadow-2xl border group smooth-transition hover:scale-101 py-3">
                 <div className={`absolute inset-0 bg-cover bg-center `} style={{ backgroundImage: `url('${imageUrl}')` }}>
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/95 from-15% via-gray-950/95 via-40% to-transparent smooth-transition group-hover:opacity-85"></div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/95 from-15% via-gray-950/95 via-40% to-transparent smooth-transition opacity-95 group-hover:opacity-50"></div>
                 </div>
                 <div className="relative flex h-full flex-col justify-end p-6 text-white md:p-8 md:pb-3 text-start">
                     {/* ------------ room type ----------- */}

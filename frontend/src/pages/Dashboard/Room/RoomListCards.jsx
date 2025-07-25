@@ -1,17 +1,33 @@
 import { useState } from "react"
 import { MapPin, Edit, Trash2, Eye } from "lucide-react"
+import { TbCurrencyRupeeNepalese } from "react-icons/tb";
+
 import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
 import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
-import { TbCurrencyRupeeNepalese } from "react-icons/tb";
+import {
+   Carousel,
+   CarouselContent,
+   CarouselItem,
+   CarouselNext,
+   CarouselPrevious,
+} from "@/components/ui/carousel"
 
-export default function RoomListCards({ room, onToggleAvailability, onEdit, onDelete, onView, }) {
-   const [isAvailable, setIsAvailable] = useState(room.available)
+
+import { useDeleteRoom, useUpdateRoom } from "@/hooks/rooms/useRooms"
+
+export default function RoomListCards({ room, onToggleAvailability }) {
+   const [isAvailable, setIsAvailable] = useState(room.available);
+   const { mutate: delroom } = useDeleteRoom();
+   const { mutate: updateAvailability } = useUpdateRoom();
 
    const handleAvailabilityToggle = (checked) => {
-      setIsAvailable(checked)
-      onToggleAvailability(room.id, checked)
+      setIsAvailable(prev => !prev)
+      updateAvailability({
+         id: room.id,
+         available: checked,
+      });
    }
 
    const roomImage = room.images[0] || `https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400&h=300&fit=crop&crop=center`
@@ -21,16 +37,34 @@ export default function RoomListCards({ room, onToggleAvailability, onEdit, onDe
          "group relative overflow-hidden smooth-transition border-border/30 hover:border-primary/50 bg-gradient-to-br from-card/80 via-card/60 to-card/40 p-0 max-w-sm"
       >
          {/* Room Image */}
-         <div className="relative h-56 overflow-hidden">
-            <img
-               src={roomImage}
-               alt={room.title}
-               className="w-full h-full object-cover"
-            />
+         <div className="relative h-50 overflow-hidden">
+            {
+               room.images && room.images.length > 0 ? (
+                  <Carousel className="w-full h-full z-10">
+                     <CarouselContent>
+                        {room.images.map((imageUrl, index) => (
+                           <CarouselItem key={index}>
+                              <img
+                                 src={imageUrl}
+                                 alt={`Room image ${index + 1}`}
+                                 className="w-full h-56 object-cover smooth-transition hover:scale-102"
+                              />
+                           </CarouselItem>
+                        ))}
+                     </CarouselContent>
+                     <CarouselPrevious className="absolute left-2 top-1/2 -translate-y-1/2 z-10 cursor-pointer disabled:hidden" />
+                     <CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2 z-10 cursor-pointer disabled:hidden" />
+                  </Carousel>
+               ) : (
+                  <div className="w-full h-full bg-muted flex items-center justify-center text-muted-foreground text-sm">
+                     No Image Available
+                  </div>
+               )
+            }
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent smooth-transition group-hover:opacity-80" />
 
             {/* Availability Badge */}
-            <div className={`absolute top-4 right-4 rounded-md px-2 text-sm font-medium border ${isAvailable
+            <div className={`absolute top-4 right-4 rounded-md px-2 text-sm font-medium border z-10 ${isAvailable
                ? "bg-green-400/50 border-green-400/70 text-green-200/90"
                : "bg-destructive/40 text-destructive border-destructive/30"
                }`}>
@@ -40,7 +74,7 @@ export default function RoomListCards({ room, onToggleAvailability, onEdit, onDe
             </div>
 
             {/* Room Type Badge */}
-            <div className="absolute top-4 left-4 grow-1 rounded-md bg-orange-600 px-3 text-sm font-semibold tracking-wider uppercase">
+            <div className="absolute z-10 top-4 left-4 grow-1 rounded-md bg-orange-600 px-3 text-sm font-semibold tracking-wider uppercase">
                {room.roomType}
             </div>
 
@@ -128,7 +162,7 @@ export default function RoomListCards({ room, onToggleAvailability, onEdit, onDe
                   </Button>
                   <Button
                      size="sm"
-                     onClick={() => onDelete(room.id)}
+                     onClick={() => delroom(room.id)}
                      className="text-destructive hover:text-desnpm ructive hover:bg-destructive/30 cursor-pointer bg-transparent"
                   >
                      <Trash2 className="h-4 w-4" />

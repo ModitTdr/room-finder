@@ -38,13 +38,13 @@ export const userLogin = async (req, res) => {
         role: user.role,
       },
       process.env.JWT_SECRET,
-      { expiresIn: '60m' }
+      { expiresIn: '1d' }
     );
     res.cookie("token", accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: "strict",
-      maxAge: 60 * 60 * 1000
+      maxAge: 1 * 24 * 60 * 60 * 1000
     });
     return res.status(200).json({
       message: "Logged in",
@@ -188,38 +188,63 @@ export const resetPassword = async (req, res) => {
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
 export const googleLogin = async (req, res) => {
   const prisma = new PrismaClient();
   const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-  const { token } = req.body;
-
+  const credential = req.body.credentials;
+  if (!credential) return res.status(400).json({ message: "Missing Token" });
   try {
     const ticket = await client.verifyIdToken({
-      idToken: token,
+      idToken: credential,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
 
     const payload = ticket.getPayload();
-    const { email, name } = payload;
+    const { email, name, picture } = payload;
+    if (!email) return res.status(400).json({ message: "Invalid token data" });
 
     let user = await prisma.user.findUnique({ where: { email } });
-
     if (!user) {
       user = await prisma.user.create({
         data: {
           email,
           name,
+          profile: {
+            create: {
+              profilePic: picture
+            }
+          }
         },
       });
     }
-    const appToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({
+      id: user.id,
+      email: user.email,
+      role: user.role,
+    }, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
 
-    res.json({ token: appToken, user });
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "Lax",
+      maxAge: 1 * 24 * 60 * 60 * 1000,
+    });
+
+    return res.status(200).json({
+      message: "Logged in",
+      token: token,
+      user: {
+        id: user.id,
+        email: user.email,
+        role: user.role
+      }
+    });
   } catch (err) {
-    console.error("Google login error:", err);
-    res.status(401).json({ message: "Google authentication failed" });
+    console.error("Google Login Error:", err);
+    return res.status(500).json({ message: "Google login failed" });
   }
 };
 
