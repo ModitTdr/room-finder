@@ -87,3 +87,11 @@ export const useGoogleLogin = async (accessToken, userInfo) => {
     );
     return res.data;
 };
+
+export const useApiGoogleLogin = async (accessToken) => {
+    const res = await axios.post(`${API}/auth/google-login`,
+        { credentials: accessToken },
+        { withCredentials: true }
+    );
+    return res.data;
+};

@@ -4,6 +4,9 @@ import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { FaGoogle } from "react-icons/fa";
+import { useGoogleLogin as useNewGoogleLogin } from '@react-oauth/google';
+import { useApiGoogleLogin } from "@/services/authServices";
+
 
 // components
 import { Button } from "@/components/ui/button";
@@ -39,6 +42,15 @@ export default function SignupPage() {
    const onSubmit = (data) => {
       mutation.mutate(data);
    };
+
+
+   const login = useNewGoogleLogin({
+      onSuccess: async (tokenResponse) => {
+         const apiResponse = await useApiGoogleLogin(tokenResponse.access_token);
+         console.log(apiResponse);
+      },
+   });
+
 
    return (
       <div className="flex justify-center items-center md:h-full min-h-[85dvh] flex-col xl:flex-row gap-x-32 px-4 gap-y-8 mt-4">
@@ -131,9 +143,13 @@ export default function SignupPage() {
                         </span>
                      </div>
 
-                     <Button variant="outline" className="w-full">
-                        <FaGoogle className="mr-2" />
-                        Sign up with Google
+                     <Button
+                        type="button"
+                        variant="accent"
+                        className="flex items-center"
+                        onClick={() => login()}
+                     >
+                        <FaGoogle />Login with Google
                      </Button>
                   </div>
 

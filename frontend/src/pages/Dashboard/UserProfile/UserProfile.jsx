@@ -137,7 +137,7 @@ const CitizenshipSection = ({ control }) => {
                 </div>
                 <p className='text-sm text-muted-foreground'>Provide or update details about your nationality and country of residence.</p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 shadow-sm">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <FormField
                     control={control}
                     name="citizenshipID"
@@ -233,7 +233,7 @@ const PreferencesSection = ({ control, setFormValue }) => {
     return (
         <div className="gap-6 p-8 rounded-lg border-border/50 bg-card/50 backdrop-blur-sm shadow-lg hover:shadow-xl space-y-8">
             <div className="overflow-hidden space-y-1">
-                <div className="flex items-center gap-3 text-xl relative z-10">
+                <div className="flex items-center gap-3 text-xl relative">
                     <div className="p-2 bg-accent/10 rounded-lg">
                         <House className="h-5 w-5 text-accent" />
                     </div>
@@ -517,7 +517,7 @@ const UserProfile = () => {
                             </div>
                             <p className='text-sm text-muted-foreground'>Update your name, contact details, and essential personal information</p>
                         </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 shadow-sm">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {/* Phone and Date of Birth */}
                             <FormField
                                 control={form.control}

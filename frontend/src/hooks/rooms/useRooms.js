@@ -62,7 +62,7 @@ export const useDeleteRoom = () => {
    });
 };
 // /* ------- Update a room ------- */
-export const useUpdateRoom = (id, formData) => {
+export const useUpdateRoom = () => {
    const queryClient = useQueryClient();
 
    return useMutation({
@@ -73,6 +73,7 @@ export const useUpdateRoom = (id, formData) => {
       },
       onError: (error) => {
          toast.error("Failed to update room");
+         console.log(error)
       },
    });
 };

@@ -195,13 +195,22 @@ export const googleLogin = async (req, res) => {
   const credential = req.body.credentials;
   if (!credential) return res.status(400).json({ message: "Missing Token" });
   try {
-    const ticket = await client.verifyIdToken({
-      idToken: credential,
-      audience: process.env.GOOGLE_CLIENT_ID,
-    });
+    const response = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
+      headers: {
+        Authorization: `Bearer ${credential}`,
+      },
+    })
+    // const ticket = await client.verifyIdToken({
+    //   idToken: credential,
+    //   audience: process.env.GOOGLE_CLIENT_ID,
+    // });
 
-    const payload = ticket.getPayload();
-    const { email, name, picture } = payload;
+    // const payload = ticket.getPayload();
+    // const { email, name, picture } = payload;
+    // if (!email) return res.status(400).json({ message: "Invalid token data" });
+
+    const body = await response.json();
+    const { email, name, picture } = body;
     if (!email) return res.status(400).json({ message: "Invalid token data" });
 
     let user = await prisma.user.findUnique({ where: { email } });

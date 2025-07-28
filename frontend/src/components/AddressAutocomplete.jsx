@@ -48,7 +48,7 @@ export default function AddressAutocomplete({
             placeholder={placeholder}
          />
          {showDropdown && (
-            <div className="absolute z-10 w-full mt-1 bg-background border rounded shadow-md max-h-60 overflow-y-auto">
+            <div className="absolute z-[999] w-full mt-1 bg-background border rounded shadow-md max-h-60 overflow-y-auto">
                {isLoading ? (
                   <div className="p-2 text-sm text-muted">Loading...</div>
                ) : suggestions?.length > 0 ? (

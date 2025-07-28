@@ -3,10 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "@/lib/react-query";
 import { toast } from "react-hot-toast";
-import { GoogleLogin } from '@react-oauth/google';
+import { useGoogleLogin as useNewGoogleLogin } from '@react-oauth/google';
+
+import { FaGoogle } from "react-icons/fa6";
 
 // Services
-import { loginUser, useGoogleLogin } from "@/services/authServices";
+import { loginUser, useApiGoogleLogin } from "@/services/authServices";
 
 // UI components
 import { Button } from "@/components/ui/button";
@@ -35,19 +37,24 @@ const LoginPage = () => {
     mutation.mutate(data);
   };
 
-  const login = async (credentialResponse) => {
-    try {
-      const res = await useGoogleLogin(credentialResponse.credential);
-      console.log("Backend response on successful login:", res);
-      if (res) {
-        toast.success(res.message);
-        queryClient.invalidateQueries({ queryKey: ["auth"] });
-        navigate('/')
+  const login = useNewGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      try {
+        const apiResponse = await useApiGoogleLogin(tokenResponse.access_token);
+        if (apiResponse) {
+          queryClient.invalidateQueries({ queryClient: ["auth"] });
+          toast.success("Logged in");
+          navigate('/');
+        } else {
+          toast.error("Failed to login");
+        }
+      } catch (error) {
+        toast.error("Logged in failed");
       }
-    } catch (error) {
-      toast.error("Login Failed");
-    }
-  }
+    },
+  });
+
+
   return (
     <div className="flex justify-center items-center h-[80dvh] flex-col xl:flex-row gap-x-32 p-4 gap-y-8 mt-4">
       {/* Left Side */}
@@ -114,17 +121,16 @@ const LoginPage = () => {
               </div>
 
               {/* ---------- google login ---------- */}
-              <GoogleLogin
-                onSuccess={login}
-                onError={() => toast.error('Google login failed')}
-                // type="icon"
-                size="medium"
-                text="continue_with"
-                shape="pill"
-                logo_alignment="center"
-                width="340"
-              />
+              <Button
+                type="button"
+                variant="accent"
+                className="flex items-center"
+                onClick={() => login()}
+              >
+                <FaGoogle />Login with Google
+              </Button>
             </div>
+
 
             {/* Signup Link */}
             <div className="mt-4 text-center text-sm">

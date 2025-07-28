@@ -8,7 +8,6 @@ const roomApi = axios.create({
 
 export async function getAllRooms() {
    const res = await roomApi.get(`/rooms`);
-   console.log(res)
    return res.data
 }
 export async function createRoom(roomData) {

@@ -24,10 +24,7 @@ export default function RoomListCards({ room, onToggleAvailability }) {
 
    const handleAvailabilityToggle = (checked) => {
       setIsAvailable(prev => !prev)
-      updateAvailability({
-         id: room.id,
-         available: checked,
-      });
+      updateAvailability(checked);
    }
 
    const roomImage = room.images[0] || `https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400&h=300&fit=crop&crop=center`
@@ -65,8 +62,8 @@ export default function RoomListCards({ room, onToggleAvailability }) {
 
             {/* Availability Badge */}
             <div className={`absolute top-4 right-4 rounded-md px-2 text-sm font-medium border z-10 ${isAvailable
-               ? "bg-green-400/50 border-green-400/70 text-green-200/90"
-               : "bg-destructive/40 text-destructive border-destructive/30"
+               ? "bg-green-400/50 border-green-400/70 text-green-200/90 backdrop-blur-xl"
+               : "bg-red-500/80 text-red-200 border-red-00"
                }`}>
 
                {isAvailable ? "Available" : "Unavailable"}
