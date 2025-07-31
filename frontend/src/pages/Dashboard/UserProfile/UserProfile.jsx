@@ -129,7 +129,7 @@ const CitizenshipSection = ({ control }) => {
     return (
         <div className="gap-6 p-8 rounded-lg border-border/50 bg-card/50 backdrop-blur-sm shadow-lg hover:shadow-xl space-y-8">
             <div className="overflow-hidden space-y-1">
-                <div className="flex items-center gap-3 text-xl relative z-10">
+                <div className="flex items-center gap-3 text-xl relative z-0">
                     <div className="p-2 bg-accent/10 rounded-lg">
                         <IdCard className="h-5 w-5 text-accent" />
                     </div>
@@ -231,7 +231,7 @@ const CitizenshipSection = ({ control }) => {
 
 const PreferencesSection = ({ control, setFormValue }) => {
     return (
-        <div className="gap-6 p-8 rounded-lg border-border/50 bg-card/50 backdrop-blur-sm shadow-lg hover:shadow-xl space-y-8">
+        <div className="gap-6 p-8 rounded-lg border-border/50 bg-card/50 backdrop-blur-sm shadow-lg hover:shadow-xl space-y-8 ">
             <div className="overflow-hidden space-y-1">
                 <div className="flex items-center gap-3 text-xl relative">
                     <div className="p-2 bg-accent/10 rounded-lg">
@@ -339,7 +339,7 @@ const PreferencesSection = ({ control, setFormValue }) => {
                 control={control}
                 name="amenityPreferences"
                 render={() => (
-                    <FormItem className="col-span-2">
+                    <FormItem className="col-span-2 space-y-2">
                         <FormLabel>Amenities</FormLabel>
                         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                             {Amenities.map((amenity) => (
@@ -503,7 +503,7 @@ const UserProfile = () => {
                 </div>
             </div>
             {/* ------------ Main Body ----------- */}
-            <h2 className="text-2xl font-semibold mb-6 text-foreground">Edit Profile</h2>
+            <h2 className="text-2xl font-semibold mb-6 text-foreground ">Edit Profile</h2>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                     {/* Basic Information */}

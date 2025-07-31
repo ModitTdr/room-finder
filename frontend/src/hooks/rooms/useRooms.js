@@ -66,7 +66,7 @@ export const useUpdateRoom = () => {
    const queryClient = useQueryClient();
 
    return useMutation({
-      mutationFn: updateRoom,
+      mutationFn: ({ roomId, updatedData }) => updateRoom(roomId, updatedData),
       onSuccess: () => {
          toast.success("Room updated successfully");
          queryClient.invalidateQueries({ queryKey: ["userRooms"] });

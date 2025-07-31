@@ -118,11 +118,11 @@ const AddRoom = () => {
    return (
       <div className="py-8 container mx-auto px-4 sm:px-6 lg:px-8 relative space-y-8 ">
          {/* --------- Topbar Section --------- */}
-         <div className="text-center transition-all duration-700">
-            <h1 className="text-5xl font-bold bg-gradient-to-r from-foreground to-accent bg-clip-text text-transparent">
+         <div className="">
+            <h1 className="text-3xl font-bold text-foreground">
                List Your Room
             </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+            <p className="text-muted-foreground">
                Create a room listing that attracts the perfect tenants.
             </p>
          </div>
@@ -324,7 +324,7 @@ const AddRoom = () => {
                      control={form.control}
                      name="amenities"
                      render={() => (
-                        <FormItem className="col-span-2">
+                        <FormItem className="col-span-2 space-y-2">
                            <FormLabel>Available Amenities</FormLabel>
                            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                               {Amenities.map((amenity) => (
