@@ -19,7 +19,7 @@ export async function getMyRooms() {
    return res.data
 }
 export async function getRoomById(roomId) {
-   const res = await roomApi.get(`/rooms/${id}`, roomId)
+   const res = await roomApi.get(`/rooms/${roomId}`);
    return res.data;
 }
 export async function updateRoom(roomId, updatedData) {

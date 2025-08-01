@@ -16,6 +16,7 @@ import MissingPage from "../pages/MissingPage";
 import AddRoom from "../pages/Dashboard/Room/AddRoom";
 import RoomsIndex from "../pages/Homepage/Rooms/RoomsIndex";
 import RoomList from "../pages/Dashboard/Room/RoomList";
+import RoomInfoPage from "../pages/Homepage/Rooms/RoomInfoPage";
 
 const router = createBrowserRouter([
     {
@@ -70,7 +71,7 @@ const router = createBrowserRouter([
             },
             {
                 path: "/rooms/:id",
-                element: <MissingPage />,
+                element: <RoomInfoPage />,
             },
 
         ]
