@@ -34,13 +34,13 @@ const RoomCards = ({ room }) => {
                                     <Badge
                                         key={index}
                                         variant="outline"
-                                        className="text-xs bg-muted/20 border-border"
+                                        className="text-xs bg-muted/20 border-border text-neutral-400"
                                     >
                                         {amenity}
                                     </Badge>
                                 ))}
                                 {room.amenities.length > 3 && (
-                                    <Badge variant="outline" className="text-xs bg-muted/20 border-border">
+                                    <Badge variant="outline" className="text-xs bg-muted/20 border-border text-neutral-400">
                                         +{room.amenities.length - 3} more
                                     </Badge>
                                 )}

@@ -28,10 +28,6 @@ import {
 } from "lucide-react"
 import { useRoomById } from "@/hooks/rooms/useRooms"
 
-
-
-
-
 // Sample room data based on Prisma schema
 const roomData = {
     id: "1",
@@ -69,7 +65,6 @@ const roomData = {
 export default function RoomInfoPage() {
     const { id } = useParams();
     const { data: room, isLoading } = useRoomById(id);
-    console.log(room)
     const [currentImageIndex, setCurrentImageIndex] = useState(0)
     const [isLiked, setIsLiked] = useState(false)
 
@@ -94,7 +89,7 @@ export default function RoomInfoPage() {
     };
 
     if (isLoading) return <span>loading..</span>
-
+    console.log(room)
     return (
         <div className="min-h-screen">
 
@@ -103,7 +98,7 @@ export default function RoomInfoPage() {
                     {/* Main Content */}
                     <div className="lg:col-span-2 space-y-6">
                         {/* Image Gallery */}
-                        <Carousel className="w-full h-[60vh] z-10 ">
+                        <Carousel className="w-full h-[60vh] z-10 relative">
                             <CarouselContent className="h-[60vh] rounded-xl">
                                 {room.images.map((imageUrl, index) => (
                                     <CarouselItem key={index}>
@@ -117,6 +112,9 @@ export default function RoomInfoPage() {
                             </CarouselContent>
                             <CarouselPrevious className="absolute left-2 top-1/2 -translate-y-1/2 z-10 cursor-pointer  border-neutral-100 text-neutral-800 backdrop-blur-sm shadow-lg" />
                             <CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2 z-10 cursor-pointer border-neutral-100 text-neutral-800 backdrop-blur-sm shadow-lg" />
+                            <div className="absolute top-6 right-8 bg-black/60 p-2.5 rounded-full hover:scale-110 cursor-pointer smooth-transition">
+                                <Heart />
+                            </div>
                         </Carousel>
 
                         {/* Room Information */}
@@ -143,7 +141,6 @@ export default function RoomInfoPage() {
                                     </div>
                                     <div className="text-right">
                                         <div className="text-3xl font-bold text-accent">Rs. {room.price}</div>
-                                        <div className="text-sm text-muted-foreground">per night</div>
                                     </div>
                                 </div>
                             </CardHeader>

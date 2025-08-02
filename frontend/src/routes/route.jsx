@@ -17,6 +17,7 @@ import AddRoom from "../pages/Dashboard/Room/AddRoom";
 import RoomsIndex from "../pages/Homepage/Rooms/RoomsIndex";
 import RoomList from "../pages/Dashboard/Room/RoomList";
 import RoomInfoPage from "../pages/Homepage/Rooms/RoomInfoPage";
+import PublicRoute from "./PublicRoute";
 
 const router = createBrowserRouter([
     {
@@ -29,19 +30,19 @@ const router = createBrowserRouter([
             },
             {
                 path: "/login",
-                element: <LoginPage />,
+                element: <PublicRoute><LoginPage /></PublicRoute>,
             },
             {
                 path: "/signup",
-                element: <SignupPage />,
+                element: <PublicRoute><SignupPage /></PublicRoute>,
             },
             {
                 path: "/forgot-password",
-                element: <ForgotPasswordPage />,
+                element: <PublicRoute><ForgotPasswordPage /></PublicRoute>,
             },
             {
                 path: "/reset-password",
-                element: <ResetPasswordPage />,
+                element: <PublicRoute><ResetPasswordPage /></PublicRoute>,
             },
             {
                 path: "/dashboard",
