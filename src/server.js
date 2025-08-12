@@ -6,6 +6,7 @@ import userRoute from "./routing/userRoutes.js"
 import authRoute from "./routing/authRoutes.js"
 import roomRoute from "./routing/roomRoutes.js"
 import recommendation from "./routing/recommendation.js"
+import review from "./routing/reviewRoutes.js"
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -23,6 +24,7 @@ app.use('/api/auth', authRoute);
 app.use('/api/users', userRoute);
 app.use('/api/rooms', roomRoute);
 app.use('/app/recommendation', recommendation);
+app.use('/app/reviews', review);
 app.listen(PORT, () => {
   console.log(`Server started at http://localhost:${PORT}`)
 })

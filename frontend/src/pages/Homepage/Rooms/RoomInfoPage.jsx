@@ -1,6 +1,5 @@
 "use client"
 
-import { useState } from "react"
 import { useParams } from "react-router-dom"
 
 import { Button } from "@/components/ui/button"
@@ -13,18 +12,13 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from "@/components/ui/carousel"
+import { Textarea } from "@/components/ui/textarea"
 import {
     MapPin,
     Star,
-    Wifi,
-    Car,
-    Coffee,
-    Tv,
-    Wind,
     Users,
     Calendar,
     Heart,
-    Share2,
 } from "lucide-react"
 import { useRoomById } from "@/hooks/rooms/useRooms"
 
@@ -65,15 +59,8 @@ const roomData = {
 export default function RoomInfoPage() {
     const { id } = useParams();
     const { data: room, isLoading } = useRoomById(id);
-    const [currentImageIndex, setCurrentImageIndex] = useState(0)
-    const [isLiked, setIsLiked] = useState(false)
 
-    const nextImage = () => {
-        setCurrentImageIndex((prev) => (prev + 1) % roomData.images.length)
-    }
-    const prevImage = () => {
-        setCurrentImageIndex((prev) => (prev - 1 + roomData.images.length) % roomData.images.length)
-    }
+
     const handleBookNow = () => {
         console.log("Book Now clicked for room:", roomData.title)
     }
@@ -89,7 +76,7 @@ export default function RoomInfoPage() {
     };
 
     if (isLoading) return <span>loading..</span>
-    console.log(room)
+
     return (
         <div className="min-h-screen">
 
@@ -150,7 +137,6 @@ export default function RoomInfoPage() {
                         </Card>
 
 
-
                         {/* Reviews */}
                         <Card>
                             <CardHeader>
@@ -164,6 +150,24 @@ export default function RoomInfoPage() {
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
+                                {/* --------- review section --------- */}
+                                <form id="comment-form" class="mb-8 relative">
+                                    <textarea
+                                        id="comment-text"
+                                        rows="5"
+                                        class="w-full p-4 pb-12 border rounded-xl focus:outline-none bg-muted"
+                                        placeholder="Write a comment..."
+                                        required
+                                    ></textarea>
+                                    <button
+                                        type="submit"
+                                        class="absolute right-4 bottom-4 bg-accent text-white font-bold py-1.5 px-5 shadow-md rounded-sm cursor-pointer hover:bg-orange-500 smooth-transition"
+                                    >
+                                        Post
+                                    </button>
+                                </form>
+
+                                {/* ---------- reviews list ---------- */}
                                 <div className="space-y-4">
                                     {roomData.reviews.recent.map((review, index) => (
                                         <div key={index} className="border-b border-gray-100 pb-4 last:border-b-0">
