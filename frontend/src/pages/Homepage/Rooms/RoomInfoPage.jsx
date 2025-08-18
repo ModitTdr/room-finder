@@ -12,15 +12,30 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from "@/components/ui/carousel"
-import { Textarea } from "@/components/ui/textarea"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuShortcut,
+    DropdownMenuSub,
+    DropdownMenuSubContent,
+    DropdownMenuSubTrigger,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
     MapPin,
     Star,
     Users,
     Calendar,
     Heart,
+    EllipsisVertical,
+    Edit2Icon,
+    Trash,
 } from "lucide-react"
-import { useRoomById } from "@/hooks/rooms/useRooms"
+import { useRoomWithService } from "@/hooks/rooms/useRooms"
+import { useAuth } from "@/hooks/useAuth"
+import { useCreateReview, useDeleteReview } from "../../../hooks/reviews/useReviews"
 
 // Sample room data based on Prisma schema
 const roomData = {
@@ -58,8 +73,10 @@ const roomData = {
 
 export default function RoomInfoPage() {
     const { id } = useParams();
-    const { data: room, isLoading } = useRoomById(id);
-
+    const { user, isAuthenticated } = useAuth();
+    const { data: room, isLoading } = useRoomWithService(id);
+    const { mutate: createReview } = useCreateReview();
+    const { mutate: deleteReview } = useDeleteReview();
 
     const handleBookNow = () => {
         console.log("Book Now clicked for room:", roomData.title)
@@ -76,10 +93,24 @@ export default function RoomInfoPage() {
     };
 
     if (isLoading) return <span>loading..</span>
+    const handleReviewSubmit = (e) => {
+        e.preventDefault();
+        const roomId = room.id;
+        createReview({ roomId, comment: e.target['comment-text'].value });
+    }
+    const handleReviewDelete = (e) => {
+        e.preventDefault();
+        const roomId = room.id;
+        deleteReview({ roomId });
+    }
 
+    // const handleReviewEdit = (e) => {
+    //     e.preventDefault();
+    //     const roomId = room.id;
+    //     createReview({ roomId, comment: e.target['comment-text'].value });
+    // }
     return (
         <div className="min-h-screen">
-
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     {/* Main Content */}
@@ -145,41 +176,61 @@ export default function RoomInfoPage() {
                                     <div className="flex items-center">
                                         <Star className="w-5 h-5 fill-orange-400 text-orange-400" />
                                         <span className="ml-1 text-lg font-bold text-orange-500">{roomData.reviews.average}</span>
-                                        <span className="ml-1 text-sm text-muted-foreground">({roomData.reviews.count} reviews)</span>
+                                        <span className="ml-1 text-sm text-muted-foreground">({room.reviews.length} reviews)</span>
                                     </div>
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
                                 {/* --------- review section --------- */}
-                                <form id="comment-form" class="mb-8 relative">
-                                    <textarea
-                                        id="comment-text"
-                                        rows="5"
-                                        class="w-full p-4 pb-12 border rounded-xl focus:outline-none bg-muted"
-                                        placeholder="Write a comment..."
-                                        required
-                                    ></textarea>
-                                    <button
-                                        type="submit"
-                                        class="absolute right-4 bottom-4 bg-accent text-white font-bold py-1.5 px-5 shadow-md rounded-sm cursor-pointer hover:bg-orange-500 smooth-transition"
-                                    >
-                                        Post
-                                    </button>
-                                </form>
+                                {isAuthenticated &&
+                                    <form onSubmit={handleReviewSubmit} className="mb-8 relative">
+                                        <textarea
+                                            id="comment-text"
+                                            rows="5"
+                                            className="w-full p-4 pb-12 border rounded-xl focus:outline-none bg-muted"
+                                            placeholder="Write a comment..."
+                                            required
+                                        ></textarea>
+                                        <button
+                                            type="submit"
+                                            class="absolute right-4 bottom-4 bg-accent text-white font-bold py-1.5 px-5 shadow-md rounded-sm cursor-pointer hover:bg-orange-500 smooth-transition"
+                                        >
+                                            Post
+                                        </button>
+                                    </form>
+                                }
 
                                 {/* ---------- reviews list ---------- */}
                                 <div className="space-y-4">
-                                    {roomData.reviews.recent.map((review, index) => (
-                                        <div key={index} className="border-b border-gray-100 pb-4 last:border-b-0">
+                                    {room.reviews.map((review, index) => (
+                                        <div key={index} className="border-b border-gray-100 pb-4 last:border-b-0 relative">
                                             <div className="flex items-center justify-between mb-2">
-                                                <span className="font-medium text-muted-foreground">{review.name}</span>
+                                                <span className="font-medium text-muted-foreground">{review.user.name}</span>
                                                 <div className="flex items-center">
-                                                    {[...Array(review.rating)].map((_, i) => (
+                                                    {review.rating?.length != 0 || review.rating?.length == null && [...Array(review.rating)].map((_, i) => (
                                                         <Star key={i} className="w-4 h-4 fill-orange-400 text-orange-400" />
                                                     ))}
                                                 </div>
                                             </div>
                                             <p className="text-muted-foreground/80 text-sm">{review.comment}</p>
+                                            {
+
+                                                review.userId === user?.id && (
+                                                    <DropdownMenu>
+                                                        <DropdownMenuTrigger asChild className="absolute top-0 right-2">
+                                                            <EllipsisVertical className="cursor-pointer" size="18" />
+                                                        </DropdownMenuTrigger>
+                                                        <DropdownMenuContent>
+                                                            {/* <DropdownMenuItem className="cursor-pointer" onClick={handleReviewEdit}>
+                                                                Edit <DropdownMenuShortcut><Edit2Icon /></DropdownMenuShortcut>
+                                                            </DropdownMenuItem> */}
+                                                            <DropdownMenuItem className="cursor-pointer" onClick={handleReviewDelete}>
+                                                                Delete <DropdownMenuShortcut><Trash /></DropdownMenuShortcut>
+                                                            </DropdownMenuItem>
+                                                        </DropdownMenuContent>
+                                                    </DropdownMenu>
+                                                )
+                                            }
                                         </div>
                                     ))}
                                 </div>

@@ -6,7 +6,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  // output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -15,20 +14,20 @@ datasource db {
 }
 
 model User {
-  id         String   @id @default(uuid())
-  name       String
-  email      String   @unique
-  password   String?
-  role       UserRole @default(SEEKER)
-  isVerified Boolean  @default(false)
-   resetToken        String? 
-  resetTokenExpiry  BigInt? 
+  id               String   @id @default(uuid())
+  name             String
+  email            String   @unique
+  password         String?
+  role             UserRole @default(SEEKER)
+  isVerified       Boolean  @default(false)
+  resetToken       String?
+  resetTokenExpiry BigInt?
 
-  profile Profile?
-  rooms      Room[]          
-  favorites  Favorite[]
-  bookings   Booking[]
-  reviews    Review[]
+  profile   Profile?
+  rooms     Room[]
+  favorites Favorite[]
+  bookings  Booking[]
+  reviews   Review[]
 
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) @updatedAt
@@ -36,7 +35,6 @@ model User {
 
 model Profile {
   id                  String    @id @default(uuid())
-  //basic
   phone               String?   @unique
   profilePic          String?
   dateOfBirth         DateTime?
@@ -45,15 +43,13 @@ model Profile {
   citizenshipFrontImg String?
   citizenshipBackImg  String?
   address             String?
-
-  //preference
-  preferredAddress String?
-  latitude      Float?
-  longitude     Float?
-  maxBudget     Int?
-  minBudget     Int?
+  preferredAddress    String?
+  latitude            Float?
+  longitude           Float?
+  maxBudget           Int?
+  minBudget           Int?
   preferredRoomType   RoomType?
-  amenityPreferences  String[] 
+  amenityPreferences  String[]
 
   userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -64,6 +60,7 @@ model Profile {
   @@index([preferredAddress])
   @@index([latitude, longitude])
 }
+
 model Room {
   id          String   @id @default(uuid())
   title       String
@@ -72,84 +69,81 @@ model Room {
   latitude    Float
   longitude   Float
   price       Int
-  available   Boolean   @default(true)
-  roomType    RoomType  @default(SINGLE)
-  
-  images      String[]
-  amenities   String[]
+  available   Boolean  @default(true)
+  roomType    RoomType @default(SINGLE)
 
-  ownerId     String
-  owner       User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  
-  favorites    Favorite[]
-  bookings     Booking[]
-  reviews      Review[]
+  images    String[]
+  amenities String[]
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  ownerId String
+  owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
-  @@index([latitude, longitude]) 
+  favorites Favorite[]
+  bookings  Booking[]
+  reviews   Review[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([latitude, longitude])
   @@index([price])
   @@index([available])
   @@index([roomType])
 }
+
 model Favorite {
-  id        String   @id @default(uuid())
-  userId    String
-  roomId    String
+  id     String @id @default(uuid())
+  userId String
+  roomId String
 
-  user      User     @relation(fields: [userId], references: [id])
-  room      Room     @relation(fields: [roomId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  room Room @relation(fields: [roomId], references: [id], onDelete: Cascade)
 
-  savedAt   DateTime @default(now())
+  savedAt DateTime @default(now())
 
-  @@unique([userId, roomId]) // one room can be favorited only once per user
+  @@unique([userId, roomId])
 }
+
 model Booking {
-  id        String         @id @default(uuid())
+  id String @id @default(uuid())
 
-  // Who booked
-  userId    String
-  user      User           @relation(fields: [userId], references: [id])
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  // What room was booked
-  roomId    String
-  room      Room           @relation(fields: [roomId], references: [id])
+  roomId String
+  room   Room   @relation(fields: [roomId], references: [id], onDelete: Cascade)
 
-  status    BookingStatus  @default(PENDING)
-  
-  // Booking dates
+  status BookingStatus @default(PENDING)
+
   checkInDate  DateTime?
   checkOutDate DateTime?
-  
-  // Additional info
-  message      String?     
+
+  message         String?
   responseMessage String?
 
-  bookedAt     DateTime     @default(now())
-  respondedAt  DateTime?    
-  
+  bookedAt    DateTime  @default(now())
+  respondedAt DateTime?
+
   @@index([status])
   @@index([bookedAt])
 }
 
 model Review {
-  id        String   @id @default(uuid())
-  rating    Int      // 1 to 5
-  comment   String?
+  id      String  @id @default(uuid())
+  rating  Int?
+  comment String?
 
-  userId    String
-  roomId    String
+  userId String
+  roomId String
 
-  user      User     @relation(fields: [userId], references: [id])
-  room      Room     @relation(fields: [roomId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  room Room @relation(fields: [roomId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 
   @@unique([userId, roomId])
 }
 
-//-----enums-----
 enum UserRole {
   OWNER
   SEEKER
@@ -170,6 +164,7 @@ enum RoomType {
   APARTMENT
   HOSTEL
 }
+
 enum BookingStatus {
   PENDING
   ACCEPTED

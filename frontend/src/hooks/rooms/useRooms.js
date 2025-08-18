@@ -3,7 +3,7 @@ import {
    createRoom,
    getMyRooms,
    getAllRooms,
-   getRoomById,
+   getRoomWithSerivce,
    deleteRoom,
    updateRoom,
 } from "@/services/roomServices.js";
@@ -39,10 +39,10 @@ export const useAllRooms = () => {
    });
 };
 /* ------- Get single room by ID ------- */
-export const useRoomById = (roomId) => {
+export const useRoomWithService = (roomId) => {
    return useQuery({
       queryKey: ["room", roomId],
-      queryFn: () => getRoomById(roomId),
+      queryFn: () => getRoomWithSerivce(roomId),
       enabled: !!roomId,
    });
 };

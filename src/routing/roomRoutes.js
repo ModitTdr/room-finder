@@ -6,6 +6,7 @@ import {
    getAllRooms,
    getRoomById,
    getMyRooms,
+   getRoomWithReviews
 } from "../controller/roomController.js";
 import isLoggedIn from "../middleware/isLoggedIn.js";
 import authorize from "../middleware/roleMiddleware.js";
@@ -14,7 +15,7 @@ const router = express.Router();
 
 // Public Routes
 router.get("/", getAllRooms);
-router.get("/:id", getRoomById);
+router.get("/:id", getRoomWithReviews);
 
 // Protected Routes (OWNER only)
 router.post("/", isLoggedIn, authorize("OWNER"), createRoom);

@@ -2,16 +2,9 @@ import { Link } from "react-router";
 import { Button } from '@/components/ui/button'
 import RoomCards from "@/components/RoomCards"
 import { useAllRooms } from "@/hooks/rooms/useRooms"
-import { useAuth } from "@/hooks/useAuth"
-import useRecommendedRooms from "@/hooks/useRecommendedRooms"
 
-const MainSection = () => {
-   const { data: rooms, isLoading } = useAllRooms();
-   const { user } = useAuth();
-   const { data: recommendedRooms, isLoading: isRecLoading } = useRecommendedRooms(user?.id, {
-      enabled: !!user?.id,
-   });
-
+const MainSection = ({ recommendedRooms }) => {
+   const { data: rooms } = useAllRooms();
    return (
       <>
          <section className='py-18 container text-center px-4 z-20 m-auto'>
@@ -24,9 +17,7 @@ const MainSection = () => {
             </div>
             {/* cards */}
             <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 mb-18'>
-               {isRecLoading ? (
-                  <p className="text-center col-span-2">Loading Rooms...</p>
-               ) : recommendedRooms && recommendedRooms.length > 0 ? (
+               {recommendedRooms && recommendedRooms.length > 0 ? (
                   recommendedRooms.map((room) => (
                      <RoomCards key={room.id} room={room} />
                   ))

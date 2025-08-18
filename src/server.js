@@ -24,7 +24,7 @@ app.use('/api/auth', authRoute);
 app.use('/api/users', userRoute);
 app.use('/api/rooms', roomRoute);
 app.use('/app/recommendation', recommendation);
-app.use('/app/reviews', review);
+app.use('/api/reviews', review);
 app.listen(PORT, () => {
   console.log(`Server started at http://localhost:${PORT}`)
 })

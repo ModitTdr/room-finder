@@ -1,16 +1,8 @@
 import { Outlet } from "react-router-dom";
-import LoadingPage from "@/pages/LoadingPage"
 import Navbar from "@/components/Navbar/Navbar"
 /* ---------- custom hooks ---------- */
-import { useAuth } from "./hooks/useAuth";
-import useDelay from "./hooks/useDelay"
 import { Toaster } from "react-hot-toast";
-
 const App = () => {
-  const { isLoading, isError } = useAuth();
-  const delay = useDelay();
-
-  if (isLoading && !isError || delay) return <LoadingPage />
 
   return (
     <>

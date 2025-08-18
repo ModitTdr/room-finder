@@ -23,7 +23,7 @@ export default function UploadWidget({ onUpload, onUploadError, children, multip
                uploadPreset: import.meta.env.VITE_API_CLOUDINARY_UPLOADPRESET,
                sources: ["local", "camera", "url"],
                multiple,
-               maxFileSize: 2000000,
+               maxFileSize: 5000000,
                clientAllowedFormats: ["jpg", "png", "jpeg", "webp"],
                showAdvancedOptions: false,
                cropping: true,

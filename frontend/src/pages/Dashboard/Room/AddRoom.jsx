@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import toast from 'react-hot-toast';
 
-import { Check, Home, Image as ImageIcon, Lightbulb, X } from "lucide-react";
+import { Check, Home, Image as ImageIcon, Lightbulb, X, Plus } from "lucide-react";
 
 import UploadWidget from "@/components/UploadWidget";
 import AddressAutocomplete from "@/components/AddressAutocomplete";
@@ -19,8 +19,8 @@ import {
    FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
    Select,
    SelectContent,
@@ -29,6 +29,7 @@ import {
    SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { useState } from "react";
 
 
 /* -------------- enums ------------- */
@@ -39,16 +40,11 @@ const RoomType = {
    APARTMENT: "APARTMENT",
    HOSTEL: "HOSTEL"
 }
-const Amenities = [
-   "wifi",
-   "parking",
-   "ac",
-   "laundry",
-   "furnished",
-   "tv",
-   "kitchen",
-   "private bathroom"
-];
+
+const commonAmenities = [
+   "WiFi", "AC", "Parking", "Kitchen", "Laundry", "Balcony",
+   "Furnished", "Security", "Water Supply", "Electricity Backup"
+]
 
 
 /* ------- validation schemas ------- */
@@ -71,6 +67,7 @@ const roomSchema = z.object({
 /* ----------- components ----------- */
 const AddRoom = () => {
    const { mutate: createNewRoom } = useCreateRoom();
+   const [newAmenity, setNewAmenity] = useState("")
 
    /* - form default values and submit - */
    const form = useForm({
@@ -102,6 +99,23 @@ const AddRoom = () => {
       const newImages = currentImages.filter((_, index) => index !== indexToRemove);
       form.setValue("images", newImages, { shouldValidate: true });
    };
+
+   const handleAddAmenity = (amenity) => {
+      if (amenity && !formData.amenities.includes(amenity)) {
+         setFormData(prev => ({
+            ...prev,
+            amenities: [...prev.amenities, amenity]
+         }))
+      }
+      setNewAmenity("")
+   }
+
+   const handleRemoveAmenity = (amenityToRemove) => {
+      setFormData(prev => ({
+         ...prev,
+         amenities: prev.amenities.filter(amenity => amenity !== amenityToRemove)
+      }))
+   }
 
    const onSubmit = async (values) => {
       try {
@@ -320,48 +334,95 @@ const AddRoom = () => {
                      </div>
                      <p className='text-sm text-muted-foreground'>Select the amenities available in your room or building.</p>
                   </div>
+
                   <FormField
                      control={form.control}
                      name="amenities"
-                     render={() => (
-                        <FormItem className="col-span-2 space-y-2">
-                           <FormLabel>Available Amenities</FormLabel>
-                           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                              {Amenities.map((amenity) => (
-                                 <FormField
-                                    key={amenity}
-                                    control={form.control}
-                                    name="amenities"
-                                    render={({ field }) => {
-                                       return (
-                                          <FormItem key={amenity} className="flex flex-row items-start space-x-2 space-y-0">
-                                             <FormControl>
-                                                <Checkbox
-                                                   checked={field.value?.includes(amenity)}
-                                                   className="data-[state=checked]:bg-accent data-[state=checked]:border-accent transition-all duration-200 cursor-pointer"
-                                                   onCheckedChange={(checked) => {
-                                                      if (checked) {
-                                                         field.onChange([...field.value || [], amenity]);
-                                                      } else {
-                                                         field.onChange(field.value?.filter((val) => val !== amenity));
-                                                      }
-                                                   }}
-                                                />
-                                             </FormControl>
-                                             <FormLabel className="text-sm font-medium cursor-pointer hover:text-accent transition-colors duration-200">
-                                                {amenity.replace("_", " ").toUpperCase()}
-                                             </FormLabel>
-                                          </FormItem>
-                                       );
+                     render={({ field }) => {
+                        const selectedAmenities = field.value || [];
+
+                        const handleAddAmenity = (amenity) => {
+                           if (!amenity || selectedAmenities.includes(amenity)) return;
+                           field.onChange([...selectedAmenities, amenity]);
+                           setNewAmenity("");
+                        };
+
+                        const handleRemoveAmenity = (amenity) => {
+                           field.onChange(selectedAmenities.filter((a) => a !== amenity));
+                        };
+
+                        return (
+                           <FormItem className="space-y-4">
+                              {/* Quick Add Buttons */}
+                              <div className="flex flex-wrap gap-2">
+                                 {commonAmenities.map((amenity) => (
+                                    <Button
+                                       key={amenity}
+                                       type="button"
+                                       variant={selectedAmenities.includes(amenity) ? "default" : "outline"}
+                                       size="sm"
+                                       onClick={() => {
+                                          selectedAmenities.includes(amenity)
+                                             ? handleRemoveAmenity(amenity)
+                                             : handleAddAmenity(amenity);
+                                       }}
+                                       className="text-xs"
+                                    >
+                                       {amenity}
+                                    </Button>
+                                 ))}
+                              </div>
+
+                              {/* Custom Amenity Input */}
+                              <div className="flex gap-2">
+                                 <Input
+                                    value={newAmenity}
+                                    onChange={(e) => setNewAmenity(e.target.value)}
+                                    placeholder="Add custom amenity"
+                                    onKeyPress={(e) => {
+                                       if (e.key === "Enter") {
+                                          e.preventDefault();
+                                          handleAddAmenity(newAmenity);
+                                       }
                                     }}
                                  />
-                              ))}
-                           </div>
-                           <FormMessage />
-                        </FormItem>
-                     )}
+                                 <Button
+                                    type="button"
+                                    onClick={() => handleAddAmenity(newAmenity)}
+                                    size="sm"
+                                 >
+                                    <Plus className="h-4 w-4" />
+                                 </Button>
+                              </div>
+
+                              {/* Selected Amenities as badges */}
+                              {selectedAmenities.length > 0 && (
+                                 <div className="flex flex-wrap gap-2">
+                                    {selectedAmenities.map((amenity, index) => (
+                                       <Badge
+                                          key={index}
+                                          variant="secondary"
+                                          className="flex items-center gap-1"
+                                       >
+                                          {amenity}
+                                          <button
+                                             type="button"
+                                             onClick={() => handleRemoveAmenity(amenity)}
+                                             className="ml-1 hover:text-destructive"
+                                          >
+                                             <X className="h-3 w-3" />
+                                          </button>
+                                       </Badge>
+                                    ))}
+                                 </div>
+                              )}
+                              <FormMessage />
+                           </FormItem>
+                        );
+                     }}
                   />
                </div>
+
 
                <button type='submit' className='fixed bottom-12 right-12 w-12 h-12 bg-green-400 rounded-full flex items-center justify-center shadow-lg hover:scale-105 smooth-transition cursor-pointer'>
                   <Check size={28} color="black" />

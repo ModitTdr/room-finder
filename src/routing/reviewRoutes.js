@@ -5,6 +5,9 @@ import ReviewController from "../controller/reviewController.js";
 const router = express.Router();
 
 router.get('/:roomid', isLoggedIn, ReviewController.getReviews);
-router.post('/', isLoggedIn, ReviewController.createReview);
+router.post('/:roomId', isLoggedIn, ReviewController.createReview);
+router.delete('/:roomId', isLoggedIn, ReviewController.deleteReview);
+
+router.put('/:roomId', isLoggedIn, ReviewController.updateReview);
 
 export default router;

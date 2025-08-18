@@ -5,6 +5,7 @@ import {
    getAllRoomsService,
    getRoomByIdService,
    getMyRoomsService,
+   getRoomWithReviewsService,
 } from "../services/roomService.js";
 import { roomSchema } from "../utils/roomSchema.js";
 
@@ -41,6 +42,16 @@ export const getRoomById = async (req, res) => {
       res.status(200).json(room);
    } catch (error) {
       res.status(500).json({ message: "Error fetching room" });
+   }
+};
+
+export const getRoomWithReviews = async (req, res) => {
+   try {
+      const room = await getRoomWithReviewsService(req.params.id);
+      if (!room) return res.status(404).json({ message: "Room not found" });
+      res.status(200).json(room);
+   } catch (error) {
+      res.status(500).json({ message: "Error fetching room reviews" });
    }
 };
 
@@ -84,6 +95,7 @@ export const getMyRooms = async (req, res) => {
 export default {
    createRoom,
    getAllRooms,
+   getRoomWithReviews,
    getRoomById,
    updateRoom,
    deleteRoom,

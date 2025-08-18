@@ -18,7 +18,7 @@ export async function getMyRooms() {
    const res = await roomApi.get(`/rooms/me/rooms`);
    return res.data
 }
-export async function getRoomById(roomId) {
+export async function getRoomWithSerivce(roomId) {
    const res = await roomApi.get(`/rooms/${roomId}`);
    return res.data;
 }

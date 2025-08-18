@@ -24,13 +24,11 @@ import {
 import { useUpdateRoom } from "@/hooks/rooms/useRooms"
 
 const roomTypes = [
-    "Single Room",
-    "Double Room",
-    "Studio",
-    "1 BHK",
-    "2 BHK",
-    "3 BHK",
-    "Shared Room"
+    "SINGLE",
+    "DOUBLE",
+    "FLAT",
+    "APARTMENT",
+    "HOSTEL",
 ]
 
 const commonAmenities = [

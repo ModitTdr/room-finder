@@ -25,6 +25,21 @@ export const getRoomByIdService = async (roomId) => {
    return room;
 };
 
+export const getRoomWithReviewsService = async (roomId) => {
+   const room = await db.room.findUnique({
+      where: { id: roomId },
+      include: {
+         reviews: {
+            include: {
+               user: { select: { name: true, profile: { select: { profilePic: true } } } },
+            },
+            orderBy: { createdAt: "desc" },
+         }
+      }
+   });
+   return room;
+};
+
 export const updateRoomService = async (roomId, ownerId, data) => {
    const existingRoom = await db.room.findUnique({ where: { id: roomId } });
 
