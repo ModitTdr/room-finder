@@ -17,6 +17,7 @@ function haversine(lat1, lon1, lat2, lon2) {
 
     return R * c;
 }
+
 function budgetScore(price, minBudget = 0, maxBudget = 1000000) {
     if (price >= minBudget && price <= maxBudget) {
         return 1;
