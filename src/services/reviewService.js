@@ -12,7 +12,7 @@ export const getReviewsByIdService = async (roomId) => {
 }
 
 export const createReviewService = async (reviewData) => {
-   const { roomId, userId, comment } = reviewData;
+   const { roomId, userId, comment, rating } = reviewData;
    const existingReview = await db.review.findFirst({
       where: {
          roomId,
@@ -24,9 +24,10 @@ export const createReviewService = async (reviewData) => {
    }
    const review = await db.review.create({
       data: {
-         comment,
          userId,
          roomId,
+         comment,
+         rating,
       },
    });
    return review;

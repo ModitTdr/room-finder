@@ -1,4 +1,5 @@
 import { getReviewsByIdService, createReviewService, updateReviewService, deleteReviewService } from '../services/reviewService.js'
+import axios from "axios";
 
 const getReviews = async (req, res) => {
    try {
@@ -20,7 +21,9 @@ const createReview = async (req, res) => {
    }
 
    try {
-      const review = await createReviewService({ roomId, userId, comment });
+      const response = await axios.post("http://127.0.0.1:5000/predict", { text: comment });
+      const { rating } = response.data;
+      const review = await createReviewService({ roomId, userId, comment, rating });
       if (!review) {
          return res.status(400).json({ message: "Failed to create review" });
       }
