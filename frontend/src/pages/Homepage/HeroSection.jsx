@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-
 const HeroSection = () => {
    const { isAuthenticated } = useAuth();
    return (
@@ -28,12 +27,12 @@ const HeroSection = () => {
                </div>
 
                <div className="flex gap-4 flex-wrap">
-                  <Button className="w-full md:w-fit text-2xl px-8 py-6 text-accent-foreground bg-accent border rounded border-white/20 hover:text-accent hover:bg-accent-foreground">
+                  <Button className="w-full md:w-fit text-2xl px-8 py-6 text-accent-foreground bg-accent border rounded border-white/20 hover:text-accent hover:bg-accent-foreground active:scale-95 smooth-transition">
                      {
                         isAuthenticated ? <Link to="/dashboard">Dashboard</Link> : <Link to="/login">Get Started</Link>
                      }
                   </Button>
-                  <Button className="w-full md:w-fit text-2xl px-8 py-6 text-accent-foreground bg-accent border rounded border-white/20 hover:text-accent hover:bg-accent-foreground">Explore</Button>
+                  <Button className="w-full md:w-fit text-2xl px-8 py-6 text-accent-foreground bg-accent border rounded border-white/20 hover:text-accent hover:bg-accent-foreground active:scale-95 smooth-transition">Explore</Button>
                </div>
 
             </div>
