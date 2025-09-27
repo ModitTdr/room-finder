@@ -2,7 +2,6 @@ import { Link } from "react-router";
 import { useMemo, useState } from "react";
 
 import { IoIosMenu, IoIosSearch } from "react-icons/io";
-import { FaRegUser } from "react-icons/fa";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,9 +22,17 @@ import { useLogout } from "@/hooks/useLogout";
 import { User } from "lucide-react";
 
 
-const NavLinks = ({ isAuthenticated }) => {
+const NavLinks = ({ isAuthenticated, role }) => {
   const linkStyle = "flex items-center gap-2"
   const { mutate: logout, isPending } = useLogout();
+
+  const getDashboard = () => {
+    if (role === "ADMIN") {
+      return "/admin";
+    } else {
+      return "/dashboard";
+    }
+  }
   return (
     <>
       {
@@ -40,7 +47,7 @@ const NavLinks = ({ isAuthenticated }) => {
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
-                <Link to='/dashboard' className="w-full">Dashboard</Link>
+                <Link to={getDashboard()} className="w-full">Dashboard</Link>
               </DropdownMenuItem>
               <DropdownMenuItem className="cursor-pointer" onClick={logout}>
                 {isPending ? "Logging out..." : "Logout"}
@@ -68,12 +75,12 @@ const Navbar = ({ title }) => {
   const userRole = user?.role || "SEEKER";
   const sidebar = useMemo(() => sidebarLinks(isAuthenticated, userRole), [isAuthenticated]);
   if (isLoading) return null;
-
   return (
     <>
       <Sidebar
         isOpen={isOpen}
         sidebar={sidebar}
+        role={userRole}
       />
       {/* Overlay for mobile */}
       {isOpen && (
@@ -92,15 +99,21 @@ const Navbar = ({ title }) => {
                 <Input
                   type="text"
                   placeholder="Search.."
-
                   className="lg:w-[300px] rounded-mdf"
                 />
                 <IoIosSearch className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground text-lg" />
               </div>
               <div className="hidden md:flex gap-4 items-center">
-                {isAuthenticated && <Button className="text-sm rounded-md bg-transparent border border-muted-foreground cursor-pointer text-neutral-100 hover:bg-transparent hover:text-accent hover:border-accent" >Become a Landlord</Button>}
+                {
+                  isAuthenticated &&
+                  <Button className="text-sm rounded-md bg-transparent border border-muted-foreground cursor-pointer text-neutral-100 hover:bg-transparent hover:text-accent hover:border-accent" >
+                    <Link to="/dashboard/become-owner">
+                      Become a Landlord
+                    </Link>
+                  </Button>
+                }
                 <DarkModeButton />
-                <NavLinks isAuthenticated={isAuthenticated} />
+                <NavLinks isAuthenticated={isAuthenticated} role={user.role} />
               </div>
 
             </div>

@@ -10,8 +10,8 @@ export const getUser = async () => {
             throw new Error(err.message || "Login failed");
         }
         return res.json();
-    } catch {
-
+    } catch (error) {
+        console.log(error)
     }
 }
 export const getUserProfile = async () => {
@@ -25,8 +25,8 @@ export const getUserProfile = async () => {
             throw new Error(err.message || "Login failed");
         }
         return res.json();
-    } catch {
-
+    } catch (error) {
+        console.log(error)
     }
 }
 export const updateUserProfile = async (formData) => {

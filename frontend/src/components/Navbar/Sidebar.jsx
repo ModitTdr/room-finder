@@ -8,9 +8,16 @@ import {
 } from "@/components/ui/collapsible";
 import { useLogout } from "@/hooks/useLogout";
 
-export function Sidebar({ isOpen, sidebar: navlink }) {
+export function Sidebar({ isOpen, sidebar: navlink, role }) {
   const { pathname: currentPath } = useLocation();
   const { mutate: logout } = useLogout();
+  const getDashboard = () => {
+    if (role === "ADMIN") {
+      return "/admin";
+    } else {
+      return "/dashboard";
+    }
+  }
   return (
     <div
       className={`bg-background border-r p-4 smooth-transition h-dvh z-55 w-62 fixed top-0 left-0 md:hidden flex flex-col ${isOpen ? "translate-x-0 lg:static" : "-translate-x-full"
@@ -23,7 +30,7 @@ export function Sidebar({ isOpen, sidebar: navlink }) {
         <li>
           <div className="flex items-center gap-2 bg-background cursor-pointer hover:bg-muted rounded-md p-2 mb-4">
             <LayoutDashboardIcon size="16" />
-            <Link to='/dashboard'>Dashboard</Link>
+            <Link to={getDashboard()}>Dashboard</Link>
           </div>
         </li>
       </ul>

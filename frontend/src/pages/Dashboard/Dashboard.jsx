@@ -1,5 +1,5 @@
-import { useEffect, useMemo } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Link, Outlet, useLocation } from "react-router";
 import { getUser } from "@/services/userServices"
 /* -------------- icons ------------- */

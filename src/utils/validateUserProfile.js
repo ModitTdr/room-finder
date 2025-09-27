@@ -23,6 +23,7 @@ export const userProfileSchema = z.object({
     citizenshipID: z.string().optional().nullable(),
     citizenshipFrontImg: z.string().url("Must be a valid URL").optional().nullable(),
     citizenshipBackImg: z.string().url("Must be a valid URL").optional().nullable(),
+    citizenshipStatus: z.enum(["PENDING", "ACCEPTED", "REJECTED"]).optional().nullable(),
     address: z.string().max(500, 'Address must be less than 500 characters').optional().nullable(),
 
     // Preferences
