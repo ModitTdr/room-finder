@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import db from "../prismaClient.js";
 import bcrypt from "bcrypt";
+import { boolean } from "zod";
 
 export const getAllUserService = async () => {
   const users = await db.user.findMany({
@@ -8,7 +9,14 @@ export const getAllUserService = async () => {
       id: true,
       name: true,
       email: true,
-      role: true
+      role: true,
+      isVerified:true,
+      profile:{
+        select:{
+          citizenshipID:true,
+          phone:true,
+        }
+      }
     },
   })
   return users;
@@ -62,6 +70,7 @@ export const deleteUserService = async (userId) => {
 
 export const updateUserService = async (userData, userId, isAdmin = false) => {
   if (!isAdmin) delete userData.role;
+  
   const hashedPassword = await bcrypt.hash(userData.password, 10);
   const updatedUser = await db.user.update({
     where: { id: userId },
@@ -72,6 +81,36 @@ export const updateUserService = async (userData, userId, isAdmin = false) => {
   })
   return updatedUser;
 };
+export const updateUserRoleService = async (userData,userId ) => {
+  const validRoles = ['ADMIN','SEEKER','OWNER'];
+  const updateData = {};
+
+  if (userData.role) {
+    if (!validRoles.includes(userData.role)) {  // Check if role is valid
+      throw new Error('Invalid role');
+    }
+    updateData.role = userData.role;
+  }
+  if (userData.isVerified !== undefined) { 
+    if (typeof userData.isVerified === 'boolean') {
+      updateData.isVerified = userData.isVerified;
+    } else {
+      throw new Error('isVerified must be a boolean value');
+    }
+  }
+  
+  if (Object.keys(updateData).length === 0) {
+    throw new Error('No valid fields (role or isVerified) to update');
+  }
+
+  const updatedUser = await db.user.update({
+    where: { id: userId },
+    data: updateData
+  });
+
+  return updatedUser;
+};
+
 const prisma = new PrismaClient();
 const savePasswordResetToken = async (userId, token, expiry) => {
   return await prisma.user.update({
@@ -113,6 +152,7 @@ export default {
   userSignupService,
   deleteUserService,
   updateUserService,
+  updateUserRoleService,
   savePasswordResetToken,
   getUserByResetToken,
   updatePassword,

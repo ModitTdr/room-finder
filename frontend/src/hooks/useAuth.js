@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { checkAuth } from "@/services/authServices";
+import LoadingPage from "../pages/LoadingPage";
 
 export function useAuth() {
     const {
@@ -20,7 +21,7 @@ export function useAuth() {
         },
         throwOnError: false,
     });
-
+    
     const isAuthenticated = !!data?.user && !isError;
 
     return {

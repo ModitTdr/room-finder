@@ -100,23 +100,6 @@ const AddRoom = () => {
       form.setValue("images", newImages, { shouldValidate: true });
    };
 
-   const handleAddAmenity = (amenity) => {
-      if (amenity && !formData.amenities.includes(amenity)) {
-         setFormData(prev => ({
-            ...prev,
-            amenities: [...prev.amenities, amenity]
-         }))
-      }
-      setNewAmenity("")
-   }
-
-   const handleRemoveAmenity = (amenityToRemove) => {
-      setFormData(prev => ({
-         ...prev,
-         amenities: prev.amenities.filter(amenity => amenity !== amenityToRemove)
-      }))
-   }
-
    const onSubmit = async (values) => {
       try {
          console.log("Submitting values:", values);

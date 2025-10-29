@@ -22,6 +22,7 @@ model User {
   isVerified       Boolean  @default(false)
   resetToken       String?
   resetTokenExpiry BigInt?
+  requestedOwnerRole RoleRequestStatus?
 
   profile   Profile?
   rooms     Room[]
@@ -34,14 +35,15 @@ model User {
 }
 
 model Profile {
-  id                  String    @id @default(uuid())
-  phone               String?   @unique
+  id                  String             @id @default(uuid())
+  phone               String?            @unique
   profilePic          String?
   dateOfBirth         DateTime?
   gender              Gender?
-  citizenshipID       String?   @unique
+  citizenshipID       String?            @unique
   citizenshipFrontImg String?
   citizenshipBackImg  String?
+  citizenshipStatus   CitizenshipStatus?
   address             String?
   preferredAddress    String?
   latitude            Float?
@@ -171,4 +173,16 @@ enum BookingStatus {
   REJECTED
   CANCELLED
   COMPLETED
+}
+
+enum CitizenshipStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+enum RoleRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }

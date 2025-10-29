@@ -46,6 +46,23 @@ export const userLogin = async (req, res) => {
       sameSite: "strict",
       maxAge: 1 * 24 * 60 * 60 * 1000
     });
+
+    let refreshToken = jwt.sign(
+      {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: '30d' }
+    );
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: "strict",
+      maxAge: 30 * 24 * 60 * 60 * 1000
+    });
+
     return res.status(200).json({
       message: "Logged in",
       token: accessToken,

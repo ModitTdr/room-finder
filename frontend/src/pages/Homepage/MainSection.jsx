@@ -2,7 +2,7 @@ import { Link } from "react-router";
 import { Button } from '@/components/ui/button'
 import RoomCards from "@/components/RoomCards"
 import { useAllRooms } from "@/hooks/rooms/useRooms"
-import { Headset, LaptopMinimal, MoveRightIcon, Sparkles } from "lucide-react"
+import { Headset, LaptopMinimal, Sparkles } from "lucide-react"
 import { motion } from "framer-motion"
 
 import FeatureCard from "./components/FeatureCard"
@@ -19,7 +19,7 @@ const MainSection = ({ recommendedRooms }) => {
         viewport={{ once: true }}
         className='py-18 container text-center px-4 z-20 m-auto'>
         <div className="flex items-center justify-between">
-          <div className="space-y-4 text-start mb-12">
+          <div className="text-start mb-12">
             <h2 className='text-5xl md:text-7xl font-bold tracking-tighter'>FEATURED
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-accent"> ROOMS
               </span>
@@ -39,7 +39,7 @@ const MainSection = ({ recommendedRooms }) => {
               rooms.map((room) => (
                 <RoomCards key={room.id} room={room} />
               ))
-            ) : <p>No Rooms Available</p>
+            ) : <p className="text-start text-xl">Currently No Rooms Are Available :(</p>
           )}
         </div>
         <Button className="p-4 py-6 text-xl font-bold bg-accent text-accent-foreground border hover:bg-accent-foreground hover:text-accent hover:border-accent active:scale-95 smooth-transition lg:hidden ">
