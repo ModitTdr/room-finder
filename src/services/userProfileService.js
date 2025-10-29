@@ -34,24 +34,31 @@ export const getCreateUserProfileService = async (id, validatedData) => {
   const profileExists = await db.profile.findUnique({
     where: { userId: id },
   });
+  let profile;
   if (!profileExists) {
-    const create = await db.profile.create({
+    profile = await db.profile.create({
       data: {
         userId: id,
         ...validatedData.data,
         amenityPreferences: validatedData.data.amenityPreferences || [],
       }
-    })
-    return { message: "Profile created", create };
-  }
-  if (profileExists) {
-    const update = await db.profile.update({
+    });
+  } else {
+    profile = await db.profile.update({
       where: { userId: id },
       data: {
-        userId: id,
         ...validatedData.data
       }
-    })
-    return { message: "Profile updated", update };
+    });
   }
+  if (profile.phone && profile.address) {
+    await db.user.update({
+      where: { id },
+      data: { isVerified: true }
+    });
+  }
+
+  return profileExists
+    ? { message: "Profile updated", update: profile }
+    : { message: "Profile created", create: profile };
 } 

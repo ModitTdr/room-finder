@@ -14,7 +14,6 @@ export const getAllUser = async (req, res) => {
 
 export const getUserById = async (req, res) => {
   const userId = req.user.id;
-  console.log(userId)
   try {
     const user = await userService.getUserByIdService(userId);
     if (!user) return res.status(404).json({ message: "User Not Found" });
@@ -50,6 +49,16 @@ export const updateUser = async (req, res) => {
 
   const userId = req.user.id;
 
+  const restrictedFields = ['isVerified', 'role'];
+  for (const field of restrictedFields) {
+    if (req.body[field] !== undefined) {
+      return res.status(403).json({ message: 'Not authorized to modify restricted fields.' });
+    }
+  }
+  if (req.body.requestedOwnerRole && req.body.requestedOwnerRole !== "PENDING") {
+    return res.status(403).json({ message: 'Not authorized to set this value.' });
+  }
+
   const { valid, message, validatedData } = await validateUserInput(req.body, userId, true);
   if (!valid) {
     return res.status(400).json({ message: message });
@@ -83,8 +92,11 @@ export const updateUserByAdmin = async (req, res) => {
   const { id } = req.params;
   const userData = req.body;
   const isAdmin = req.user.role === 'ADMIN';
+  if (!isAdmin) {
+    res.status(404).json({ message: 'Not Authorized' });
+  }
   try {
-    const updatedUser = await userService.updateUserRoleService(userData, id, isAdmin);
+    const updatedUser = await userService.updateUserByAdminService(userData, id);
     res.json(updatedUser);
   } catch (error) {
     res.status(400).json({ error: error.message });

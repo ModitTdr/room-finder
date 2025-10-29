@@ -105,7 +105,7 @@ const Navbar = ({ title }) => {
               </div>
               <div className="hidden md:flex gap-4 items-center">
                 {
-                  isAuthenticated &&
+                  isAuthenticated && userRole === "SEEKER" &&
                   <Button className="text-sm rounded-md bg-transparent border border-muted-foreground cursor-pointer text-neutral-100 hover:bg-transparent hover:text-accent hover:border-accent" >
                     <Link to="/dashboard/become-owner">
                       Become a Landlord

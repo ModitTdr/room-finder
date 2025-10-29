@@ -1,7 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import db from "../prismaClient.js";
 import bcrypt from "bcrypt";
-import { boolean } from "zod";
 
 export const getAllUserService = async () => {
   const users = await db.user.findMany({
@@ -10,11 +9,11 @@ export const getAllUserService = async () => {
       name: true,
       email: true,
       role: true,
-      isVerified:true,
-      profile:{
-        select:{
-          citizenshipID:true,
-          phone:true,
+      isVerified: true,
+      profile: {
+        select: {
+          citizenshipID: true,
+          phone: true,
         }
       }
     },
@@ -70,35 +69,41 @@ export const deleteUserService = async (userId) => {
 
 export const updateUserService = async (userData, userId, isAdmin = false) => {
   if (!isAdmin) delete userData.role;
-  
-  const hashedPassword = await bcrypt.hash(userData.password, 10);
+  if (userData.password) {
+    const hashedPassword = await bcrypt.hash(userData.password, 10);
+    userData.password = hashedPassword;
+  }
   const updatedUser = await db.user.update({
     where: { id: userId },
-    data: {
-      ...userData,
-      password: hashedPassword
-    }
+    data: userData
   })
   return updatedUser;
 };
-export const updateUserRoleService = async (userData,userId ) => {
-  const validRoles = ['ADMIN','SEEKER','OWNER'];
-  const updateData = {};
 
+export const updateUserByAdminService = async (userData, userId) => {
+  const validRoles = ['ADMIN', 'SEEKER', 'OWNER'];
+  const validStatus = ['PENDING', 'REJECTED', 'ACCEPTED'];
+  const updateData = {};
   if (userData.role) {
-    if (!validRoles.includes(userData.role)) {  // Check if role is valid
+    if (!validRoles.includes(userData.role)) {
       throw new Error('Invalid role');
     }
     updateData.role = userData.role;
   }
-  if (userData.isVerified !== undefined) { 
+  if (userData.isVerified !== undefined) {
     if (typeof userData.isVerified === 'boolean') {
       updateData.isVerified = userData.isVerified;
     } else {
       throw new Error('isVerified must be a boolean value');
     }
   }
-  
+  if (userData.requestedOwnerRole && isVerified) {
+    if (!validStatus.includes(userData.requestedOwnerRole)) {
+      throw new Error('Invalid Status');
+    }
+    updateData.requestedOwnerRole = userData.requestedOwnerRole;
+  }
+
   if (Object.keys(updateData).length === 0) {
     throw new Error('No valid fields (role or isVerified) to update');
   }
@@ -152,7 +157,7 @@ export default {
   userSignupService,
   deleteUserService,
   updateUserService,
-  updateUserRoleService,
+  updateUserByAdminService,
   savePasswordResetToken,
   getUserByResetToken,
   updatePassword,
