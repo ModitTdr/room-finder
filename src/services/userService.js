@@ -10,6 +10,7 @@ export const getAllUserService = async () => {
       email: true,
       role: true,
       isVerified: true,
+      requestedOwnerRole: true,
       profile: {
         select: {
           citizenshipID: true,
@@ -89,6 +90,9 @@ export const updateUserByAdminService = async (userData, userId) => {
       throw new Error('Invalid role');
     }
     updateData.role = userData.role;
+    if (userData.role === 'OWNER') {
+      updateData.requestedOwnerRole = 'ACCEPTED';
+    }
   }
   if (userData.isVerified !== undefined) {
     if (typeof userData.isVerified === 'boolean') {
