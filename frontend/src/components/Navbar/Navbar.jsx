@@ -113,7 +113,7 @@ const Navbar = ({ title }) => {
                   </Button>
                 }
                 <DarkModeButton />
-                <NavLinks isAuthenticated={isAuthenticated} role={user.role} />
+                <NavLinks isAuthenticated={isAuthenticated} role={userRole} />
               </div>
 
             </div>

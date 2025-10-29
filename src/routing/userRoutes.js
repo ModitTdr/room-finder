@@ -13,6 +13,12 @@ router.get(
     authorize('ADMIN'),
     userController.getAllUser
 );
+router.patch(
+    '/:id',
+    isLoggedIn,
+    authorize('ADMIN'),
+    userController.updateUserByAdmin
+);
 router.get(
     '/me',
     isLoggedIn,

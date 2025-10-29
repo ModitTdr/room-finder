@@ -1,10 +1,15 @@
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
+import LoadingPage from "../pages/LoadingPage";
 
 const RoleProtectedRoute = ({ children, allowedRoles }) => {
-  const { user } = useAuth();
+  const { user, isLoading, isError } = useAuth();
 
-  if (!user) {
+  if (isLoading) {
+    return <LoadingPage />;
+  }
+
+  if (isError || !user) {
     return <Navigate to="/login" />;
   }
 
@@ -14,4 +19,5 @@ const RoleProtectedRoute = ({ children, allowedRoles }) => {
 
   return children;
 };
+
 export default RoleProtectedRoute;

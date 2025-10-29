@@ -60,3 +60,45 @@ export const updateUserProfile = async (formData) => {
         throw error;
     }
 }
+export const getAllUser = async () => {
+    try {
+        const res = await fetch(`${API}/users/`, {
+            method: "GET",
+            credentials: "include",
+        });
+        if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.message || "Failed to get users");
+        }
+        return res.json();
+    } catch (error) {
+        console.log(error)
+    }
+}
+export const updateUserByAdmin = async(userData) => {
+    const objKey = Object.keys(userData)[0];
+    const objValue = userData[objKey];
+    const finalData = {[objKey]:objValue}
+    try{
+        const res = await fetch(`${API}/users/${userData.id}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "include",
+            body: JSON.stringify(finalData),
+        });
+         if (!res.ok) {
+            const data = await res.json();
+            const errorMessage = data.message || "Something went wrong";
+            const error = new Error(errorMessage);
+            error.response = data;
+            throw error;
+        }
+        const data = await res.json();
+        return data; 
+    }catch (error) {
+        console.error(error);
+        throw error;
+    }
+};

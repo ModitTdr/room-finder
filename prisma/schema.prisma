@@ -22,6 +22,7 @@ model User {
   isVerified       Boolean  @default(false)
   resetToken       String?
   resetTokenExpiry BigInt?
+  requestedAdminRole AdminRequestStatus @default(PENDING)
 
   profile   Profile?
   rooms     Room[]
@@ -177,5 +178,11 @@ enum BookingStatus {
 enum CitizenshipStatus {
   PENDING
   ACCEPTED
+  REJECTED
+}
+
+enum AdminRequestStatus {
+  PENDING
+  APPROVED
   REJECTED
 }

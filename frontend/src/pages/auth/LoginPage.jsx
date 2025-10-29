@@ -48,7 +48,7 @@ const LoginPage = () => {
         } else {
           toast.error("Failed to login");
         }
-      } catch (error) {
+      } catch {
         toast.error("Logged in failed");
       }
     },

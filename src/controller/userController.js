@@ -14,12 +14,17 @@ export const getAllUser = async (req, res) => {
 
 export const getUserById = async (req, res) => {
   const userId = req.user.id;
-
+  console.log(userId)
   try {
     const user = await userService.getUserByIdService(userId);
     if (!user) return res.status(404).json({ message: "User Not Found" });
     const { password, created_at, updated_at, ...withoutPassword } = user;
-    res.status(200).json(withoutPassword);
+    const safeUser = JSON.parse(
+      JSON.stringify(withoutPassword, (_key, value) =>
+        typeof value === "bigint" ? value.toString() : value
+      )
+    );
+    res.status(200).json(safeUser);
   } catch (error) {
     console.error('Error fetching user:', error);
     res.status(500).json({ message: 'Internal server error' });
@@ -74,9 +79,23 @@ export const updateUser = async (req, res) => {
   }
 };
 
+export const updateUserByAdmin = async (req,res) => {
+  const {id} = req.params;
+  const userData = req.body;
+  console.log(id)
+  const isAdmin = req.user.role === 'ADMIN';
+   try {
+      const updatedUser = await userService.updateUserRoleService(userData, id, isAdmin);
+      res.json(updatedUser);  
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+}
+
 export default {
   getAllUser,
   getUserById,
   deleteUser,
-  updateUser
+  updateUser,
+  updateUserByAdmin
 };
