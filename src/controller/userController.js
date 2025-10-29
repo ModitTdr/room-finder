@@ -79,17 +79,16 @@ export const updateUser = async (req, res) => {
   }
 };
 
-export const updateUserByAdmin = async (req,res) => {
-  const {id} = req.params;
+export const updateUserByAdmin = async (req, res) => {
+  const { id } = req.params;
   const userData = req.body;
-  console.log(id)
   const isAdmin = req.user.role === 'ADMIN';
-   try {
-      const updatedUser = await userService.updateUserRoleService(userData, id, isAdmin);
-      res.json(updatedUser);  
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
+  try {
+    const updatedUser = await userService.updateUserRoleService(userData, id, isAdmin);
+    res.json(updatedUser);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 }
 
 export default {
@@ -97,5 +96,5 @@ export default {
   getUserById,
   deleteUser,
   updateUser,
-  updateUserByAdmin
+  updateUserByAdmin,
 };

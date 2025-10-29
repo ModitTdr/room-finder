@@ -8,41 +8,41 @@ const router = express.Router();
 
 //User Controller
 router.get(
-    '/',
-    isLoggedIn,
-    authorize('ADMIN'),
-    userController.getAllUser
+  '/',
+  isLoggedIn,
+  authorize('ADMIN'),
+  userController.getAllUser
 );
 router.patch(
-    '/:id',
-    isLoggedIn,
-    authorize('ADMIN'),
-    userController.updateUserByAdmin
+  '/:id',
+  isLoggedIn,
+  authorize('ADMIN'),
+  userController.updateUserByAdmin
 );
 router.get(
-    '/me',
-    isLoggedIn,
-    userController.getUserById
+  '/me',
+  isLoggedIn,
+  userController.getUserById
 );
 router.delete(
-    '/me',
-    isLoggedIn,
-    userController.deleteUser)
-    ;
+  '/me',
+  isLoggedIn,
+  userController.deleteUser)
+  ;
 router.put(
-    '/me',
-    isLoggedIn,
-    userController.updateUser
+  '/me',
+  isLoggedIn,
+  userController.updateUser
 );
 router.get(
-    '/me/userprofile',
-    isLoggedIn,
-    userProfileController.getUserProfile
+  '/me/userprofile',
+  isLoggedIn,
+  userProfileController.getUserProfile
 );
 router.put(
-    '/me/userprofile',
-    isLoggedIn,
-    userProfileController.createUserProfile
+  '/me/userprofile',
+  isLoggedIn,
+  userProfileController.createUserProfile
 );
 
 export default router;
