@@ -9,11 +9,20 @@ import Homepage from "@/pages/Homepage/HomePage"
 import LoginPage from "@/pages/auth/LoginPage";
 import SignupPage from "@/pages/auth/SignupPage";
 import Dashboard from "@/pages/Dashboard/Dashboard"
+
+import AdminLayout from "@/pages/Dashboard/Admin/AdminLayout"
 import AdminDashboard from "@/pages/Dashboard/Admin/AdminDashboard"
+import AdminUsersPage from "@/pages/Dashboard/Admin/AdminUsersPage"
+import AdminTransactionsPage from "@/pages/Dashboard/Admin/AdminTransactionsPage"
+
 import UserProfile from "@/pages/Dashboard/UserProfile/UserProfile"
 import BecomeOwner from "@/pages/Dashboard/UserProfile/BecomeOwner"
 import ForgotPasswordPage from "@/pages/auth/ForgotPasswordPage";
 import ResetPasswordPage from "@/pages/auth/ResetPasswordPage";
+import MyBookings from "@/pages/MyBookings";
+import ReceivedBookings from "@/pages/ReceivedBookings";
+import PaymentSuccess from "@/pages/PaymentSuccess";
+import PaymentFailure from "@/pages/PaymentFailure";
 
 import MissingPage from "../pages/MissingPage";
 import UnauthorizedPage from "../pages/UnauthorizedPage";
@@ -65,10 +74,14 @@ const router = createBrowserRouter([
             )
           },
           {
+            path: "bookings",
+            element: <MyBookings />,
+          },
+          {
             path: "booking-request",
             element: (
               <RoleProtectedRoute allowedRoles={['OWNER']}>
-                <MissingPage />
+                <ReceivedBookings />
               </RoleProtectedRoute>
             )
           },
@@ -102,6 +115,16 @@ const router = createBrowserRouter([
         path: "/rooms/:id",
         element: <RoomInfoPage />,
       },
+
+      {
+        path: "/payment/success",
+        element: <PaymentSuccess />,
+      },
+      {
+        path: "/payment/failure",
+        element: <PaymentFailure />,
+      },
+
     ]
   },
   {
@@ -112,9 +135,23 @@ const router = createBrowserRouter([
     path: "/admin",
     element: (
       <RoleProtectedRoute allowedRoles={['ADMIN']}>
-        <AdminDashboard />
+        <AdminLayout />
       </RoleProtectedRoute>
-    )
+    ),
+    children: [
+      {
+        index: true,
+        element: <AdminDashboard />
+      },
+      {
+        path: "users",
+        element: <AdminUsersPage />
+      },
+      {
+        path: "transactions",
+        element: <AdminTransactionsPage />
+      }
+    ]
   }
 
 ]);

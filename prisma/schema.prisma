@@ -123,11 +123,29 @@ model Booking {
   message         String?
   responseMessage String?
 
+  payments    Payment[]
+
   bookedAt    DateTime  @default(now())
   respondedAt DateTime?
 
   @@index([status])
   @@index([bookedAt])
+}
+
+model Payment {
+  id                   String        @id @default(uuid())
+  bookingId            String
+  amount               Int
+  status               PaymentStatus @default(PENDING)
+  esewaTransactionId   String?
+  
+  booking              Booking       @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  
+  createdAt            DateTime      @default(now())
+  paidAt               DateTime?
+
+  @@index([bookingId])
+  @@index([status])
 }
 
 model Review {
@@ -185,4 +203,11 @@ enum RoleRequestStatus {
   PENDING
   APPROVED
   REJECTED
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
 }
