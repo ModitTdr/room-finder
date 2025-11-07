@@ -202,8 +202,8 @@ export default function RoomInfoPage() {
                     <p className="text-center text-muted-foreground py-8">No reviews yet</p>
                   ) : (
                     room.reviews.map((review, index) => (
-                      <div key={index} className="border-b border-gray-100 pb-4 last:border-b-0 relative">
-                        <div className="flex items-center justify-between mb-2">
+                      <div key={index} className="border-b border-gray-100 space-y-1 last:border-b-0 relative">
+                        <div className="flex flex-col gap-3">
                           <span className="font-medium text-muted-foreground">{review.user.name}</span>
                           <div className="flex items-center">
                             {review.rating && [...Array(review.rating)].map((_, i) => (
