@@ -20,7 +20,7 @@ const ReceivedBookings = () => {
   const { mutate: updateStatus, isLoading: isUpdating } = useUpdateBookingStatus();
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [responseMessage, setResponseMessage] = useState('');
-  const [actionType, setActionType] = useState(null); // 'ACCEPTED' or 'REJECTED'
+  const [actionType, setActionType] = useState(null);
 
   const handleAction = (booking, action) => {
     setSelectedBooking(booking);
@@ -55,11 +55,11 @@ const ReceivedBookings = () => {
 
   const getStatusBadge = (status) => {
     const statusConfig = {
-      PENDING: { color: 'bg-yellow-100 text-yellow-800', label: 'Pending' },
-      ACCEPTED: { color: 'bg-green-100 text-green-800', label: 'Accepted' },
-      REJECTED: { color: 'bg-red-100 text-red-800', label: 'Rejected' },
-      CANCELLED: { color: 'bg-gray-100 text-gray-800', label: 'Cancelled' },
-      COMPLETED: { color: 'bg-blue-100 text-blue-800', label: 'Completed' },
+      PENDING: { color: 'bg-yellow-200 text-yellow-700', label: 'Pending' },
+      ACCEPTED: { color: 'bg-green-200 text-green-700', label: 'Accepted' },
+      REJECTED: { color: 'bg-red-200 text-red-700', label: 'Rejected' },
+      CANCELLED: { color: 'bg-gray-200 text-gray-700', label: 'Cancelled' },
+      COMPLETED: { color: 'bg-blue-200 text-blue-700', label: 'Completed' },
     };
 
     const config = statusConfig[status] || statusConfig.PENDING;
@@ -88,10 +88,10 @@ const ReceivedBookings = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Received Bookings</h1>
+          <h1 className="text-3xl font-bold text-foreground">Received Bookings</h1>
           <p className="text-gray-600 mt-2">
             Manage booking requests for your rooms
           </p>
@@ -134,19 +134,19 @@ const ReceivedBookings = () => {
                       </div>
 
                       {/* Seeker Info */}
-                      <div className="bg-blue-50 p-4 rounded-lg space-y-2">
-                        <h4 className="font-semibold text-gray-900 mb-2">Seeker Information</h4>
-                        <div className="flex items-center text-sm text-gray-700">
-                          <User className="w-4 h-4 mr-2 text-gray-500" />
+                      <div className="border p-4 rounded-lg space-y-2">
+                        <h4 className="font-semibold text-gray-400 mb-2">Seeker Information</h4>
+                        <div className="flex items-center text-sm text-neutral-500">
+                          <User className="w-4 h-4 mr-2 " />
                           <span>{booking.user.name}</span>
                         </div>
-                        <div className="flex items-center text-sm text-gray-700">
-                          <Mail className="w-4 h-4 mr-2 text-gray-500" />
+                        <div className="flex items-center text-sm text-neutral-500">
+                          <Mail className="w-4 h-4 mr-2 " />
                           <span>{booking.user.email}</span>
                         </div>
                         {booking.user.profile?.phone && (
-                          <div className="flex items-center text-sm text-gray-700">
-                            <Phone className="w-4 h-4 mr-2 text-gray-500" />
+                          <div className="flex items-center text-sm text-neutral-500">
+                            <Phone className="w-4 h-4 mr-2 " />
                             <span>{booking.user.profile.phone}</span>
                           </div>
                         )}
@@ -169,26 +169,27 @@ const ReceivedBookings = () => {
                           )}
                         </div>
                       )}
+                      <div className="space-y-5">
+                        {/* Seeker's Message */}
+                        {booking.message && (
+                          <div>
+                            <p className="text-sm text-gray-500">
+                              <span className="font-medium">Seeker's message: </span>
+                              {booking.message}
+                            </p>
+                          </div>
+                        )}
 
-                      {/* Seeker's Message */}
-                      {booking.message && (
-                        <div className="bg-gray-50 p-3 rounded">
-                          <p className="text-sm text-gray-700">
-                            <span className="font-medium">Seeker's message: </span>
-                            {booking.message}
-                          </p>
-                        </div>
-                      )}
-
-                      {/* Your Response */}
-                      {booking.responseMessage && (
-                        <div className="bg-green-50 p-3 rounded">
-                          <p className="text-sm text-gray-700">
-                            <span className="font-medium">Your response: </span>
-                            {booking.responseMessage}
-                          </p>
-                        </div>
-                      )}
+                        {/* Your Response */}
+                        {booking.responseMessage && (
+                          <div>
+                            <p className="text-sm text-gray-500">
+                              <span className="font-medium">Your response: </span>
+                              {booking.responseMessage}
+                            </p>
+                          </div>
+                        )}
+                      </div>
 
                       {/* Price */}
                       <div className="text-2xl font-bold text-orange-500">

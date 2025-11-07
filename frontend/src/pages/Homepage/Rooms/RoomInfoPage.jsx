@@ -96,7 +96,7 @@ export default function RoomInfoPage() {
               </CarouselContent>
               <CarouselPrevious className="absolute left-2 top-1/2 -translate-y-1/2 z-10 cursor-pointer  border-neutral-100 text-neutral-800 backdrop-blur-sm shadow-lg" />
               <CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2 z-10 cursor-pointer border-neutral-100 text-neutral-800 backdrop-blur-sm shadow-lg" />
-              <div className="absolute top-6 right-8 bg-black/60 p-2.5 rounded-full hover:scale-110 cursor-pointer smooth-transition">
+              <div className="absolute top-6 right-4 bg-black/60 p-2.5 rounded-full hover:scale-110 cursor-pointer smooth-transition">
                 <Heart />
               </div>
             </Carousel>
@@ -128,8 +128,38 @@ export default function RoomInfoPage() {
                   </div>
                 </div>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-6">
                 <p className="leading-relaxed text-muted-foreground">{room.description}</p>
+                <div className="flex justify-center">
+                  {isAuthenticated && user?.id !== room.ownerId ? (
+                    <BookingDialog
+                      roomId={room.id}
+                      roomTitle={room.title}
+                      roomPrice={room.price}
+                    >
+                      <Button
+                        disabled={!room.available}
+                        className="w-full max-w-64 bg-accent hover:bg-orange-500 text-white font-semibold py-3 cursor-pointer"
+                      >
+                        {room.available ? "Book Now" : "Not Available"}
+                      </Button>
+                    </BookingDialog>
+                  ) : !isAuthenticated ? (
+                    <Button
+                      onClick={() => window.location.href = '/login'}
+                      className="w-full bg-accent hover:bg-orange-500 text-white font-semibold py-3 cursor-pointer"
+                    >
+                      Login to Book
+                    </Button>
+                  ) : (
+                    <Button
+                      disabled
+                      className="w-full bg-gray-400 text-white font-semibold py-3 cursor-not-allowed"
+                    >
+                      Your Own Room
+                    </Button>
+                  )}
+                </div>
               </CardContent>
             </Card>
 
@@ -206,45 +236,6 @@ export default function RoomInfoPage() {
 
           {/* Sidebar */}
           <div className="space-y-6">
-            {/* Booking Card */}
-            <Card className="">
-              <CardContent className="space-y-4 pt-6">
-                <div className="text-start">
-                  <div className="text-3xl font-bold text-orange-500">Rs. {room.price}</div>
-                </div>
-
-                {/* Only show booking button if authenticated and not the owner */}
-                {isAuthenticated && user?.id !== room.ownerId ? (
-                  <BookingDialog
-                    roomId={room.id}
-                    roomTitle={room.title}
-                    roomPrice={room.price}
-                  >
-                    <Button
-                      disabled={!room.available}
-                      className="w-full bg-accent hover:bg-orange-500 text-white font-semibold py-3 cursor-pointer"
-                    >
-                      {room.available ? "Book Now" : "Not Available"}
-                    </Button>
-                  </BookingDialog>
-                ) : !isAuthenticated ? (
-                  <Button
-                    onClick={() => window.location.href = '/login'}
-                    className="w-full bg-accent hover:bg-orange-500 text-white font-semibold py-3 cursor-pointer"
-                  >
-                    Login to Book
-                  </Button>
-                ) : (
-                  <Button
-                    disabled
-                    className="w-full bg-gray-400 text-white font-semibold py-3 cursor-not-allowed"
-                  >
-                    Your Own Room
-                  </Button>
-                )}
-              </CardContent>
-            </Card>
-
             {/* Quick Stats */}
             <Card>
               <CardHeader>
