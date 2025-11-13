@@ -28,11 +28,27 @@ export const initiateEsewaPayment = async (bookingId, userId) => {
   if (!booking) {
     throw new Error('Booking not found');
   }
-
   if (booking.status !== 'ACCEPTED') {
     throw new Error('Only accepted bookings can be paid');
   }
 
+  const completedPayment = await db.payment.findFirst({
+    where: {
+      bookingId: booking.id,
+      status: 'COMPLETED'
+    }
+  });
+  if (completedPayment) {
+    throw new Error('This booking has already been paid');
+  }
+  await db.payment.deleteMany({
+    where: {
+      bookingId: booking.id,
+      status: {
+        in: ['PENDING', 'FAILED']
+      }
+    }
+  });
   const payment = await db.payment.create({
     data: {
       bookingId: booking.id,
@@ -46,15 +62,11 @@ export const initiateEsewaPayment = async (bookingId, userId) => {
   const totalAmount = booking.room.price.toString();
   const productCode = ESEWA_MERCHANT_ID;
 
+  if (booking.room.price < 10) {
+    throw new Error('Payment amount must be at least Rs. 10');
+  }
   const message = `total_amount=${totalAmount},transaction_uuid=${transactionUuid},product_code=${productCode}`;
   const signature = generateSignature(message, ESEWA_SECRET_KEY);
-
-  console.log('Payment initiated:', {
-    transactionUuid,
-    amount: totalAmount,
-    productCode,
-    signature
-  });
 
   return {
     paymentId: payment.id,
@@ -80,14 +92,11 @@ export const verifyEsewaPayment = async (paymentData) => {
         booking: true
       }
     });
-
     if (!payment) {
       throw new Error('Payment record not found');
     }
     const verifyUrl = `${ESEWA_VERIFY_URL}?product_code=${ESEWA_MERCHANT_ID}&total_amount=${payment.amount}&transaction_uuid=${transaction_uuid}`;
-
     const response = await axios.get(verifyUrl);
-
     if (response.data.status === 'COMPLETE' && response.data.transaction_uuid === transaction_uuid) {
       await db.payment.update({
         where: { id: payment.id },
@@ -97,11 +106,16 @@ export const verifyEsewaPayment = async (paymentData) => {
           paidAt: new Date()
         }
       });
-
       await db.booking.update({
         where: { id: payment.bookingId },
         data: {
           status: 'COMPLETED'
+        }
+      });
+      await db.room.update({
+        where: { id: payment.booking.roomId },
+        data: {
+          available: false
         }
       });
 

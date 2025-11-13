@@ -95,14 +95,6 @@ const Navbar = ({ title }) => {
           <div className="flex items-center justify-end box-border">
             <div className="flex items-center justify-between gap-8">
               {/* desktop view*/}
-              <div className="relative hidden md:block">
-                <Input
-                  type="text"
-                  placeholder="Search.."
-                  className="lg:w-[300px] rounded-mdf"
-                />
-                <IoIosSearch className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground text-lg" />
-              </div>
               <div className="hidden md:flex gap-4 items-center">
                 {
                   isAuthenticated && userRole === "SEEKER" &&

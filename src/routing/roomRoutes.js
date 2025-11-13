@@ -1,12 +1,12 @@
 import express from "express";
 import {
-   createRoom,
-   updateRoom,
-   deleteRoom,
-   getAllRooms,
-   getRoomById,
-   getMyRooms,
-   getRoomWithReviews
+  createRoom,
+  updateRoom,
+  deleteRoom,
+  getAllRooms,
+  getMyRooms,
+  getRoomWithReviews,
+  toggleRoomAvailability
 } from "../controller/roomController.js";
 import isLoggedIn from "../middleware/isLoggedIn.js";
 import authorize from "../middleware/roleMiddleware.js";
@@ -22,5 +22,5 @@ router.post("/", isLoggedIn, authorize("OWNER"), createRoom);
 router.put("/:id", isLoggedIn, authorize("OWNER"), updateRoom);
 router.delete("/:id", isLoggedIn, authorize("OWNER"), deleteRoom);
 router.get("/me/rooms", isLoggedIn, authorize("OWNER"), getMyRooms);
-
+router.patch("/:id/toggle-availability", isLoggedIn, authorize("OWNER"), toggleRoomAvailability);
 export default router;

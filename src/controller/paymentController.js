@@ -28,8 +28,6 @@ export const initiatePayment = async (req, res) => {
 export const verifyPayment = async (req, res) => {
   const { transaction_uuid, transaction_code, total_amount, status } = req.query;
 
-  console.log('Payment verification request:', { transaction_uuid, transaction_code, status });
-
   if (!transaction_uuid || !transaction_code) {
     console.log('Missing required parameters');
     return res.status(400).json({ message: "Missing required payment parameters" });
@@ -48,7 +46,6 @@ export const verifyPayment = async (req, res) => {
       total_amount
     });
 
-    console.log('Payment verified successfully:', result);
     res.status(200).json(result);
   } catch (error) {
     console.error("Verify payment error:", error);

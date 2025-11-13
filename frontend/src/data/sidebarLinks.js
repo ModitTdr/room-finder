@@ -5,7 +5,7 @@ const sidebarLinks = (isAuthenticated = false, userRole) => [
     icon: House,
     subtitle: [
       { title: 'Browse Rooms', icon: Search, link: '/rooms', isActive: (isAuthenticated, (userRole === "SEEKER")) },
-      { title: 'Favourites', icon: Heart, link: 'favourites', isActive: (isAuthenticated, (userRole === "SEEKER")) },
+      // { title: 'Favourites', icon: Heart, link: 'favourites', isActive: (isAuthenticated, (userRole === "SEEKER")) },
       { title: 'List Rooms', icon: ListFilterPlus, link: '/dashboard/myrooms', isActive: (isAuthenticated, (userRole === "OWNER")) },
       { title: 'Add a Room', icon: List, link: '/dashboard/addroom', isActive: (isAuthenticated, (userRole === "OWNER")) },
       { title: 'My Bookings', icon: Calendar, link: '/dashboard/bookings', isActive: (isAuthenticated, (userRole === "SEEKER")) },

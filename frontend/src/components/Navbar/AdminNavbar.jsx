@@ -30,6 +30,11 @@ const AdminNavbar = () => {
       icon: Users
     },
     {
+      title: 'Rooms',
+      path: '/admin/rooms',
+      icon: Home
+    },
+    {
       title: 'Transactions',
       path: '/admin/transactions',
       icon: CreditCard

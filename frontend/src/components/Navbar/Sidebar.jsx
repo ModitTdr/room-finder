@@ -49,7 +49,7 @@ export function Sidebar({ isOpen, sidebar: navlink, role }) {
                 {
                   link.subtitle
                     .filter((sub) => sub.isActive)
-                    .map(({ title, icon: Icon, link = "#" }, index) => (
+                    .map(({ title, icon: Icon, link = "#" }) => (
                       currentPath === link ? '' :
                         <div key={title} className="flex gap-2 bg-background cursor-pointer hover:bg-muted rounded-md p-2">
                           {

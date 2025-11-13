@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
+import toast from "react-hot-toast";
 import {
   Table,
   TableBody,
@@ -18,7 +19,7 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import LoadingPage from "../../LoadingPage";
+import LoadingPage from "@/pages/LoadingPage";
 import {
   Search,
   ChevronLeft,
@@ -27,6 +28,7 @@ import {
   CheckCircle,
   XCircle,
   Clock,
+  Trash2
 } from "lucide-react";
 
 const API = import.meta.env.VITE_API_URL;
@@ -36,6 +38,7 @@ const AdminTransactionsPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("ALL");
   const [currentPage, setCurrentPage] = useState(1);
+  const queryClient = useQueryClient();
 
   // Fetch all transactions
   const { data: transactions, isLoading } = useQuery({
@@ -46,6 +49,23 @@ const AdminTransactionsPage = () => {
       });
       return response.data;
     },
+  });
+
+  // Cleanup mutation
+  const cleanupMutation = useMutation({
+    mutationFn: async () => {
+      const response = await axios.delete(`${API}/admin/transactions/cleanup`, {
+        withCredentials: true
+      });
+      return response.data;
+    },
+    onSuccess: (data) => {
+      toast.success(`Cleaned up ${data.deleted} old pending/failed transactions`);
+      queryClient.invalidateQueries(['alltransactions']);
+    },
+    onError: (error) => {
+      toast.error(error.response?.data?.message || 'Failed to cleanup transactions');
+    }
   });
 
   if (isLoading) {
@@ -184,11 +204,23 @@ const AdminTransactionsPage = () => {
 
         {/* Transactions Table */}
         <div className="rounded-xl shadow-sm border border-foreground/30 overflow-hidden">
-          <div className="p-6 border-b border-foreground/40">
-            <h2 className="text-xl font-semibold">All Transactions</h2>
-            <p className="text-sm text-gray-600 mt-1">
-              View and monitor all payment transactions
-            </p>
+          <div className="p-6 border-b border-foreground/40 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div>
+              <h2 className="text-xl font-semibold">All Transactions</h2>
+              <p className="text-sm text-gray-600 mt-1">
+                View and monitor all payment transactions
+              </p>
+            </div>
+            <Button
+              onClick={() => cleanupMutation.mutate()}
+              disabled={cleanupMutation.isLoading}
+              variant="destructive"
+              size="sm"
+              className="bg-red-600 hover:bg-red-700"
+            >
+              <Trash2 className="h-4 w-4 mr-2" />
+              {cleanupMutation.isLoading ? 'Cleaning...' : 'Cleanup Old Pending'}
+            </Button>
           </div>
 
           {/* Filters */}

@@ -9,11 +9,13 @@ import Homepage from "@/pages/Homepage/HomePage"
 import LoginPage from "@/pages/auth/LoginPage";
 import SignupPage from "@/pages/auth/SignupPage";
 import Dashboard from "@/pages/Dashboard/Dashboard"
+import DashboardHome from "@/pages/Dashboard/DashboardHome"
 
 import AdminLayout from "@/pages/Dashboard/Admin/AdminLayout"
 import AdminDashboard from "@/pages/Dashboard/Admin/AdminDashboard"
 import AdminUsersPage from "@/pages/Dashboard/Admin/AdminUsersPage"
 import AdminTransactionsPage from "@/pages/Dashboard/Admin/AdminTransactionsPage"
+import AdminRoomsPage from "@/pages/Dashboard/Admin/AdminRoomsPage"
 
 import UserProfile from "@/pages/Dashboard/UserProfile/UserProfile"
 import BecomeOwner from "@/pages/Dashboard/UserProfile/BecomeOwner"
@@ -61,6 +63,10 @@ const router = createBrowserRouter([
         path: "dashboard",
         element: <ProtectedRoute><Dashboard /></ProtectedRoute>,
         children: [
+          {
+            index: true,
+            element: <DashboardHome />
+          },
           {
             path: "userprofile",
             element: <UserProfile />
@@ -146,6 +152,10 @@ const router = createBrowserRouter([
       {
         path: "users",
         element: <AdminUsersPage />
+      },
+      {
+        path: "rooms",
+        element: <AdminRoomsPage />
       },
       {
         path: "transactions",
