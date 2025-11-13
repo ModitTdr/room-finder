@@ -83,7 +83,7 @@ export const updateUserService = async (userData, userId, isAdmin = false) => {
 
 export const updateUserByAdminService = async (userData, userId) => {
   const validRoles = ['ADMIN', 'SEEKER', 'OWNER'];
-  const validStatus = ['PENDING', 'REJECTED', 'ACCEPTED'];
+  const validStatus = ['PENDING', 'REJECTED', 'APPROVED'];
   const updateData = {};
   if (userData.role) {
     if (!validRoles.includes(userData.role)) {
@@ -91,7 +91,7 @@ export const updateUserByAdminService = async (userData, userId) => {
     }
     updateData.role = userData.role;
     if (userData.role === 'OWNER') {
-      updateData.requestedOwnerRole = 'ACCEPTED';
+      updateData.requestedOwnerRole = 'APPROVED';
     }
   }
   if (userData.isVerified !== undefined) {
@@ -101,7 +101,7 @@ export const updateUserByAdminService = async (userData, userId) => {
       throw new Error('isVerified must be a boolean value');
     }
   }
-  if (userData.requestedOwnerRole && isVerified) {
+  if (userData.requestedOwnerRole && userData.isVerified) {
     if (!validStatus.includes(userData.requestedOwnerRole)) {
       throw new Error('Invalid Status');
     }

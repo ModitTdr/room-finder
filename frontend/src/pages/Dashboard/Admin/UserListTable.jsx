@@ -72,13 +72,12 @@ const UserListTable = ({ data }) => {
     if (request === "PENDING") {
       return "Pending";
     } else if (request === "APPROVED") {
-      return "Accepted";
+      return "APPROVED";
     } else if (request === "REJECTED") {
       return "Rejected";
     }
   }
   const getRequestStyle = (request) => {
-    console.log(request)
     if (request === "PENDING") {
       return "bg-yellow-100 text-yellow-700";
     } else if (request === "APPROVED") {
