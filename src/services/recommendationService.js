@@ -26,8 +26,8 @@ function budgetScore(price, minBudget = 0, maxBudget = 1000000) {
     return Math.max(0, 1 - (minBudget - price) / minBudget);
   }
   const overBudgetRatio = (price - maxBudget) / maxBudget;
-  if (overBudgetRatio >= 1) return 0;
-  return 1 - overBudgetRatio;
+  if (overBudgetRatio >= 0.5) return 0;
+  return 1 - (overBudgetRatio * 2);
 }
 
 function weightScore(rooms, userdata) {
