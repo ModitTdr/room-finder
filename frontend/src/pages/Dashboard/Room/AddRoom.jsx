@@ -43,7 +43,7 @@ const RoomType = {
 
 const commonAmenities = [
   "WiFi", "AC", "Parking", "Kitchen", "Laundry", "Balcony",
-  "Furnished", "Security", "Water Supply", "Electricity Backup"
+  "Furnished", "Security", "Water Supply", "Electricity Backup", "Toilet"
 ]
 
 

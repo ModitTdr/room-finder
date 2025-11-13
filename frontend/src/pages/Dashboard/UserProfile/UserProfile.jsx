@@ -8,7 +8,7 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import toast from 'react-hot-toast';
 
-import { CalendarIcon, Check, House, IdCard, UploadCloud, User } from "lucide-react";
+import { CalendarIcon, Check, House, IdCard, UploadCloud, User, Plus, X } from "lucide-react";
 
 import UploadWidget from "@/components/UploadWidget"
 import { updateUserProfile } from "@/services/userServices"
@@ -27,6 +27,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Badge } from "@/components/ui/badge";
 import {
   Popover,
   PopoverContent,
@@ -59,16 +60,10 @@ const RoomType = {
   APARTMENT: "APARTMENT",
   HOSTEL: "HOSTEL"
 }
-const Amenities = [
-  "wifi",
-  "parking",
-  "ac",
-  "laundry",
-  "furnished",
-  "tv",
-  "kitchen",
-  "private_bathroom"
-];
+const commonAmenities = [
+  "WiFi", "AC", "Parking", "Kitchen", "Laundry", "Balcony",
+  "Furnished", "Security", "Water Supply", "Electricity Backup", "Toilet"
+]
 
 
 /* ------- validation schemas ------- */
@@ -335,46 +330,95 @@ const PreferencesSection = ({ control, setFormValue }) => {
         />
       </div>
       {/* ----------- Ammenities ----------- */}
+
       <FormField
         control={control}
         name="amenityPreferences"
-        render={() => (
-          <FormItem className="col-span-2 space-y-2">
-            <FormLabel>Amenities</FormLabel>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {Amenities.map((amenity) => (
-                <FormField
-                  key={amenity}
-                  control={control}
-                  name="amenityPreferences"
-                  render={({ field }) => {
-                    return (
-                      <FormItem key={amenity} className="flex flex-row items-start space-x-2 space-y-0">
-                        <FormControl>
-                          <Checkbox
-                            checked={field.value?.includes(amenity)}
-                            className="data-[state=checked]:bg-accent data-[state=checked]:border-accent transition-all duration-200 cursor-pointer"
-                            onCheckedChange={(checked) => {
-                              if (checked) {
-                                field.onChange([...field.value || [], amenity]);
-                              } else {
-                                field.onChange(field.value?.filter((val) => val !== amenity));
-                              }
-                            }}
-                          />
-                        </FormControl>
-                        <FormLabel className="text-sm font-medium cursor-pointer hover:text-accent transition-colors duration-200">
-                          {amenity.replace("_", " ").toUpperCase()}
-                        </FormLabel>
-                      </FormItem>
-                    );
+        render={({ field }) => {
+          const selectedAmenities = field.value || [];
+          const [newAmenity, setNewAmenity] = useState("");
+
+          // Handle adding a custom amenity
+          const handleAddAmenity = (amenity) => {
+            if (!amenity || selectedAmenities.includes(amenity)) return;
+            field.onChange([...selectedAmenities, amenity]);
+            setNewAmenity("");
+          };
+
+          // Handle removing an amenity
+          const handleRemoveAmenity = (amenity) => {
+            field.onChange(selectedAmenities.filter((a) => a !== amenity));
+          };
+
+          return (
+            <FormItem className="space-y-4">
+              {/* Predefined Amenity Buttons */}
+              <div className="flex flex-wrap gap-2">
+                {commonAmenities.map((amenity) => (
+                  <Button
+                    key={amenity}
+                    type="button"
+                    variant={selectedAmenities.includes(amenity) ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => {
+                      selectedAmenities.includes(amenity)
+                        ? handleRemoveAmenity(amenity)
+                        : handleAddAmenity(amenity);
+                    }}
+                    className="text-xs"
+                  >
+                    {amenity}
+                  </Button>
+                ))}
+              </div>
+
+              {/* Custom Amenity Input */}
+              <div className="flex gap-2">
+                <Input
+                  value={newAmenity}
+                  onChange={(e) => setNewAmenity(e.target.value)}
+                  placeholder="Add custom amenity"
+                  onKeyPress={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      handleAddAmenity(newAmenity);
+                    }
                   }}
                 />
-              ))}
-            </div>
-            <FormMessage />
-          </FormItem>
-        )}
+                <Button
+                  type="button"
+                  onClick={() => handleAddAmenity(newAmenity)}
+                  size="sm"
+                >
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </div>
+
+              {/* Display Selected Amenities as Badges */}
+              {selectedAmenities.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {selectedAmenities.map((amenity, index) => (
+                    <Badge
+                      key={index}
+                      variant="secondary"
+                      className="flex items-center gap-1"
+                    >
+                      {amenity}
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveAmenity(amenity)}
+                        className="ml-1 hover:text-destructive"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </Badge>
+                  ))}
+                </div>
+              )}
+              <FormMessage />
+            </FormItem>
+          );
+        }}
       />
 
     </div>
