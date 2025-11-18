@@ -15,7 +15,7 @@ const RoomsIndex = () => {
   }
 
   return (
-    <div className="container mx-auto py-8">
+    <div className="container m-auto py-8 px-4">
       {/* Filters Component */}
       <RoomFilters rooms={rooms} onFilteredRooms={setFilteredRooms} />
 
